@@ -1,0 +1,23 @@
+{
+  "name": "mobify-pinny",
+  "version": "0.1.0",
+  "description": "A module-first modal module",
+  "devDependencies": {
+    "grunt": "~0.4.4",
+    "grunt-sass": "~0.12.1",
+    "load-grunt-tasks": "~0.4.0",
+    "grunt-autoprefixer": "~0.7.2"
+  },
+  "license": "MIT",
+  "main": "gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mobify/pinny.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mobify/pinny/issues"
+  }
+}
