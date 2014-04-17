@@ -1,3 +1,176 @@
-body {
-	color: red;
+// Pinny
+// =====
+//
+// Mobile friendly modal that will slide from bottom to top. The modal
+// will cover full screen, if the content in modal is longer than the
+// content then it will be scrollable.
+//
+// Currently support:
+// ==================
+// - iOS 6.0 and 7.0 on iPhone and iPad
+// - Android 4.0 and higher
+//
+// Doesnt support:
+// ===============
+// - Android legacy
+// - iOS 5 or lower
+// - ** TO DO: add pinny--is-legacy-android and add if devices support transitions or translate3d ** - similar to pikabu issues
+//
+//
+// Modal Anchor/Button
+// ===================
+// When user click on modal button and will display modal
+//
+// Markup:
+// -------
+// <a href="#myModal" class="c-button">Open modal</a>
+//
+// Modal Content
+// =============
+//
+// **** IMPORTANT NOTICE ****
+// Place the pinny before close of html tag to avoid z-index issues.
+// There are a lot issues if pinny is inside of pikabu viewport so it
+// MUST be outside of pikabu viewport.
+// **************************
+//
+// Modal will appear when the modal button is clicked
+//
+// Markup:
+// -------
+//
+// <div id="myModal" class="pinny-viewport">
+//     <div class="pinny-header">
+//         <a class="pinny-close" data-icon--name="close" href="#myModal"></a>
+//         <h3 class="pinny-title">Modal</h3>
+//     </div>
+//     <div class="pinny-content">
+//         <p>The contents of my modal go here.</p>
+//     </div>
+// </div>
+//
+// TO DO:
+// ======
+// - add style for iOS 6 and lower
+// - add style for legacy android
+
+// MODAL VARIABLES
+// ================
+
+$modalTitle: 16px; // size of title
+$cancelIcon: 18px; // size of cancel icon
+$defaultHeight: 44px; // default height of header
+$layer-overlay:  1000;
+
+$margin: 10px;
+
+// BASE STYLE
+// ==========
+
+* {
+    box-sizing: border-box;
+}
+
+img {
+    display: inline-block;
+    height: auto;
+    max-width: 100%;
+    margin: 0;
+}
+
+// PINNY STYLE
+// ===========
+
+.pinny-viewport {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    overflow: auto;
+    overflow-y: scroll;
+    width: 100%;
+    min-height: 100%;
+
+    opacity: 0;
+
+    transition: transform 0.25s, opacity 1ms 0.25s;
+
+    html:not(.pinny--is-legacy-android) & {
+        transform: translate3d(0, 100%, 0);
+    }
+
+    // pinny--visible
+    &.pinny--visible {
+        height: 100%;
+
+        opacity: 1;
+
+        transition: transform 0.25s;
+
+        html:not(.pinny--is-legacy-android) & {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+}
+
+// Modal header with title and close button
+.pinny-header {
+    position: absolute;
+    right: 0;
+    left: 0;
+    z-index: $layer-overlay;
+
+    display: table;
+    width: 100%;
+    height: $defaultHeight; // get value of height of .pinny-header and set here, if change height eg. one line to two lines then apply here.
+    padding: 0 ($cancelIcon*2 + 2); // ensure there is more padding on left/right to avoid text overlap icon
+
+    text-align: center;
+
+    html:not(.pinny--is-legacy-android) & {
+        -webkit-backface-visibility: hidden;
+    }
+
+    // Close icon
+    .pinny-close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: $layer-overlay + 1;
+
+        display: table;
+        height: $defaultHeight; // get value of height of .pinny-header and set here, if change height eg. one line to two lines then apply here.
+        padding: 0 $margin;
+
+        &::before {
+            display: table-cell;
+            margin-right: 0; // reset icon style
+
+            font-size: $cancelIcon;
+            vertical-align: middle;
+        }
+    }
+}
+
+.pinny-title {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: $margin 0;
+
+    font-size: $modalTitle;
+}
+
+.pinny-content {
+    position: absolute;
+    top: $defaultHeight; // get value of height of .pinny-header and set here, if change height eg. one line to two lines then apply here.
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: $layer-overlay - 1;
+
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+
+    padding: $margin;
 }
