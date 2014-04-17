@@ -123,7 +123,7 @@ img {
     display: table;
     width: 100%;
     height: $defaultHeight; // get value of height of .pinny-header and set here, if change height eg. one line to two lines then apply here.
-    padding: 0 ($cancelIcon*2 + 2); // ensure there is more padding on left/right to avoid text overlap icon
+    padding: 0 ($cancelIcon*2); // ensure there is more padding on left/right to avoid text overlap icon
 
     text-align: center;
 
