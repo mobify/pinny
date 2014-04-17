@@ -54,6 +54,7 @@
 // - add style for iOS 6 and lower
 // - add style for legacy android
 
+
 // MODAL VARIABLES
 // ================
 
@@ -64,19 +65,6 @@ $layer-overlay:  1000;
 
 $margin: 10px;
 
-// BASE STYLE
-// ==========
-
-* {
-    box-sizing: border-box;
-}
-
-img {
-    display: inline-block;
-    height: auto;
-    max-width: 100%;
-    margin: 0;
-}
 
 // PINNY STYLE
 // ===========
@@ -99,7 +87,6 @@ img {
         transform: translate3d(0, 100%, 0);
     }
 
-    // pinny--visible
     &.pinny--visible {
         height: 100%;
 
@@ -113,14 +100,12 @@ img {
     }
 }
 
-// Modal header with title and close button
 .pinny-header {
     position: absolute;
     right: 0;
     left: 0;
     z-index: $layer-overlay;
 
-    display: table;
     width: 100%;
     height: $defaultHeight; // get value of height of .pinny-header and set here, if change height eg. one line to two lines then apply here.
     padding: 0 ($cancelIcon*2); // ensure there is more padding on left/right to avoid text overlap icon
@@ -130,25 +115,23 @@ img {
     html:not(.pinny--is-legacy-android) & {
         -webkit-backface-visibility: hidden;
     }
+}
 
-    // Close icon
-    .pinny-close {
-        position: absolute;
-        top: 0;
-        right: 0;
-        z-index: $layer-overlay + 1;
+.pinny-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: $layer-overlay + 1;
 
-        display: table;
-        height: $defaultHeight; // get value of height of .pinny-header and set here, if change height eg. one line to two lines then apply here.
-        padding: 0 $margin;
+    display: table;
+    height: $defaultHeight; // get value of height of .pinny-header and set here, if change height eg. one line to two lines then apply here.
+    padding: 0 $margin;
 
-        &::before {
-            display: table-cell;
-            margin-right: 0; // reset icon style
+    &::before {
+        display: table-cell;
 
-            font-size: $cancelIcon;
-            vertical-align: middle;
-        }
+        font-size: $cancelIcon;
+        vertical-align: middle;
     }
 }
 
