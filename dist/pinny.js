@@ -9,7 +9,6 @@
     }
 
     Pinny.DEFAULTS = {
-        activator: 'body',
         open: noop,
         opened: noop,
         close: noop,

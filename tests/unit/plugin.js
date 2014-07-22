@@ -37,32 +37,5 @@ define([
                 assert.isDefined(element.data('pinny').$pinny);
             });
         });
-
-        describe('invoking pinny methods using the plugin interface', function() {
-            it('opens pinny using the open method', function(done) {
-                element.pinny({
-                    opened: function() {
-//                        assert.isTrue(element.hasClass('pinny--is-open'));
-                        done();
-                    }
-                });
-
-                element.pinny('open');
-            });
-
-//            it('closes a pinny item using the close method', function(done) {
-//                element.pinny({
-//                    opened: function() {
-//                        element.pinny('close');
-//                    },
-//                    closed: function() {
-////                        assert.isFalse(element.hasClass('pinny--is-open'));
-//                        done();
-//                    }
-//                });
-//
-//                element.pinny('open');
-//            });
-        });
     });
 });
