@@ -1,0 +1,29 @@
+{
+  "name": "bellows",
+  "version": "2.0.0",
+  "homepage": "https://github.com/mobify/bellows",
+  "authors": [
+    "Mobify <jobs@mobify.com>"
+  ],
+  "description": "A mobile first content fly-in UI plugin",
+  "main": "dist/pinny.min.js",
+  "keywords": [
+    "pinny",
+    "fly-in",
+    "modal",
+    "mobile",
+    "mobify"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "velocity": "0.8.0",
+    "tappy": "https://github.com/mobify/zappy.git#master",
+    "requirejs-text": "~2.0.12",
+    "requirejs": "~2.1.14"
+  }
+}
