@@ -1,6 +1,6 @@
 # Mobify Pinny
 
-A mobile-first accordion UI module for progressive disclosure on the web.
+A mobile-first content fly-in UI plugin.
 
 ## Documentation
 
