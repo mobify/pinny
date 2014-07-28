@@ -1,6 +1,8 @@
 define([
     'text!fixtures/pinny.html',
-    'zepto',
+    'selectorEngine',
+    'velocity',
+    'zappy',
     'pinny'
 ], function(fixture, $) {
     var Pinny;
