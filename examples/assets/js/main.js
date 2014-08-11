@@ -1,11 +1,14 @@
 require(['config'], function() {
     require([
+        'modal-center',
         'selectorEngine',
         'pinny'
     ],
-    function($) {
+    function(position, $) {
         // Initialize Pinny
-        var $pinny = $('#somePinny').pinny();
+        var $pinny = $('#somePinny').pinny({
+            position: position
+        });
 
         $('#pinnyActivator').on('click', function() {
             $pinny.pinny('toggle');

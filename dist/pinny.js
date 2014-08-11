@@ -10,6 +10,7 @@
             zappy.
          */
         define([
+            'bouncefix',
             'selectorEngine',
             'velocity',
             'zappy',
@@ -21,7 +22,7 @@
          */
         factory(window.Zepto || window.jQuery);
     }
-}(function($) {
+}(function(bouncefix, $) {
     var PLUGIN_NAME = 'pinny';
     var noop = function() {};
 
@@ -34,7 +35,9 @@
     Pinny.VERSION = '1.0.0';
 
     Pinny.DEFAULTS = {
-        position: 'modal-center',
+        position: function() {
+            throw 'You must specify a position function that instructs Pinny how to open.';
+        },
         title: 'Pinny',
         open: noop,
         opened: noop,
@@ -49,10 +52,6 @@
         var $body = $(document.body);
 
         this.options = $.extend(true, {}, Pinny.DEFAULTS, options);
-
-        require([this.options.position], function(position) {
-            plugin.position = position;
-        });
 
         this.$pinny = $('<div />')
             .appendTo($body)
@@ -85,11 +84,15 @@
 
         $(element).appendTo(this.$content).show();
 
+        bouncefix.add('pinny__content');
+
         this.$shade = $body.shade({
             click: function() {
                 plugin.close();
             }
         });
+
+        this.position = this.options.position;
 
         this._bindEvents();
     };

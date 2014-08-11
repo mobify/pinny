@@ -1,3 +1,4 @@
+$title-font-color: #fff;
 $title-background: #3498db;
 
 
@@ -8,14 +9,18 @@ $title-background: #3498db;
 
     background: $title-background;
 
+    color: $title-font-color;
+
     .pinny__close {
         position: absolute;
         right: 10px;
-        top: 8px;
+        top: 4px;
 
         text-decoration: none;
 
-        color: #fff;
+        font-size: 22px;
+
+        color: $title-font-color;
     }
 }
 

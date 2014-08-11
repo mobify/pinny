@@ -1,10 +1,12 @@
 .pinny__title {
   position: relative;
   padding: 10px;
-  background: #3498db; }
+  background: #3498db;
+  color: white; }
   .pinny__title .pinny__close {
     position: absolute;
     right: 10px;
-    top: 8px;
+    top: 4px;
     text-decoration: none;
-    color: #fff; }
+    font-size: 22px;
+    color: white; }

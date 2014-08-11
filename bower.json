@@ -22,6 +22,7 @@
     "velocity": "0.9.0",
     "tappy": "https://github.com/mobify/zappy.git#master",
     "requirejs-text": "~2.0.12",
-    "requirejs": "~2.1.14"
+    "requirejs": "~2.1.14",
+    "bouncefix.js": "~0.3.0"
   }
 }

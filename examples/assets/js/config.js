@@ -3,6 +3,7 @@ require.config({
     paths: {
         'text': 'bower_components/requirejs-text/text',
         'selectorEngine': 'lib/zeptojs/dist/zepto.min',
+        'bouncefix': 'bower_components/bouncefix.js/dist/bouncefix.min',
         'zappy': 'bower_components/tappy/tappy',
         'velocity-shim': 'lib/velocity-shim',
         'velocity': 'bower_components/velocity/jquery.velocity',
