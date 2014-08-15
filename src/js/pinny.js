@@ -52,7 +52,6 @@
     Pinny.prototype._init = function(element, options) {
         var plugin = this;
         var $body = $(document.body);
-        var scrollPos = 0;
 
         this.options = $.extend(true, {}, Pinny.DEFAULTS, options);
 
@@ -70,7 +69,8 @@
             this.$title = $('<div />')
                 .addClass('pinny__title')
                 .html(this.options.title)
-                .prependTo(this.$pinny);
+                .prependTo(this.$pinny)
+                .on('touchmove', function() { return false; });
 
             $('<button />')
                 .html('&times')
@@ -133,10 +133,7 @@
                 {
                     begin: function() {
                         $('html')
-                            .css('position', '')
-                            .css('top', '');
-
-                        window.scrollTo(0, scrollPos);
+                            .css('overflow', '');
                     },
                     easing: this.options.easing,
                     duration: this.options.duration,
@@ -161,21 +158,15 @@
                 },
                 {
                     begin: function() {
-                        scrollPos = $(window).scrollTop();
-
                         $('html')
-                            .css('position', 'fixed')
-                            .css('top', scrollPos * -1);
+                            .css('overflow', 'hidden');
                     },
                     easing: this.options.easing,
                     duration: this.options.duration,
                     display: 'block',
                     complete: function() {
-                        console.log($item.height());
-                        console.log($title.height());
-
                         $content
-                            .height($item.height() - $title.height() - 40);
+                            .height($title ? $item.height() - $title.height() - 40 : $item.height());
 
                     }
                 }
