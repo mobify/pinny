@@ -69,10 +69,10 @@
         if (this.options.title) {
             this.$title = $('<div />')
                 .addClass('pinny__title')
-                .text(this.options.title)
+                .html(this.options.title)
                 .prependTo(this.$pinny);
 
-            $('<a href="#" />')
+            $('<button />')
                 .html('&times')
                 .addClass('pinny__close')
                 .appendTo(this.$title)
@@ -85,6 +85,8 @@
         this.$content = $('<div />')
             .addClass('pinny__content')
             .appendTo(this.$pinny);
+
+
 
         $(element).appendTo(this.$content).show();
 
@@ -130,9 +132,7 @@
                 'reverse',
                 {
                     begin: function() {
-                        console.log(scrollPos);
-
-                        $('body')
+                        $('html')
                             .css('position', '')
                             .css('top', '');
 
@@ -147,11 +147,10 @@
 
     Pinny.prototype._open = function() {
         $item = this.$pinny;
+        $content = this.$content;
+        $title = this.$title;
 
         this.position(this.$pinny);
-
-        this.$content
-            .height(this.$title ? this.$pinny.innerHeight() - this.$title.innerHeight() : this.$pinny.innerHeight());
 
         this.$pinny
             // Forcefeed the initial value
@@ -164,13 +163,21 @@
                     begin: function() {
                         scrollPos = $(window).scrollTop();
 
-                        $('body')
+                        $('html')
                             .css('position', 'fixed')
-                            .css('top', -1*scrollPos);
+                            .css('top', scrollPos * -1);
                     },
                     easing: this.options.easing,
                     duration: this.options.duration,
-                    display: 'block'
+                    display: 'block',
+                    complete: function() {
+                        console.log($item.height());
+                        console.log($title.height());
+
+                        $content
+                            .height($item.height() - $title.height() - 40);
+
+                    }
                 }
             );
     };

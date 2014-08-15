@@ -70,7 +70,7 @@
 
         this._trigger('opened');
     };
-    
+
     Shade.prototype.close = function() {
         this._trigger('close');
 
@@ -94,7 +94,7 @@
                 height: this.options.padding ? height - this.options.padding : height,
                 backgroundColor: this.options.color,
                 opacity: this.options.opacity,
-                position: 'absolute',
+                position: 'fixed',
                 padding: this.options.padding,
                 zIndex: this.options.zIndex || $element.css('zIndex') + 1
             });

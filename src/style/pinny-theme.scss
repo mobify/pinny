@@ -10,18 +10,6 @@ $title-background: #3498db;
     background: $title-background;
 
     color: $title-font-color;
-
-    .pinny__close {
-        position: absolute;
-        right: 10px;
-        top: 4px;
-
-        text-decoration: none;
-
-        font-size: 22px;
-
-        color: $title-font-color;
-    }
 }
 
 .pinny__content {
