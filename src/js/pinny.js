@@ -44,12 +44,15 @@
         close: noop,
         closed: noop,
         zIndex: 2,
-        coverage: '90%'
+        coverage: '90%',
+        easing: 'swing',
+        duration: 150
     };
 
     Pinny.prototype._init = function(element, options) {
         var plugin = this;
         var $body = $(document.body);
+        var scrollPos = 0;
 
         this.options = $.extend(true, {}, Pinny.DEFAULTS, options);
 
@@ -57,7 +60,7 @@
             .appendTo($body)
             .addClass('pinny')
             .css({
-                position: 'absolute',
+                position: 'fixed',
                 zIndex: this.options.zIndex,
                 width: this.options.coverage,
                 height: this.options.coverage
@@ -73,7 +76,8 @@
                 .html('&times')
                 .addClass('pinny__close')
                 .appendTo(this.$title)
-                .on('click', function() {
+                .on('click', function(e) {
+                    e.preventDefault();
                     plugin.close();
                 });
         }
@@ -118,19 +122,66 @@
     Pinny.prototype.close = function() {
         this._trigger('close');
         this.$shade.shade('close');
-        this.$pinny.hide().removeClass(OPENED_CLASS);
+        this.$pinny.removeClass(OPENED_CLASS);
         this._trigger('closed');
+
+        this.$pinny
+            .velocity(
+                'reverse',
+                {
+                    begin: function() {
+                        console.log(scrollPos);
+
+                        $('body')
+                            .css('position', '')
+                            .css('top', '');
+
+                        window.scrollTo(0, scrollPos);
+                    },
+                    easing: this.options.easing,
+                    duration: this.options.duration,
+                    display: 'none'
+                }
+            );
     };
 
     Pinny.prototype._open = function() {
-        this.$pinny
-            .show()
-            .addClass(OPENED_CLASS);
+        $item = this.$pinny;
 
         this.position(this.$pinny);
 
         this.$content
-            .height(this.$title ? this.$pinny.height() - this.$title.height() : this.$pinny.height());
+            .height(this.$title ? this.$pinny.innerHeight() - this.$title.innerHeight() : this.$pinny.innerHeight());
+
+        this.$pinny
+            // Forcefeed the initial value
+            .velocity({ translateY: ['100%', '100%'] }, 0)
+            .velocity(
+                {
+                    translateY: 0
+                },
+                {
+                    begin: function() {
+                        scrollPos = $(window).scrollTop();
+
+                        $('body')
+                            .css('position', 'fixed')
+                            .css('top', -1*scrollPos);
+                    },
+                    easing: this.options.easing,
+                    duration: this.options.duration,
+                    display: 'block'
+                }
+            );
+    };
+
+    /*
+     Gets an element's height using Velocity's built-in property cache.
+     Used for getting heights before animations, for animating into an
+     element's space.
+     */
+    Pinny.prototype._getHeight = function($element) {
+        return parseFloat($.Velocity.CSS.getPropertyValue($element[0], 'height'));
     };
 
     $.fn.pinny = function(option) {

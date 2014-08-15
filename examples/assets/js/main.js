@@ -1,6 +1,6 @@
 require(['config'], function() {
     require([
-        'modal-center',
+        'modal-bottom',
         'selectorEngine',
         'pinny'
     ],
@@ -10,7 +10,7 @@ require(['config'], function() {
             position: position
         });
 
-        $('#pinnyActivator').on('click', function() {
+        $('.pinnyActivator').on('click', function() {
             $pinny.pinny('toggle');
         });
 

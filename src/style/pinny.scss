@@ -1,6 +1,15 @@
 .pinny {
+    position: fixed;
+
     display: none;
-    background-color: #fff;
+    background: white;
+    overflow: hidden;
+
+    transform: translateY(0, 100%, 0);
+
+    &.pinny--is-open {
+        transform: translateY(0, 0, 0);
+    }
 }
 
 .pinny__content {
