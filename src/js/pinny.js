@@ -28,6 +28,11 @@
 
     var OPENED_CLASS = 'pinny--is-open';
 
+
+    var blockScroll = function(event) {
+        event.preventDefault();
+    }
+
     function Pinny(element, options) {
         this._init(element, options);
     }
@@ -69,8 +74,7 @@
             this.$title = $('<div />')
                 .addClass('pinny__title')
                 .html(this.options.title)
-                .prependTo(this.$pinny)
-                .on('touchmove', function() { return false; });
+                .prependTo(this.$pinny);
 
             $('<button />')
                 .html('&times')
@@ -86,8 +90,6 @@
             .addClass('pinny__content')
             .appendTo(this.$pinny);
 
-
-
         $(element).appendTo(this.$content).show();
 
         bouncefix.add('pinny__content');
@@ -95,6 +97,13 @@
         this.$shade = $body.shade({
             click: function() {
                 plugin.close();
+            }
+        });
+
+        // Block scrolling on anything but pinny content
+        this.$pinny.on( 'touchmove', function( ev ) {
+            if (!$(ev.target).parents().hasClass( 'pinny__content' )) {
+                ev.preventDefault();
             }
         });
 
@@ -132,17 +141,25 @@
                 'reverse',
                 {
                     begin: function() {
+                        $(document).on('touchmove', blockScroll);
+
                         $('html')
                             .css('overflow', '');
                     },
                     easing: this.options.easing,
                     duration: this.options.duration,
-                    display: 'none'
+                    display: 'none',
+                    complete: function() {
+                        $(document).off('touchmove', blockScroll);
+                    }
                 }
             );
     };
 
     Pinny.prototype._open = function() {
+        // Why is this needed? @WARN! @TODO!
+        var magicNumber = 40;
+
         $item = this.$pinny;
         $content = this.$content;
         $title = this.$title;
@@ -166,8 +183,9 @@
                     display: 'block',
                     complete: function() {
                         $content
-                            .height($title ? $item.height() - $title.height() - 40 : $item.height());
+                            .height($title ? $item.height() - $title.height() - magicNumber : $item.height());
 
+                        $(document).off('touchmove', blockScroll);
                     }
                 }
             );

@@ -15,3 +15,7 @@
   overflow: auto;
   padding: 10px;
   -webkit-overflow-scrolling: touch; }
+
+.shield {
+  -webkit-transition: opacity 0.1s;
+          transition: opacity 0.1s; }

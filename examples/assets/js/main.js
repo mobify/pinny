@@ -7,7 +7,8 @@ require(['config'], function() {
     function(position, $) {
         // Initialize Pinny
         var $pinny = $('#somePinny').pinny({
-            position: position
+            position: position,
+            coverage: '100%',
         });
 
         $('.pinnyActivator').on('click', function() {
