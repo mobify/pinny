@@ -10,6 +10,8 @@ require.config({
         'modal-center': 'dist/position-modal-center',
         'sheet-bottom': 'dist/position-sheet-bottom',
         'sheet-left': 'dist/position-sheet-left',
+        'sheet-right': 'dist/position-sheet-right',
+        'sheet-top': 'dist/position-sheet-top',
         'shade': 'dist/shade',
         'pinny': 'dist/pinny'
     },
