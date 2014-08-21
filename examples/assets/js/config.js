@@ -8,7 +8,7 @@ require.config({
         'velocity-shim': 'lib/velocity-shim',
         'velocity': 'bower_components/velocity/jquery.velocity',
         'modal-center': 'dist/position-modal-center',
-        'modal-bottom': 'dist/position-modal-bottom',
+        'sheet-bottom': 'dist/position-sheet-bottom',
         'shade': 'dist/shade',
         'pinny': 'dist/pinny'
     },

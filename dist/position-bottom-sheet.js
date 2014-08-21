@@ -42,8 +42,10 @@
                         duration: this.options.duration,
                         display: 'auto',
                         complete: function() {
-                            $content
-                                .height(plugin.$title ? plugin.$pinny.height() - plugin.$title.height() - magicNumber : plugin.$pinny.height());
+                            plugin.$content
+                                .height(
+                                    plugin.$title ?
+                                    plugin.$pinny.height() - plugin.$title.height() - magicNumber : plugin.$pinny.height());
 
                             $(document).off('touchmove', plugin.blockScroll);
                         }

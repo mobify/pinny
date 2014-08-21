@@ -1,6 +1,6 @@
 require(['config'], function() {
     require([
-        'modal-bottom',
+        'sheet-bottom',
         'selectorEngine',
         'pinny'
     ],
