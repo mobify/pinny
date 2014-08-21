@@ -48,7 +48,6 @@
             .hide()
             .appendTo(this.$element)
             .on('click', function() {
-                console.log('hallo');
                 plugin.options.click.call(self);
                 plugin.close();
             });
