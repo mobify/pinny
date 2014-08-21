@@ -19,7 +19,7 @@
             var plugin = this;
 
             // Why is this needed? @WARN! @TODO!
-            var magicNumber = 40;
+            var magicNumber = 0;
 
             this.$pinny
                 .css({
@@ -46,7 +46,7 @@
                             plugin.$content
                                 .height(
                                     plugin.$title ?
-                                    plugin.$pinny.height() - plugin.$title.height() - magicNumber : plugin.$pinny.height());
+                                    plugin.$pinny.height() - plugin.$title.outerHeight() : plugin.$pinny.height());
 
                             $(document).off('touchmove', plugin.blockScroll);
                         }

@@ -1,51 +1,37 @@
-/***************
-    Details
-***************/
-
-/*!
-* Velocity.js: Accelerated JavaScript animation.
-* @version 0.11.2
-* @docs http://VelocityJS.org
-* @license Copyright 2014 Julian Shapiro. MIT License: http://en.wikipedia.org/wiki/MIT_License
-*/
-
-/****************
-    Overview
-****************/
-
-/*
-Velocity's structure:
-- CSS Stack: Works independently from the rest of Velocity.
-- Velocity.animate(): Core method that iterates over the targeted elements and queues the incoming call onto each element individually. Consists of:
-  - Pre-Queueing: Prepare the element for animation by instantiating its data cache and processing the call's options.
-  - Queueing: The logic that runs once the call has reached its point of execution in the element's $.queue() stack.
-              Most logic is placed here to avoid risking it becoming stale (if the element's properties have changed).
-  - Pushing: Consolidation of the tween data followed by its push onto the global in-progress calls container.
-- tick(): The single requestAnimationFrame loop responsible for tweening all in-progress calls.
-- completeCall(): Handles the cleanup process for each Velocity call.
-*/
-
 /******************
     Velocity.js
 ******************/
 
+/*! VelocityJS.org (0.11.7). (C) 2014 Julian Shapiro. MIT @license: en.wikipedia.org/wiki/MIT_License */
+
 ;(function (factory) {    
-    /* AMD module. */
-    if (typeof define === "function" && define.amd) {
-        if (window.Velocity) {
-            define(factory);
-        } else {
-            define(["jquery"], factory)
-        }
     /* CommonJS module. */
-    } else if (typeof exports === "object") {
-        factory(window.Velocity ? undefined : require("jquery"));
+    if (typeof module === "object" && typeof module.exports === "object") {
+        module.exports = factory(window.Velocity ? window.jQuery : require("jquery"));
+    /* AMD module. */
+    } else if (typeof define === "function" && define.amd) {        
+        if (window.Velocity) {
+            define("velocity", factory);
+        } else {
+            define("velocity", [ "jquery" ], factory)
+        }
     /* Browser globals. */
     } else {        
         factory(window.jQuery);
     }
 }(function (jQuery) {
 return function (global, window, document, undefined) {
+    /*
+    Structure:
+    - CSS: CSS stack that works independently from the rest of Velocity.
+    - animate(): Core animation method that iterates over the targeted elements and queues the incoming call onto each element individually.
+      - Pre-Queueing: Prepare the element for animation by instantiating its data cache and processing the call's options.
+      - Queueing: The logic that runs once the call has reached its point of execution in the element's $.queue() stack.
+                  Most logic is placed here to avoid risking it becoming stale (if the element's properties have changed).
+      - Pushing: Consolidation of the tween data followed by its push onto the global in-progress calls container.
+    - tick(): The single requestAnimationFrame loop responsible for tweening all in-progress calls.
+    - completeCall(): Handles the cleanup process for each Velocity call.
+    */
 
     /*****************
         Constants
@@ -116,6 +102,11 @@ return function (global, window, document, undefined) {
         return result;
     }
 
+    /* Wrap single elements in an array so that $.each() can iterate with the element instead of its node's children. */
+    function createElementsArray (elements) {
+        return Type.isNode(elements) ? [ elements ] : elements;
+    }
+
     var Type = {
         isString: function (variable) {
             return (typeof variable === "string");
@@ -166,10 +157,10 @@ return function (global, window, document, undefined) {
     *****************/
 
     /* Local to our Velocity scope, assign $ to jQuery or the jQuery shim. (The shim is a port of the jQuery utility functions that Velocity uses.) */
-    var $;
+    var $;    
+
     /* The argument passed in by the module loader can either be jQuery (if it was required) or a helper function provided by the module loader
        (in the case that Velocity's jQuery shim is being used). We check for jQuery by sniffing its unique .fn property. */
-
     if (jQuery && jQuery.fn !== undefined) {
         $ = jQuery;
     } else if (window.Velocity && window.Velocity.Utilities) {
@@ -186,7 +177,7 @@ return function (global, window, document, undefined) {
        Revert to jQuery's $.animate(), and lose Velocity's extra features. */
     } else if (IE <= 7) {
         if (!jQuery) {
-            throw new Error("Velocity: For IE<=7, Velocity falls back to jQuery, which must first be loaded.");
+            throw new Error("Velocity: In IE<=7, Velocity falls back to jQuery, which must first be loaded.");
         } else {
             jQuery.fn.velocity = jQuery.fn.animate;
 
@@ -195,7 +186,7 @@ return function (global, window, document, undefined) {
         }
     /* IE8 doesn't work with the jQuery shim; it requires jQuery proper. */
     } else if (IE === 8 && !jQuery) {
-        throw new Error("Velocity: For IE8, Velocity requires jQuery proper to be loaded; Velocity's jQuery shim does not work with IE8.");
+        throw new Error("Velocity: In IE8, Velocity requires jQuery proper to be loaded; Velocity's jQuery shim does not work with IE8.");
     }
 
     /* Shorthand alias for jQuery's $.data() utility. */
@@ -288,7 +279,7 @@ return function (global, window, document, undefined) {
             });
         },
         /* Velocity's core animation method, later aliased to $.fn if a framework (jQuery or Zepto) is detected. */
-        animate: function () { /* Defined below. */ },
+        animate: null, /* Defined below. */
         /* A reimplementation of jQuery's $.css(), used for getting/setting Velocity's hooked CSS properties. */
         hook: function (elements, arg2, arg3) {
             var value = undefined;
@@ -298,7 +289,7 @@ return function (global, window, document, undefined) {
                 elements = [].slice.call(elements);
             }
 
-            $.each(Type.isNode(elements) ? [ elements ] : elements, function(i, element) {
+            $.each(createElementsArray(elements), function(i, element) {
                 /* Initialize Velocity's per-element data cache if this element hasn't previously been animated. */
                 if (Data(element) === undefined) {
                     Velocity.init(element);
@@ -327,7 +318,7 @@ return function (global, window, document, undefined) {
         },
         /* Set to true to force a duration of 1ms for all animations so that UI testing can be performed without waiting on animations to complete. */
         mock: false,
-        version: { major: 0, minor: 11, patch: 2 },
+        version: { major: 0, minor: 11, patch: 7 },
         /* Set to 1 or 2 (most verbose) to output debug info to console. */
         debug: false
     };
@@ -1555,11 +1546,11 @@ return function (global, window, document, undefined) {
     CSS.Hooks.register();
     CSS.Normalizations.register();
 
-    /**********************
-       Velocity.animate
-    **********************/
+    /*****************
+        Animation
+    *****************/
 
-    Velocity.animate = function() {
+    var animate = function() {
 
         /******************
             Call Chain
@@ -1587,7 +1578,7 @@ return function (global, window, document, undefined) {
         var syntacticSugar = (arguments[0] && (($.isPlainObject(arguments[0].properties) && !arguments[0].properties.names) || Type.isString(arguments[0].properties))),
             /* Whether Velocity was called via the utility function (as opposed to on a jQuery/Zepto object). */
             isUtility,
-            /* When Velocity is called via the utility function ($.Velocity.animate()/Velocity.animate()), elements are explicitly
+            /* When Velocity is called via the utility function ($.Velocity()/Velocity()), elements are explicitly
                passed in as the first parameter. Thus, argument positioning varies. We normalize them here. */
             elementsWrapped,
             argumentIndex;
@@ -1708,7 +1699,7 @@ return function (global, window, document, undefined) {
                 *******************/
 
                 /* Clear the currently-active delay on each targeted element. */
-                $.each(Type.isNode(elements) ? [ elements ] : elements, function(i, element) {
+                $.each(createElementsArray(elements), function(i, element) {
                     if (Data(element) && Data(element).delayTimer) {
                         /* Stop the timer from triggering its cached next() function. */
                         clearTimeout(Data(element).delayTimer.setTimeout);
@@ -1736,8 +1727,8 @@ return function (global, window, document, undefined) {
                     /* Inactive calls are set to false by the logic inside completeCall(). Skip them. */
                     if (activeCall) {
                         /* If we're operating on a single element, wrap it in an array so that $.each() can iterate over it. */
-                        $.each(Type.isNode(activeCall[1]) ? [ activeCall[1] ] : activeCall[1], function(k, activeElement) {
-                            $.each(Type.isNode(elements) ? [ elements ] : elements, function(l, element) {
+                        $.each(createElementsArray(activeCall[1]), function(k, activeElement) {
+                            $.each(createElementsArray(elements), function(l, element) {
                                 /* Check that this call was applied to the target element. */
                                 if (element === activeElement) {
                                     if (Data(element)) {
@@ -1755,7 +1746,7 @@ return function (global, window, document, undefined) {
 
                                         /* Iterate through the items in the element's queue. */
                                         $.each($.queue(element, queueName), function(i, item) {
-                                            /* The queue array can contain an "inprogress" sentinal, which we skip. */
+                                            /* The queue array can contain an "inprogress" string, which we skip. */
                                             if (Type.isFunction(item)) {
                                                 /* Pass the item's callback a flag indicating that we want to abort from the queue call.
                                                    (Specifically, the queue will resolve the call's associated promise then abort.)  */
@@ -1808,7 +1799,7 @@ return function (global, window, document, undefined) {
                     }
 
                     /* Individually trigger the sequence for each element in the set to prevent users from having to handle iteration logic in their sequence. */
-                    $.each(elements, function(elementIndex, element) {
+                    $.each(createElementsArray(elements), function(elementIndex, element) {
                         /* If the stagger option was passed in, successively delay each element by the stagger value (in ms). Retain the original delay value. */
                         if (parseFloat(options.stagger)) {
                             options.delay = delayOriginal + (parseFloat(options.stagger) * elementIndex);
@@ -2677,7 +2668,9 @@ return function (global, window, document, undefined) {
                     call.push(tweensContainer);
 
                     /* Store the tweensContainer on the element, plus the current call's opts so that Velocity can reference this data the next time this element is animated. */
-                    Data(element).tweensContainer = tweensContainer;
+                    if (opts.queue !== false) {
+                        Data(element).tweensContainer = tweensContainer;
+                    }
                     Data(element).opts = opts;
                     /* Switch on the element's animating flag. */
                     Data(element).isAnimating = true;
@@ -2765,7 +2758,7 @@ return function (global, window, document, undefined) {
 
         /* If the "nodeType" property exists on the elements variable, we're animating a single element.
            Place it in an array so that $.each() can iterate over it. */
-        $.each(Type.isNode(elements) ? [ elements ] : elements, function(i, element) {
+        $.each(createElementsArray(elements), function(i, element) {
             /* Ensure each element in a set has a nodeType (is a real element) to avoid throwing errors. */
             if (Type.isNode(element)) {
                 processElement.call(element);
@@ -2806,7 +2799,7 @@ return function (global, window, document, undefined) {
                     reverseOptions.complete = opts.complete;
                 }
 
-                Velocity.animate(elements, "reverse", reverseOptions);
+                Velocity(elements, "reverse", reverseOptions);
             }
         }
 
@@ -2817,6 +2810,11 @@ return function (global, window, document, undefined) {
         /* Return the elements back to the call chain, with wrapped elements taking precedence in case Velocity was called via the $.fn. extension. */
         return getChain();
     };
+
+    /* Turn Velocity into the animation function, extended with the pre-existing Velocity object. */
+    Velocity = $.extend(animate, Velocity);
+    /* For legacy support, also expose the literal animate method. */
+    Velocity.animate = animate;
 
     /**************
         Timing
@@ -3062,8 +3060,7 @@ return function (global, window, document, undefined) {
 
         /* Note: completeCall() sets the isTicking flag to false when the last call on Velocity.State.calls has completed. */
         if (Velocity.State.isTicking) {
-            /* If mock is on (http://VelocityJS.org/#mock), use synchronous code (with mock's forced duration of 0) to immediately toggle end values. */
-            Velocity.mock ? tick(true) : ticker(tick);
+            ticker(tick);
         }
     }
 
@@ -3094,7 +3091,7 @@ return function (global, window, document, undefined) {
             var element = call[i].element;
 
             /* If the user set display to "none" (intending to hide the element), set it now that the animation has completed. */
-            /* Note: display:none isn't set when calls are manually stopped (via Velocity.animate("stop"). */
+            /* Note: display:none isn't set when calls are manually stopped (via Velocity("stop"). */
             /* Note: Display gets ignored with "reverse" calls and infinite loops, since this behavior would be undesirable. */
             if (!isStopped && !opts.loop) {
                 if (opts.display === "none") {
@@ -3119,12 +3116,12 @@ return function (global, window, document, undefined) {
                     Data(element).rootPropertyValueCache = {};
 
                     var transformHAPropertyExists = false;
-                    /* If any transform subproperty is at its default value (regardless of unit type), remove it. This has the
-                       dual benefit of avoiding random browser transform bugs and removing hardware acceleration to free up RAM. */
-                    $.each(Data(element).transformCache, function(transformName, transformValue) {
-                        var defaultValue = /^scale/.test(transformName) ? 1 : 0;
+                    /* If any 3D transform subproperty is at its default value (regardless of unit type), remove it. */
+                    $.each(CSS.Lists.transforms3D, function(i, transformName) {
+                        var defaultValue = /^scale/.test(transformName) ? 1 : 0,
+                            currentValue = Data(element).transformCache[transformName];
 
-                        if (new RegExp("^\\(" + defaultValue + "[^.]").test(transformValue)) {
+                        if (Data(element).transformCache[transformName] !== undefined && new RegExp("^\\(" + defaultValue + "[^.]").test(currentValue)) {
                             transformHAPropertyExists = true;
                             delete Data(element).transformCache[transformName];
                         }
@@ -3151,7 +3148,7 @@ return function (global, window, document, undefined) {
             *********************/
 
             /* Complete is fired once per call (not once per element) and is passed the full raw DOM element set as both its context and its first argument. */
-            /* Note: Callbacks aren't fired when calls are manually stopped (via Velocity.animate("stop"). */
+            /* Note: Callbacks aren't fired when calls are manually stopped (via Velocity("stop"). */
             if (!isStopped && opts.complete && !opts.loop && (i === callLength - 1)) {
                 /* We throw callbacks in a setTimeout so that thrown errors don't halt the execution of Velocity itself. */
                 try {
@@ -3177,7 +3174,7 @@ return function (global, window, document, undefined) {
             ****************************/
 
             if (opts.loop === true && !isStopped) {
-                Velocity.animate(element, "reverse", { loop: true, delay: opts.delay });
+                Velocity(element, "reverse", { loop: true, delay: opts.delay });
             }
 
             /***************
@@ -3228,7 +3225,7 @@ return function (global, window, document, undefined) {
        If either framework is loaded, register a "velocity" extension pointing to Velocity's core animate() method. */
     var framework;
 
-    if (jQuery && jQuery.fn) {
+    if (jQuery && jQuery.fn !== undefined) {
         framework = jQuery;
     } else if (window.Zepto) {
         framework = window.Zepto;
@@ -3241,7 +3238,7 @@ return function (global, window, document, undefined) {
 
     if (framework) {
         /* Assign the element function to Velocity's core animate() method. */
-        framework.fn.velocity = Velocity.animate;
+        framework.fn.velocity = animate;
         /* Assign the object function's defaults to Velocity's global defaults object. */
         framework.fn.velocity.defaults = Velocity.defaults;
     }
@@ -3379,7 +3376,7 @@ return function (global, window, document, undefined) {
             };
 
             /* Animation triggering. */
-            Velocity.animate(element, originalValues, opts);
+            Velocity(element, originalValues, opts);
         };
     });
 
@@ -3413,7 +3410,7 @@ return function (global, window, document, undefined) {
                 opts.display = opts.display || ((direction === "In") ? "auto" : "none");
             }
 
-            Velocity.animate(this, propertiesMap, opts);
+            Velocity(this, propertiesMap, opts);
         };
     });
 

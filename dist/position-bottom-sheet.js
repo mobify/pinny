@@ -45,7 +45,7 @@
                             plugin.$content
                                 .height(
                                     plugin.$title ?
-                                    plugin.$pinny.height() - plugin.$title.height() - magicNumber : plugin.$pinny.height());
+                                    plugin.$pinny.height() - plugin.$title.outerHeight() : plugin.$pinny.height());
 
                             $(document).off('touchmove', plugin.blockScroll);
                         }

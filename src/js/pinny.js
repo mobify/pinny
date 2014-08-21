@@ -6,14 +6,12 @@
         /*
             In AMD environments, you will need to define an alias
             to your selector engine. i.e. either zepto or jQuery.
-            Additionally, you will need to alias velocity and
-            zappy.
+            Additionally, you will need to alias velocity
          */
         define([
             'bouncefix',
             'selectorEngine',
             'velocity',
-            'zappy',
             'shade'
         ], factory);
     } else {
