@@ -14,15 +14,63 @@
         factory(window.Zepto || window.jQuery);
     }
 }(function($) {
-    return function($element) {
-        var $window = $(window);
+    return {
+        open: function() {
+            var plugin = this;
+                    // Why is this needed? @WARN! @TODO!
+            var magicNumber = 40;
 
-        $element
-            .css({
-                bottom: 0,
-                left: 0,
-                right: 0,
-                width: 'auto'
-            });
+            this.$pinny
+                .css({
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    width: 'auto'
+                })
+                // Forcefeed the initial value
+                .velocity({ translateY: ['100%', '100%'] }, 0)
+                .velocity(
+                    {
+                        translateY: 0
+                    },
+                    {
+                        begin: function() {
+                            $('html')
+                                .css('overflow', 'hidden');
+                        },
+                        easing: this.options.easing,
+                        duration: this.options.duration,
+                        display: 'auto',
+                        complete: function() {
+                            $content
+                                .height(plugin.$title ? plugin.$pinny.height() - plugin.$title.height() - magicNumber : plugin.$pinny.height());
+
+                            $(document).off('touchmove', plugin.blockScroll);
+                        }
+                    }
+                );
+        },
+        close: function() {
+            var plugin = this;
+
+            this.$pinny
+                .velocity(
+                    'reverse',
+                    {
+                        begin: function() {
+                            $(document).on('touchmove', plugin.blockScroll);
+
+                            $('html')
+                                .css('overflow', '');
+                        },
+                        easing: this.options.easing,
+                        duration: this.options.duration,
+                        display: 'none',
+                        complete: function() {
+                            $(document).off('touchmove', plugin.blockScroll);
+                        }
+                    }
+                );
+        }
     };
 }));

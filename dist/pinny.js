@@ -28,11 +28,6 @@
 
     var OPENED_CLASS = 'pinny--is-open';
 
-
-    var blockScroll = function(event) {
-        event.preventDefault();
-    }
-
     function Pinny(element, options) {
         this._init(element, options);
     }
@@ -40,8 +35,9 @@
     Pinny.VERSION = '1.0.0';
 
     Pinny.DEFAULTS = {
-        position: function() {
-            throw 'You must specify a position function that instructs Pinny how to open.';
+        position: {
+            open: noop,
+            close: noop
         },
         title: 'Pinny',
         open: noop,
@@ -77,7 +73,7 @@
                 .prependTo(this.$pinny);
 
             $('<button />')
-                .html('&times')
+                .html('Close')
                 .addClass('pinny__close')
                 .appendTo(this.$title)
                 .on('click', function(e) {
@@ -136,68 +132,20 @@
         this.$pinny.removeClass(OPENED_CLASS);
         this._trigger('closed');
 
-        this.$pinny
-            .velocity(
-                'reverse',
-                {
-                    begin: function() {
-                        $(document).on('touchmove', blockScroll);
-
-                        $('html')
-                            .css('overflow', '');
-                    },
-                    easing: this.options.easing,
-                    duration: this.options.duration,
-                    display: 'none',
-                    complete: function() {
-                        $(document).off('touchmove', blockScroll);
-                    }
-                }
-            );
+        this._close();
     };
 
     Pinny.prototype._open = function() {
-        // Why is this needed? @WARN! @TODO!
-        var magicNumber = 40;
-
-        $item = this.$pinny;
-        $content = this.$content;
-        $title = this.$title;
-
-        this.position(this.$pinny);
-
-        this.$pinny
-            // Forcefeed the initial value
-            .velocity({ translateY: ['100%', '100%'] }, 0)
-            .velocity(
-                {
-                    translateY: 0
-                },
-                {
-                    begin: function() {
-                        $('html')
-                            .css('overflow', 'hidden');
-                    },
-                    easing: this.options.easing,
-                    duration: this.options.duration,
-                    display: 'block',
-                    complete: function() {
-                        $content
-                            .height($title ? $item.height() - $title.height() - magicNumber : $item.height());
-
-                        $(document).off('touchmove', blockScroll);
-                    }
-                }
-            );
+        this.position.open.call(this);
+        this.$pinny.addClass(OPENED_CLASS);
     };
 
-    /*
-     Gets an element's height using Velocity's built-in property cache.
-     Used for getting heights before animations, for animating into an
-     element's space.
-     */
-    Pinny.prototype._getHeight = function($element) {
-        return parseFloat($.Velocity.CSS.getPropertyValue($element[0], 'height'));
+    Pinny.prototype._close = function() {
+        this.position.close.call(this);
+    };
+
+    Pinny.prototype._blockScroll = function(event) {
+        event.preventDefault();
     };
 
     $.fn.pinny = function(option) {
