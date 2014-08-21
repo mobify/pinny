@@ -1,5 +1,5 @@
 .pinny,
-.pinny__title,
+.pinny__header,
 .pinny__content {
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
@@ -15,5 +15,5 @@
   overflow: auto;
   -webkit-overflow-scrolling: touch; }
 
-.pinny__intent {
-  display: none; }
+.pinny__hidden {
+  display: none !important; }

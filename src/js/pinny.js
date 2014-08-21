@@ -37,7 +37,7 @@
             open: noop,
             close: noop
         },
-        title: 'Pinny',
+        header: 'Pinny',
         open: noop,
         opened: noop,
         close: noop,
@@ -64,16 +64,16 @@
                 height: this.options.coverage
             });
 
-        if (this.options.title) {
-            this.$title = $('<div />')
-                .addClass('pinny__title')
-                .html(this.options.title)
+        if (this.options.header) {
+            this.$header = $('<div />')
+                .addClass('pinny__header')
+                .html(this.options.header)
                 .prependTo(this.$pinny);
 
             $('<button />')
                 .html('Close')
                 .addClass('pinny__close')
-                .appendTo(this.$title)
+                .appendTo(this.$header)
                 .on('click', function(e) {
                     e.preventDefault();
                     plugin.close();
@@ -84,7 +84,9 @@
             .addClass('pinny__content')
             .appendTo(this.$pinny);
 
-        $(element).appendTo(this.$content).show();
+        $(element)
+            .appendTo(this.$content)
+            .removeClass('pinny__hidden');
 
         bouncefix.add('pinny__content');
 
@@ -145,6 +147,14 @@
     Pinny.prototype._blockScroll = function(event) {
         event.preventDefault();
     };
+
+    Pinny.prototype._setContentHeight = function() {
+        this.$content
+            .height(
+                this.$header ?
+                this.$pinny.height() - this.$header[0].scrollHeight : this.$pinny.height()
+            );
+    }
 
     $.fn.pinny = function(option) {
         var args = Array.prototype.slice.call(arguments);
