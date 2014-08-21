@@ -6,14 +6,12 @@
         /*
             In AMD environments, you will need to define an alias
             to your selector engine. i.e. either zepto or jQuery.
-            Additionally, you will need to alias velocity and
-            zappy.
+            Additionally, you will need to alias velocity
          */
         define([
             'bouncefix',
             'selectorEngine',
             'velocity',
-            'zappy',
             'shade'
         ], factory);
     } else {
@@ -35,16 +33,19 @@
     Pinny.VERSION = '1.0.0';
 
     Pinny.DEFAULTS = {
-        position: function() {
-            throw 'You must specify a position function that instructs Pinny how to open.';
+        position: {
+            open: noop,
+            close: noop
         },
-        title: 'Pinny',
+        header: 'Pinny',
         open: noop,
         opened: noop,
         close: noop,
         closed: noop,
         zIndex: 2,
-        coverage: '90%'
+        coverage: '90%',
+        easing: 'swing',
+        duration: 150
     };
 
     Pinny.prototype._init = function(element, options) {
@@ -57,23 +58,24 @@
             .appendTo($body)
             .addClass('pinny')
             .css({
-                position: 'absolute',
+                position: 'fixed',
                 zIndex: this.options.zIndex,
                 width: this.options.coverage,
                 height: this.options.coverage
             });
 
-        if (this.options.title) {
-            this.$title = $('<div />')
-                .addClass('pinny__title')
-                .text(this.options.title)
+        if (this.options.header) {
+            this.$header = $('<div />')
+                .addClass('pinny__header')
+                .html(this.options.header)
                 .prependTo(this.$pinny);
 
-            $('<a href="#" />')
-                .html('&times')
+            $('<button />')
+                .html('Close')
                 .addClass('pinny__close')
-                .appendTo(this.$title)
-                .on('click', function() {
+                .appendTo(this.$header)
+                .on('click', function(e) {
+                    e.preventDefault();
                     plugin.close();
                 });
         }
@@ -82,13 +84,22 @@
             .addClass('pinny__content')
             .appendTo(this.$pinny);
 
-        $(element).appendTo(this.$content).show();
+        $(element)
+            .appendTo(this.$content)
+            .removeClass('pinny__hidden');
 
         bouncefix.add('pinny__content');
 
         this.$shade = $body.shade({
             click: function() {
                 plugin.close();
+            }
+        });
+
+        // Block scrolling on anything but pinny content
+        this.$pinny.on( 'touchmove', function( ev ) {
+            if (!$(ev.target).parents().hasClass( 'pinny__content' )) {
+                ev.preventDefault();
             }
         });
 
@@ -118,20 +129,32 @@
     Pinny.prototype.close = function() {
         this._trigger('close');
         this.$shade.shade('close');
-        this.$pinny.hide().removeClass(OPENED_CLASS);
+        this.$pinny.removeClass(OPENED_CLASS);
         this._trigger('closed');
+
+        this._close();
     };
 
     Pinny.prototype._open = function() {
-        this.$pinny
-            .show()
-            .addClass(OPENED_CLASS);
-
-        this.position(this.$pinny);
-
-        this.$content
-            .height(this.$title ? this.$pinny.height() - this.$title.height() : this.$pinny.height());
+        this.position.open.call(this);
+        this.$pinny.addClass(OPENED_CLASS);
     };
+
+    Pinny.prototype._close = function() {
+        this.position.close.call(this);
+    };
+
+    Pinny.prototype._blockScroll = function(event) {
+        event.preventDefault();
+    };
+
+    Pinny.prototype._setContentHeight = function() {
+        this.$content
+            .height(
+                this.$header ?
+                this.$pinny.height() - this.$header[0].scrollHeight : this.$pinny.height()
+            );
+    }
 
     $.fn.pinny = function(option) {
         var args = Array.prototype.slice.call(arguments);

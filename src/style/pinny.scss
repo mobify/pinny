@@ -1,12 +1,24 @@
+.pinny,
+.pinny__header,
+.pinny__content {
+    box-sizing: border-box;
+}
+
 .pinny {
+    position: fixed;
+
     display: none;
-    background-color: #fff;
+    overflow: hidden;
+
+    background: white;
 }
 
 .pinny__content {
     overflow: auto;
 
-    padding: 10px;
-
     -webkit-overflow-scrolling: touch;
+}
+
+.pinny__hidden {
+    display: none !important;
 }

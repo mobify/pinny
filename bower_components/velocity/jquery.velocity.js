@@ -1,37 +1,37 @@
-/***************
-    Details
-***************/
-
-/*!
-* Velocity.js: Accelerated JavaScript animation.
-* @version 0.9.0
-* @docs http://velocityjs.org
-* @license Copyright 2014 Julian Shapiro. MIT License: http://en.wikipedia.org/wiki/MIT_License
-*/
-
-/****************
-     Summary
-****************/
-
-/*
-Velocity's structure:
-- CSS Stack: Works independently from the rest of Velocity.
-- Velocity.animate(): Core method that iterates over the targeted elements and queues the incoming call onto each element individually. Consists of:
-  - Pre-Queueing: Prepare the element for animation by instantiating its data cache and processing the call's options.
-  - Queueing: The logic that runs once the call has reached its point of execution in the element's $.queue() stack.
-              Most logic is placed here to avoid risking it becoming stale (if the element's properties have changed).
-  - Pushing: Consolidation of the tween data followed by its push onto the global in-progress calls container.
-- tick(): The single requestAnimationFrame loop responsible for tweening all in-progress calls.
-- completeCall(): Handles the cleanup process for each Velocity call.
-*/
-
-/* NOTICE: Despite the ensuing code indicating that Velocity works *without* jQuery and *with* Zepto, this support has not yet landed. */
-
 /******************
     Velocity.js
 ******************/
 
-;(function (global, window, document, undefined) {
+/*! VelocityJS.org (0.11.7). (C) 2014 Julian Shapiro. MIT @license: en.wikipedia.org/wiki/MIT_License */
+
+;(function (factory) {    
+    /* CommonJS module. */
+    if (typeof module === "object" && typeof module.exports === "object") {
+        module.exports = factory(window.Velocity ? window.jQuery : require("jquery"));
+    /* AMD module. */
+    } else if (typeof define === "function" && define.amd) {        
+        if (window.Velocity) {
+            define("velocity", factory);
+        } else {
+            define("velocity", [ "jquery" ], factory)
+        }
+    /* Browser globals. */
+    } else {        
+        factory(window.jQuery);
+    }
+}(function (jQuery) {
+return function (global, window, document, undefined) {
+    /*
+    Structure:
+    - CSS: CSS stack that works independently from the rest of Velocity.
+    - animate(): Core animation method that iterates over the targeted elements and queues the incoming call onto each element individually.
+      - Pre-Queueing: Prepare the element for animation by instantiating its data cache and processing the call's options.
+      - Queueing: The logic that runs once the call has reached its point of execution in the element's $.queue() stack.
+                  Most logic is placed here to avoid risking it becoming stale (if the element's properties have changed).
+      - Pushing: Consolidation of the tween data followed by its push onto the global in-progress calls container.
+    - tick(): The single requestAnimationFrame loop responsible for tweening all in-progress calls.
+    - completeCall(): Handles the cleanup process for each Velocity call.
+    */
 
     /*****************
         Constants
@@ -83,7 +83,7 @@ Velocity's structure:
         };
     })();
 
-    var rAF = window.requestAnimationFrame || rAFPollyfill;
+    var ticker = window.requestAnimationFrame || rAFPollyfill;
 
     /* Array compacting. Copyright Lo-Dash. MIT License: https://github.com/lodash/lodash/blob/master/LICENSE.txt */
     function compactSparseArray (array) {
@@ -100,6 +100,11 @@ Velocity's structure:
         }
 
         return result;
+    }
+
+    /* Wrap single elements in an array so that $.each() can iterate with the element instead of its node's children. */
+    function createElementsArray (elements) {
+        return Type.isNode(elements) ? [ elements ] : elements;
     }
 
     var Type = {
@@ -134,6 +139,16 @@ Velocity's structure:
 
         isSVG: function (variable) {
             return window.SVGElement && (variable instanceof SVGElement);
+        },
+
+        isEmptyObject: function (variable) {
+            var name;
+
+            for (name in variable) {
+                return false;
+            }
+
+            return true;
         }
     };
 
@@ -141,32 +156,37 @@ Velocity's structure:
        Dependencies
     *****************/
 
-    /* Local to our Velocity scope, assign $ to our jQuery shim if jQuery itself isn't loaded.
-       (The shim is a port of the jQuery utility functions that Velocity uses.) */
-    /* Note: We can't default to Zepto since the shimless version of Velocity does not work with Zepto,
-       which is missing several utility functions that Velocity requires. */
-    var $ = window.jQuery || (global.Velocity && global.Velocity.Utilities);
+    /* Local to our Velocity scope, assign $ to jQuery or the jQuery shim. (The shim is a port of the jQuery utility functions that Velocity uses.) */
+    var $;    
+
+    /* The argument passed in by the module loader can either be jQuery (if it was required) or a helper function provided by the module loader
+       (in the case that Velocity's jQuery shim is being used). We check for jQuery by sniffing its unique .fn property. */
+    if (jQuery && jQuery.fn !== undefined) {
+        $ = jQuery;
+    } else if (window.Velocity && window.Velocity.Utilities) {
+        $ = window.Velocity.Utilities;
+    }
 
     if (!$) {
         throw new Error("Velocity: Either jQuery or Velocity's jQuery shim must first be loaded.")
     /* We allow the global Velocity variable to pre-exist so long as we were responsible for its creation
       (via the jQuery shim, which uniquely assigns a Utilities property to the Velocity object). */
-    } else if (global.Velocity !== undefined && !global.Velocity.Utilities) {
+    } else if (global.Velocity !== undefined && global.Velocity.Utilities == undefined) {
         throw new Error("Velocity: Namespace is occupied.");
     /* Nothing prevents Velocity from working on IE6+7, but it is not worth the time to test on them.
        Revert to jQuery's $.animate(), and lose Velocity's extra features. */
     } else if (IE <= 7) {
-        if (!window.jQuery) {
-            throw new Error("Velocity: For IE<=7, Velocity falls back to jQuery, which must first be loaded.");
+        if (!jQuery) {
+            throw new Error("Velocity: In IE<=7, Velocity falls back to jQuery, which must first be loaded.");
         } else {
-            window.jQuery.fn.velocity = window.jQuery.fn.animate;
+            jQuery.fn.velocity = jQuery.fn.animate;
 
             /* Now that $.fn.velocity is aliased, abort this Velocity declaration. */
             return;
         }
     /* IE8 doesn't work with the jQuery shim; it requires jQuery proper. */
-    } else if (IE === 8 && !window.jQuery) {
-        throw new Error("Velocity: For IE8, Velocity requires jQuery to be loaded. (Velocity's jQuery shim does not work with IE8.)");
+    } else if (IE === 8 && !jQuery) {
+        throw new Error("Velocity: In IE8, Velocity requires jQuery proper to be loaded; Velocity's jQuery shim does not work with IE8.");
     }
 
     /* Shorthand alias for jQuery's $.data() utility. */
@@ -182,13 +202,9 @@ Velocity's structure:
         State
     *************/
 
-    /* Velocity registers itself onto a global container (window.jQuery || window.Zepto || window) so that that
-       certain features are accessible beyond just a per-element scope. This master object contains an .animate() method,
-       which is later assigned to $.fn (if jQuery or Zepto are present). Accordingly, Velocity can both act on wrapped
-       DOM elements and stand alone for targeting raw DOM elements. */
     /* Note: The global object also doubles as a publicly-accessible data store for the purposes of unit testing. */
     /* Note: Alias the lowercase and uppercase variants of "velocity" to minimize user confusion due to the lowercase nature of the $.fn extension. */
-    var Velocity = global.Velocity = global.velocity = {
+    var Velocity = {
         /* Container for page-wide Velocity state data. */
         State: {
             /* Detect mobile devices to determine if mobileHA should be turned on. */
@@ -215,7 +231,7 @@ Velocity's structure:
         /* Velocity's custom CSS stack. Made global for unit testing. */
         CSS: { /* Defined below. */ },
         /* Defined by Velocity's optional jQuery shim. */
-        Utilities: window.jQuery,
+        Utilities: $,
         /* Container for the user's custom animation sequences that are referenced by name in place of a properties map object. */
         Sequences: {
             /* Manually registered by the user. Learn more: VelocityJS.org/#sequences */
@@ -240,11 +256,69 @@ Velocity's structure:
             /* Set to false to prevent property values from being cached between consecutive Velocity-initiated chain calls. */
             _cacheValues: true
         },
-        /* Velocity's core animation method, subsequently aliased to $.fn. */
-        animate: function () { /* Defined below. */ },
+        /* A design goal of Velocity is to cache data wherever possible in order to avoid DOM requerying.
+           Accordingly, each element has a data cache instantiated on it. */
+        init: function (element) {
+            $.data(element, NAME, {
+                /* Store whether this is an SVG element, since its properties are retrieved and updated differently than standard HTML elements. */
+                isSVG: Type.isSVG(element),
+                /* Keep track of whether the element is currently being animated by Velocity.
+                   This is used to ensure that property values are not transferred between non-consecutive (stale) calls. */
+                isAnimating: false,
+                /* A reference to the element's live computedStyle object. Learn more here: https://developer.mozilla.org/en/docs/Web/API/window.getComputedStyle */
+                computedStyle: null,
+                /* Tween data is cached for each animation on the element so that data can be passed across calls --
+                   in particular, end values are used as subsequent start values in consecutive Velocity calls. */
+                tweensContainer: null,
+                /* The full root property values of each CSS hook being animated on this element are cached so that:
+                   1) Concurrently-animating hooks sharing the same root can have their root values' merged into one while tweening.
+                   2) Post-hook-injection root values can be transferred over to consecutively chained Velocity calls as starting root values. */
+                rootPropertyValueCache: {},
+                /* A cache for transform updates, which must be manually flushed via CSS.flushTransformCache(). */
+                transformCache: {}
+            });
+        },
+        /* Velocity's core animation method, later aliased to $.fn if a framework (jQuery or Zepto) is detected. */
+        animate: null, /* Defined below. */
+        /* A reimplementation of jQuery's $.css(), used for getting/setting Velocity's hooked CSS properties. */
+        hook: function (elements, arg2, arg3) {
+            var value = undefined;
+
+            /* Unwrap jQuery/Zepto objects. */
+            if (Type.isWrapped(elements)) {
+                elements = [].slice.call(elements);
+            }
+
+            $.each(createElementsArray(elements), function(i, element) {
+                /* Initialize Velocity's per-element data cache if this element hasn't previously been animated. */
+                if (Data(element) === undefined) {
+                    Velocity.init(element);
+                }
+
+                /* Get property value. If an element set was passed in, only return the value for the first element. */
+                if (arg3 === undefined) {
+                    if (value === undefined) {
+                        value = Velocity.CSS.getPropertyValue(element, arg2);
+                    }
+                /* Set property value. */
+                } else {
+                    /* sPV returns an array of the normalized propertyName/propertyValue pair used to update the DOM. */
+                    var adjustedSet = Velocity.CSS.setPropertyValue(element, arg2, arg3);
+
+                    /* Transform properties don't automatically set. They have to be flushed to the DOM. */
+                    if (adjustedSet[0] === "transform") {
+                        Velocity.CSS.flushTransformCache(element);
+                    }
+
+                    value = adjustedSet;
+                }
+            });
+
+            return value;
+        },
         /* Set to true to force a duration of 1ms for all animations so that UI testing can be performed without waiting on animations to complete. */
         mock: false,
-        version: { major: 0, minor: 9, patch: 0 },
+        version: { major: 0, minor: 11, patch: 7 },
         /* Set to 1 or 2 (most verbose) to output debug info to console. */
         debug: false
     };
@@ -258,31 +332,6 @@ Velocity's structure:
         Velocity.State.scrollAnchor = document.documentElement || document.body.parentNode || document.body;
         Velocity.State.scrollPropertyLeft = "scrollLeft";
         Velocity.State.scrollPropertyTop = "scrollTop";
-    }
-
-    /**************
-        Timing
-    **************/
-
-    /* Inactive browser tabs pause rAF, which results in all active animations immediately sprinting to their completion states when the tab refocuses.
-       To get around this, we dynamically switch rAF to setTimeout (which the browser *doesn't* pause) when the tab loses focus. We skip this for mobile
-       devices to avoid wasting battery power on inactive tabs. */
-    /* Note: Tab focus detection doesn't work on older versions of IE, but that's okay since they don't support rAF to begin with. */
-    if (!Velocity.State.isMobile && document.hidden !== undefined) {
-        document.addEventListener("visibilitychange", function() {
-            /* Reassign the rAF function (which the global tick() function uses) based on the tab's focus state. */
-            if (document.hidden) {
-                rAF = function(callback) { 
-                    /* The tick function needs a truthy first argument to pass its internal timestamp check. */
-                    return setTimeout(function() { callback(true) }, 16);
-                };
-
-                /* The rAF loop has been paused by the browser, so we manually restart the tick. */
-                tick();
-            } else {
-                rAF = window.requestAnimationFrame || rAFPollyfill;
-            }
-        });
     }
 
     /**************
@@ -879,7 +928,7 @@ Velocity's structure:
                                 /* Transform values are cached onto a per-element transformCache object. */
                                 case "extract":
                                     /* If this transform has yet to be assigned a value, return its null value. */
-                                    if (Data(element).transformCache[transformName] === undefined) {
+                                    if (Data(element) === undefined || Data(element).transformCache[transformName] === undefined) {
                                         /* Scale CSS.Lists.transformsBase default to 1 whereas all other transform properties default to 0. */
                                         return /^scale/i.test(transformName) ? 1 : 0;
                                     /* When transform values are set, they are wrapped in parentheses as per the CSS spec.
@@ -1497,11 +1546,11 @@ Velocity's structure:
     CSS.Hooks.register();
     CSS.Normalizations.register();
 
-    /**********************
-       Velocity.animate
-    **********************/
+    /*****************
+        Animation
+    *****************/
 
-    Velocity.animate = function() {
+    var animate = function() {
 
         /******************
             Call Chain
@@ -1529,7 +1578,7 @@ Velocity's structure:
         var syntacticSugar = (arguments[0] && (($.isPlainObject(arguments[0].properties) && !arguments[0].properties.names) || Type.isString(arguments[0].properties))),
             /* Whether Velocity was called via the utility function (as opposed to on a jQuery/Zepto object). */
             isUtility,
-            /* When Velocity is called via the utility function ($.Velocity.animate()/Velocity.animate()), elements are explicitly
+            /* When Velocity is called via the utility function ($.Velocity()/Velocity()), elements are explicitly
                passed in as the first parameter. Thus, argument positioning varies. We normalize them here. */
             elementsWrapped,
             argumentIndex;
@@ -1606,13 +1655,13 @@ Velocity's structure:
             Promises
         ***************/
 
-        var promiseData = { 
+        var promiseData = {
                 promise: null,
                 resolver: null,
                 rejecter: null
             };
 
-        /* If this call was made via the utility function (which is the default method of invocation when jQuery/Zepto are not being used), and if 
+        /* If this call was made via the utility function (which is the default method of invocation when jQuery/Zepto are not being used), and if
            promise support was detected, create a promise object for this call and store references to its resolver and rejecter methods. The resolve
            method is used when a call completes naturally or is prematurely stopped by the user. In both cases, completeCall() handles the associated
            call cleanup and promise resolving logic. The reject method is used when an invalid set of arguments is passed into a Velocity call. */
@@ -1650,7 +1699,7 @@ Velocity's structure:
                 *******************/
 
                 /* Clear the currently-active delay on each targeted element. */
-                $.each(Type.isNode(elements) ? [ elements ] : elements, function(i, element) {
+                $.each(createElementsArray(elements), function(i, element) {
                     if (Data(element) && Data(element).delayTimer) {
                         /* Stop the timer from triggering its cached next() function. */
                         clearTimeout(Data(element).delayTimer.setTimeout);
@@ -1676,10 +1725,10 @@ Velocity's structure:
                    regardless of the element's current queue state. */
                 $.each(Velocity.State.calls, function(i, activeCall) {
                     /* Inactive calls are set to false by the logic inside completeCall(). Skip them. */
-                    if (activeCall !== false) {
+                    if (activeCall) {
                         /* If we're operating on a single element, wrap it in an array so that $.each() can iterate over it. */
-                        $.each(Type.isNode(activeCall[1]) ? [ activeCall[1] ] : activeCall[1], function(k, activeElement) {
-                            $.each(Type.isNode(elements) ? [ elements ] : elements, function(l, element) {
+                        $.each(createElementsArray(activeCall[1]), function(k, activeElement) {
+                            $.each(createElementsArray(elements), function(l, element) {
                                 /* Check that this call was applied to the target element. */
                                 if (element === activeElement) {
                                     if (Data(element)) {
@@ -1697,7 +1746,7 @@ Velocity's structure:
 
                                         /* Iterate through the items in the element's queue. */
                                         $.each($.queue(element, queueName), function(i, item) {
-                                            /* The queue array can contain an "inprogress" sentinal, which we skip. */
+                                            /* The queue array can contain an "inprogress" string, which we skip. */
                                             if (Type.isFunction(item)) {
                                                 /* Pass the item's callback a flag indicating that we want to abort from the queue call.
                                                    (Specifically, the queue will resolve the call's associated promise then abort.)  */
@@ -1732,7 +1781,7 @@ Velocity's structure:
 
             default:
                 /* Treat a non-empty plain object as a literal properties map. */
-                if ($.isPlainObject(propertiesMap) && !$.isEmptyObject(propertiesMap)) {
+                if ($.isPlainObject(propertiesMap) && !Type.isEmptyObject(propertiesMap)) {
                     action = "start";
 
                 /****************
@@ -1746,11 +1795,11 @@ Velocity's structure:
 
                     /* If the backwards option was passed in, reverse the element set so that elements animate from the last to the first. */
                     if (options.backwards === true) {
-                        elements = (elements.jquery ? [].slice.call(elements) : elements).reverse();
+                        elements = (Type.isWrapped(elements) ? [].slice.call(elements) : elements).reverse();
                     }
 
                     /* Individually trigger the sequence for each element in the set to prevent users from having to handle iteration logic in their sequence. */
-                    $.each(elements, function(elementIndex, element) {
+                    $.each(createElementsArray(elements), function(elementIndex, element) {
                         /* If the stagger option was passed in, successively delay each element by the stagger value (in ms). Retain the original delay value. */
                         if (parseFloat(options.stagger)) {
                             options.delay = delayOriginal + (parseFloat(options.stagger) * elementIndex);
@@ -1796,31 +1845,24 @@ Velocity's structure:
             Call-Wide Variables
         **************************/
 
-        /* A container for CSS unit conversion ratios (e.g. %, rem, and em ==> px) that is used to cache ratios across all properties
+        /* A container for CSS unit conversion ratios (e.g. %, rem, and em ==> px) that is used to cache ratios across all elements
            being animated in a single Velocity call. Calculating unit ratios necessitates DOM querying and updating, and is therefore
-           avoided (via caching) wherever possible; further, ratios are only calculated when they're needed. */
-        /* Note: This container is call-wide instead of page-wide to avoid the risk of using stale conversion metrics across
-           Velocity animations that are not immediately consecutively chained. */
-        var unitConversionRatios = {
-                /* Performance optimization insight: When the parent element, CSS position value, and fontSize do not differ amongst elements,
-                   the elements' unit ratios are identical. */
+           avoided (via caching) wherever possible. This container is call-wide instead of page-wide to avoid the risk of using stale
+           conversion metrics across Velocity animations that are not immediately consecutively chained. */
+        var callUnitConversionData = {
                 lastParent: null,
                 lastPosition: null,
                 lastFontSize: null,
-                /* Percent is the only unit types whose ratio is dependant upon axis. */
                 lastPercentToPxWidth: null,
                 lastPercentToPxHeight: null,
                 lastEmToPx: null,
-                /* The rem==>px ratio is relative to the document's fontSize -- not any property belonging to the element.
-                   Thus, it is automatically call-wide cached whenever the rem unit is being animated. */
                 remToPx: null,
-                /* Similarly, viewport units are relative to the window's current dimensions. */
                 vwToPx: null,
                 vhToPx: null
             };
 
-        /* A container for all the ensuing tween data and metadata associated with this call.
-           This container gets pushed to the page-wide Velocity.State.calls array that is processed during animation ticking. */
+        /* A container for all the ensuing tween data and metadata associated with this call. This container gets pushed to the page-wide
+           Velocity.State.calls array that is processed during animation ticking. */
         var call = [];
 
         /************************
@@ -1848,33 +1890,15 @@ Velocity's structure:
                 opts = $.extend({}, Velocity.defaults, options),
                 /* A container for the processed data associated with each property in the propertyMap.
                    (Each property in the map produces its own "tween".) */
-                tweensContainer = {};
+                tweensContainer = {},
+                elementUnitConversionData;
 
             /******************
-                Data Cache
+               Element Init
             ******************/
-
-            /* A primary design goal of Velocity is to cache data wherever possible in order to avoid DOM requerying.
-               Accordingly, each element has a data cache instantiated on it. */
+            
             if (Data(element) === undefined) {
-                $.data(element, NAME, {
-                    /* Store whether this is an SVG element, since its properties are retrieved and updated differently than standard HTML elements. */
-                    isSVG: Type.isSVG(element),
-                    /* Keep track of whether the element is currently being animated by Velocity.
-                       This is used to ensure that property values are not transferred between non-consecutive (stale) calls. */
-                    isAnimating: false,
-                    /* A reference to the element's live computedStyle object. Learn more here: https://developer.mozilla.org/en/docs/Web/API/window.getComputedStyle */
-                    computedStyle: null,
-                    /* Tween data is cached for each animation on the element so that data can be passed across calls --
-                       in particular, end values are used as subsequent start values in consecutive Velocity calls. */
-                    tweensContainer: null,
-                    /* The full root property values of each CSS hook being animated on this element are cached so that:
-                       1) Concurrently-animating hooks sharing the same root can have their root values' merged into one while tweening.
-                       2) Post-hook-injection root values can be transferred over to consecutively chained Velocity calls as starting root values. */
-                    rootPropertyValueCache: {},
-                    /* A cache for transform updates, which must be manually flushed via CSS.flushTransformCache(). */
-                    transformCache: {}
-                });
+                Velocity.init(element);
             }
 
             /******************
@@ -1889,9 +1913,9 @@ Velocity's structure:
                     /* This is a flag used to indicate to the upcoming completeCall() function that this queue entry was initiated by Velocity. See completeCall() for further details. */
                     Velocity.velocityQueueEntryFlag = true;
 
-                    /* The ensuing queue item (which is assigned to the "next" argument that $.queue() automatically passes in) will be triggered after a setTimeout delay. 
+                    /* The ensuing queue item (which is assigned to the "next" argument that $.queue() automatically passes in) will be triggered after a setTimeout delay.
                        The setTimeout is stored so that it can be subjected to clearTimeout() if this animation is prematurely stopped via Velocity's "stop" command. */
-                    Data(element).delayTimer = { 
+                    Data(element).delayTimer = {
                         setTimeout: setTimeout(next, parseFloat(opts.delay)),
                         next: next
                     };
@@ -1996,7 +2020,7 @@ Velocity's structure:
                     /* We throw callbacks in a setTimeout so that thrown errors don't halt the execution of Velocity itself. */
                     try {
                         opts.begin.call(elements, elements);
-                    } catch (error) { 
+                    } catch (error) {
                         setTimeout(function() {
                             throw error;
                         }, 1);
@@ -2020,7 +2044,7 @@ Velocity's structure:
                        as opposed to the browser window itself. This is useful for scrolling toward an element that's inside an overflowing parent element. */
                     if (opts.container) {
                         /* Ensure that either a jQuery object or a raw DOM element was passed in. */
-                        if (opts.container.jquery || Type.isNode(opts.container)) {
+                        if (Type.isWrapped(opts.container) || Type.isNode(opts.container)) {
                             /* Extract the raw DOM element from the jQuery wrapper. */
                             opts.container = opts.container[0] || opts.container;
                             /* Note: Unlike other properties in Velocity, the browser's scroll position is never cached since it so frequently changes
@@ -2141,7 +2165,7 @@ Velocity's structure:
                                 /* Easing is the only option that embeds into the individual tween data (since it can be defined on a per-property basis).
                                    Accordingly, every property's easing value must be updated when an options object is passed in with a reverse call.
                                    The side effect of this extensibility is that all per-property easing values are forcefully reset to the new value. */
-                                if (!$.isEmptyObject(options)) {
+                                if (!Type.isEmptyObject(options)) {
                                     lastTweensContainer[lastTween].easing = opts.easing;
                                 }
 
@@ -2218,7 +2242,9 @@ Velocity's structure:
                         }
 
                         /* Default to the call's easing if a per-property easing type was not defined. */
-                        easing = easing || opts.easing;
+                        if (!skipResolvingEasing) {
+                            easing = easing || opts.easing;
+                        }
 
                         /* If functions were passed in as values, pass the function the current element as its context,
                            plus the element's index and the element set's size as arguments. Then, assign the returned value. */
@@ -2237,27 +2263,29 @@ Velocity's structure:
                     /* Cycle through each property in the map, looking for shorthand color properties (e.g. "color" as opposed to "colorRed"). Inject the corresponding
                        colorRed, colorGreen, and colorBlue RGB component tweens into the propertiesMap (which Velocity understands) and remove the shorthand property. */
                     $.each(propertiesMap, function(property, value) {
-                        /* Parse the value data for each shorthand. */
-                        var valueData = parsePropertyValue(value, true),
-                            endValue = valueData[0],
-                            easing = valueData[1],
-                            startValue = valueData[2];
-
                         /* Find shorthand color properties that have been passed a hex string. */
-                        if (RegExp(CSS.Lists.colors.join("|")).test(property) && CSS.RegEx.isHex.test(endValue)) {
-                            /* Convert the hex strings into their RGB component arrays. */
-                            var colorComponents = [ "Red", "Green", "Blue" ],
-                                endValueRGB = CSS.Values.hexToRgb(endValue),
-                                startValueRGB = startValue ? CSS.Values.hexToRgb(startValue) : undefined;
+                        if (RegExp("^" + CSS.Lists.colors.join("$|^") + "$").test(property)) {
+                            /* Parse the value data for each shorthand. */
+                            var valueData = parsePropertyValue(value, true),
+                                endValue = valueData[0],
+                                easing = valueData[1],
+                                startValue = valueData[2];
 
-                            /* Inject the RGB component tweens into propertiesMap. */
-                            for (var i = 0; i < colorComponents.length; i++) {
-                                propertiesMap[property + colorComponents[i]] = [ endValueRGB[i], easing, startValueRGB ? startValueRGB[i] : startValueRGB ]; 
+                            if (CSS.RegEx.isHex.test(endValue)) {
+                                /* Convert the hex strings into their RGB component arrays. */
+                                var colorComponents = [ "Red", "Green", "Blue" ],
+                                    endValueRGB = CSS.Values.hexToRgb(endValue),
+                                    startValueRGB = startValue ? CSS.Values.hexToRgb(startValue) : undefined;
+
+                                /* Inject the RGB component tweens into propertiesMap. */
+                                for (var i = 0; i < colorComponents.length; i++) {
+                                    propertiesMap[property + colorComponents[i]] = [ endValueRGB[i], easing, startValueRGB ? startValueRGB[i] : startValueRGB ];
+                                }
+
+                                /* Remove the intermediary shorthand property entry now that we've processed it. */
+                                delete propertiesMap[property];
                             }
-
-                            /* Remove the intermediary shorthand property entry now that we've processed it. */
-                            delete propertiesMap[property];
-                        }                        
+                        }
                     });
 
                     /* Create a tween out of each property, and append its associated data to tweensContainer. */
@@ -2391,8 +2419,6 @@ Velocity's structure:
                            Value & Unit Conversion
                         *****************************/
 
-                        var elementUnitRatios;
-
                         /* Custom support for properties that don't actually accept the % unit type, but where pollyfilling is trivial and relatively foolproof. */
                         if (endValueUnitType === "%") {
                             /* A %-value fontSize/lineHeight is relative to the parent's fontSize (as opposed to the parent's dimensions),
@@ -2416,195 +2442,111 @@ Velocity's structure:
                            %, em, or rem is animated toward, startValue must be converted from pixels into the same unit type as endValue in order
                            for value manipulation logic (increment/decrement) to proceed. Further, if the startValue was forcefed or transferred
                            from a previous call, startValue may also not be in pixels. Unit conversion logic therefore consists of two steps:
-                           1) Calculating the ratio of %,/em/rem relative to pixels then 2) Converting startValue into the same unit of measurement as endValue based on these ratios. */
-                        /* Unit conversion ratios are calculated by momentarily setting a value with the target unit type on the element,
-                           comparing the returned pixel value, then reverting to the original value. */
+                           1) Calculating the ratio of %/em/rem/vh/vw relative to pixels
+                           2) Converting startValue into the same unit of measurement as endValue based on these ratios. */
+                        /* Unit conversion ratios are calculated by inserting a sibling node next to the target node, copying over its position property,
+                           setting values with the target unit type then comparing the returned pixel value. */
                         /* Note: Even if only one of these unit types is being animated, all unit ratios are calculated at once since the overhead
                            of batching the SETs and GETs together upfront outweights the potential overhead
-                                 of layout thrashing caused by re-querying for uncalculated ratios for subsequently-processed properties. */
-                        /* Note: Instead of adjusting the CSS properties on the target element, an alternative way of performing value conversion
-                           is to inject a cloned element into the element's parent and manipulate *its* values instead.
-                           This is a cleaner method that avoids the ensuing rounds of layout thrashing, but it's ultimately less performant.
-                           due to the overhead involved with DOM tree modification (element insertion/deletion). */
+                           of layout thrashing caused by re-querying for uncalculated ratios for subsequently-processed properties. */
                         /* Todo: Shift this logic into the calls' first tick instance so that it's synced with RAF. */
-                        /* Todo: Store the original values and skip re-setting if we're animating height or width in the properties map. */
+
                         function calculateUnitRatios () {
-                            /* The properties below are used to determine whether the element differs sufficiently from this same call's
-                               prior element (in the overall element set) to also differ in its unit conversion ratios. If the properties
-                               match up with those of the prior element, the prior element's conversion ratios are used. Like most optimizations
-                               in Velocity, this is done to minimize DOM querying. */
+
+                            /************************
+                                Same Ratio Checks
+                            ************************/
+
+                            /* The properties below are used to determine whether the element differs sufficiently from this call's
+                               previously iterated element to also differ in its unit conversion ratios. If the properties match up with those
+                               of the prior element, the prior element's conversion ratios are used. Like most optimizations in Velocity,
+                               this is done to minimize DOM querying. */
                             var sameRatioIndicators = {
-                                    parent: element.parentNode, /* GET */
+                                    myParent: element.parentNode || document.body, /* GET */
                                     position: CSS.getPropertyValue(element, "position"), /* GET */
                                     fontSize: CSS.getPropertyValue(element, "fontSize") /* GET */
                                 },
-                                /* Determine if the same % ratio can be used. % is relative to the element's position value and the parent's width and height dimensions. */
-                                sameBasePercent = ((sameRatioIndicators.position === unitConversionRatios.lastPosition) && (sameRatioIndicators.parent === unitConversionRatios.lastParent)),
-                                /* Determine if the same em ratio can be used. em is relative to the element's fontSize, which itself is relative to the parent's fontSize. */
-                                sameBaseEm = ((sameRatioIndicators.fontSize === unitConversionRatios.lastFontSize) && (sameRatioIndicators.parent === unitConversionRatios.lastParent));
+                                /* Determine if the same % ratio can be used. % is based on the element's position value and its parent's width and height dimensions. */
+                                samePercentRatio = ((sameRatioIndicators.position === callUnitConversionData.lastPosition) && (sameRatioIndicators.myParent === callUnitConversionData.lastParent)),
+                                /* Determine if the same em ratio can be used. em is relative to the element's fontSize. */
+                                sameEmRatio = (sameRatioIndicators.fontSize === callUnitConversionData.lastFontSize);
 
                             /* Store these ratio indicators call-wide for the next element to compare against. */
-                            unitConversionRatios.lastParent = sameRatioIndicators.parent;
-                            unitConversionRatios.lastPosition = sameRatioIndicators.position;
-                            unitConversionRatios.lastFontSize = sameRatioIndicators.fontSize;
+                            callUnitConversionData.lastParent = sameRatioIndicators.myParent;
+                            callUnitConversionData.lastPosition = sameRatioIndicators.position;
+                            callUnitConversionData.lastFontSize = sameRatioIndicators.fontSize;
 
-                            /* Whereas % and em ratios are determined on a per-element basis, the rem unit type only needs to be checked
-                               once per call since it is exclusively dependant upon document.body's fontSize. If this is the first time
-                               that calculateUnitRatios() is being run during this call, remToPx will still be set to its default value of null, so we calculate it now. */
-                            if (unitConversionRatios.remToPx === null) {
-                                /* Default to most browsers' default fontSize of 16px in the case of 0. */
-                                unitConversionRatios.remToPx = parseFloat(CSS.getPropertyValue(document.body, "fontSize")) || 16; /* GET */
-                            }
+                            /***************************
+                               Element-Specific Units
+                            ***************************/
+                             
+                            /* Note: IE8 rounds to the nearest pixel when returning CSS values, thus we perform conversions using a measurement
+                               of 100 (instead of 1) to give our ratios a precision of at least 2 decimal values. */
+                            var measurement = 100,
+                                unitRatios = {};
 
-                            /* The viewport units are relative to the window's inner dimensions. */
-                            if (unitConversionRatios.vwToPx === null) {
-                                unitConversionRatios.vwToPx = parseFloat(window.innerWidth) / 100; /* GET */
-                                unitConversionRatios.vhToPx = parseFloat(window.innerHeight) / 100; /* GET */
-                            }
+                            if (!sameEmRatio || !samePercentRatio) {
+                                var dummy = Data(element).isSVG ? document.createElementNS("http://www.w3.org/2000/svg", "rect") : document.createElement("div");
+                                Velocity.init(dummy);
+                                sameRatioIndicators.myParent.appendChild(dummy);
 
-                            var originalValues = {
-                                    /* To accurately and consistently calculate conversion ratios, the element's overflow and box-sizing are temporarily removed.
-                                       Both properties modify an element's visible dimensions. */
-                                    /* Note: Overflow must be manipulated on a per-axis basis since the plain overflow property overwrites its subproperties' values. */
-                                    overflowX: null,
-                                    overflowY: null,
-                                    boxSizing: null,
-                                    /* width and height act as our proxy properties for measuring the horizontal and vertical % ratios.
-                                       Since they can be artificially constrained by their min-/max- equivalents, those properties are converted as well. */
-                                    width: null,
-                                    minWidth: null,
-                                    maxWidth: null,
-                                    height: null,
-                                    minHeight: null,
-                                    maxHeight: null,
-                                    /* paddingLeft arbitrarily acts as our proxy for the em ratio. */
-                                    paddingLeft: null
-                                },
-                                elementUnitRatios = {},
-                                /* Note: IE<=8 round to the nearest pixel when returning CSS values, thus we perform conversions using a measurement
-                                   of 10 (instead of 1) to give our ratios a precision of at least 1 decimal value. */
-                                measurement = 10;
+                                Velocity.CSS.setPropertyValue(dummy, "position", sameRatioIndicators.position);
+                                Velocity.CSS.setPropertyValue(dummy, "fontSize", sameRatioIndicators.fontSize);
+                                /* To accurately and consistently calculate conversion ratios, the element's cascaded overflow and box-sizing are stripped.
+                                   Similarly, since width/height can be artificially constrained by their min-/max- equivalents, these are controlled for as well. */
+                                /* Note: Overflow must be also be controlled for per-axis since the overflow property overwrites its per-axis values. */
+                                Velocity.CSS.setPropertyValue(dummy, "overflow", "hidden");
+                                Velocity.CSS.setPropertyValue(dummy, "overflowX", "hidden");
+                                Velocity.CSS.setPropertyValue(dummy, "overflowY", "hidden");
+                                Velocity.CSS.setPropertyValue(dummy, "boxSizing", "content-box");
+                                /* paddingLeft arbitrarily acts as our proxy property for the em ratio. */
+                                Velocity.CSS.setPropertyValue(dummy, "paddingLeft", measurement + "em");
+                                /* width and height act as our proxy properties for measuring the horizontal and vertical % ratios. */
+                                Velocity.CSS.setPropertyValue(dummy, "minWidth", measurement + "%");
+                                Velocity.CSS.setPropertyValue(dummy, "maxWidth", measurement + "%");
+                                Velocity.CSS.setPropertyValue(dummy, "width", measurement + "%");
+                                Velocity.CSS.setPropertyValue(dummy, "minHeight", measurement + "%");
+                                Velocity.CSS.setPropertyValue(dummy, "maxHeight", measurement + "%");
+                                Velocity.CSS.setPropertyValue(dummy, "height", measurement + "%");
 
-                            /* For organizational purposes, current ratio calculations are consolidated onto the elementUnitRatios object. */
-                            elementUnitRatios.remToPx = unitConversionRatios.remToPx;
-                            elementUnitRatios.vwToPx = unitConversionRatios.vwToPx;
-                            elementUnitRatios.vhToPx = unitConversionRatios.vhToPx;
+                                /* Divide the returned value by the measurement to get the ratio between 1% and 1px. Default to 1 since working with 0 can produce Infinite. */
+                                unitRatios.percentToPxWidth = callUnitConversionData.lastPercentToPxWidth = (parseFloat(CSS.getPropertyValue(dummy, "width", null, true)) || 1) / measurement; /* GET */
+                                unitRatios.percentToPxHeight = callUnitConversionData.lastPercentToPxHeight = (parseFloat(CSS.getPropertyValue(dummy, "height", null, true)) || 1) / measurement; /* GET */
+                                unitRatios.emToPx = callUnitConversionData.lastEmToPx = (parseFloat(CSS.getPropertyValue(dummy, "paddingLeft")) || 1) / measurement; /* GET */
 
-                            /* After temporary unit conversion logic runs, width and height properties that were originally set to "auto" must be set back
-                               to "auto" instead of to the actual corresponding pixel value. Leaving the values at their hard-coded pixel value equivalents
-                               would inherently prevent the elements from vertically adjusting as the height of its inner content changes. */
-                            /* IE tells us whether or not the property is set to "auto". Other browsers provide no way of determing "auto" values on height/width,
-                               and thus we have to trigger additional layout thrashing (see below) to solve this. */
-                            if (IE && !Data(element).isSVG) {
-                                var isIEWidthAuto = /^auto$/i.test(element.currentStyle.width),
-                                    isIEHeightAuto = /^auto$/i.test(element.currentStyle.height);
-                            }
-
-                            /* Note: To minimize layout thrashing, the ensuing unit conversion logic is split into batches to synchronize GETs and SETs. */
-                            if (!sameBasePercent || !sameBaseEm) {
-                                /* SVG elements have no concept of document flow, and don't support the full range of CSS properties,
-                                   so we skip the unnecessary stripping of unapplied properties to avoid dirtying their HTML. */
-                                if (!Data(element).isSVG) {
-                                    originalValues.overflowX = CSS.getPropertyValue(element, "overflowX"); /* GET */
-                                    originalValues.overflowY = CSS.getPropertyValue(element, "overflowY"); /* GET */
-                                    originalValues.boxSizing = CSS.getPropertyValue(element, "boxSizing"); /* GET */
-
-                                    /* Since % values are relative to their respective axes, ratios are calculated for both width and height.
-                                       In contrast, only a single ratio is required for rem and em. */
-                                    /* When calculating % values, we set a flag to indiciate that we want the computed value instead of offsetWidth/Height,
-                                       which incorporate additional dimensions (such as padding and border-width) into their values. */
-                                    originalValues.minWidth = CSS.getPropertyValue(element, "minWidth"); /* GET */
-                                    /* Note: max-width/height must default to "none" when 0 is returned, otherwise the element cannot have its width/height set. */
-                                    originalValues.maxWidth = CSS.getPropertyValue(element, "maxWidth") || "none"; /* GET */
-
-                                    originalValues.minHeight = CSS.getPropertyValue(element, "minHeight"); /* GET */
-                                    originalValues.maxHeight = CSS.getPropertyValue(element, "maxHeight") || "none"; /* GET */
-
-                                    originalValues.paddingLeft = CSS.getPropertyValue(element, "paddingLeft"); /* GET */
-                                }
-
-                                originalValues.width = CSS.getPropertyValue(element, "width", null, true); /* GET */
-                                originalValues.height = CSS.getPropertyValue(element, "height", null, true); /* GET */
-                            }
-
-                            if (sameBasePercent) {
-                                elementUnitRatios.percentToPxRatioWidth = unitConversionRatios.lastPercentToPxWidth;
-                                elementUnitRatios.percentToPxRatioHeight = unitConversionRatios.lastPercentToPxHeight;
+                                sameRatioIndicators.myParent.removeChild(dummy);
                             } else {
-                                if (!Data(element).isSVG) {
-                                    CSS.setPropertyValue(element, "overflowX",  "hidden"); /* SET */
-                                    CSS.setPropertyValue(element, "overflowY",  "hidden"); /* SET */
-                                    CSS.setPropertyValue(element, "boxSizing",  "content-box"); /* SET */
-
-                                    CSS.setPropertyValue(element, "minWidth", measurement + "%"); /* SET */
-                                    CSS.setPropertyValue(element, "maxWidth", measurement + "%"); /* SET */
-
-                                    CSS.setPropertyValue(element, "minHeight",  measurement + "%"); /* SET */
-                                    CSS.setPropertyValue(element, "maxHeight",  measurement + "%"); /* SET */
-                                }
-
-                                CSS.setPropertyValue(element, "width", measurement + "%"); /* SET */
-                                CSS.setPropertyValue(element, "height",  measurement + "%"); /* SET */
+                                unitRatios.emToPx = callUnitConversionData.lastEmToPx;
+                                unitRatios.percentToPxWidth = callUnitConversionData.lastPercentToPxWidth;
+                                unitRatios.percentToPxHeight = callUnitConversionData.lastPercentToPxHeight;
                             }
 
-                            if (sameBaseEm) {
-                                elementUnitRatios.emToPx = unitConversionRatios.lastEmToPx;
-                            } else if (!Data(element).isSVG) {
-                                CSS.setPropertyValue(element, "paddingLeft", measurement + "em"); /* SET */
+                            /***************************
+                               Element-Agnostic Units
+                            ***************************/
+
+                            /* Whereas % and em ratios are determined on a per-element basis, the rem unit only needs to be checked
+                               once per call since it's exclusively dependant upon document.body's fontSize. If this is the first time
+                               that calculateUnitRatios() is being run during this call, remToPx will still be set to its default value of null,
+                               so we calculate it now. */
+                            if (callUnitConversionData.remToPx === null) {
+                                /* Default to browsers' default fontSize of 16px in the case of 0. */
+                                callUnitConversionData.remToPx = parseFloat(CSS.getPropertyValue(document.body, "fontSize")) || 16; /* GET */
                             }
 
-                            /* The following pixel-value GETs cannot be batched with the prior GETs since they depend upon the values
-                               temporarily set immediately above; layout thrashing cannot be avoided here. */
-                            if (!sameBasePercent) {
-                                /* Divide the returned value by the measurement value to get the ratio between 1% and 1px.
-                                   Default to 1 since conversion logic using 0 can produce Infinite. */
-                                elementUnitRatios.percentToPxRatioWidth = unitConversionRatios.lastPercentToPxWidth = (parseFloat(CSS.getPropertyValue(element, "width", null, true)) || 1) / measurement; /* GET */
-                                elementUnitRatios.percentToPxRatioHeight = unitConversionRatios.lastPercentToPxHeight = (parseFloat(CSS.getPropertyValue(element, "height", null, true)) || 1) / measurement; /* GET */
+                            /* Similarly, viewport units are %-relative to the window's inner dimensions. */
+                            if (callUnitConversionData.vwToPx === null) {
+                                callUnitConversionData.vwToPx = parseFloat(window.innerWidth) / 100; /* GET */
+                                callUnitConversionData.vhToPx = parseFloat(window.innerHeight) / 100; /* GET */
                             }
 
-                            if (!sameBaseEm) {
-                                elementUnitRatios.emToPx = unitConversionRatios.lastEmToPx = (parseFloat(CSS.getPropertyValue(element, "paddingLeft")) || 1) / measurement; /* GET */
-                            }
+                            unitRatios.remToPx = callUnitConversionData.remToPx;
+                            unitRatios.vwToPx = callUnitConversionData.vwToPx;
+                            unitRatios.vhToPx = callUnitConversionData.vhToPx;
 
-                            /* Revert each used test property to its original value. */
-                            for (var originalValueProperty in originalValues) {
-                                if (originalValues[originalValueProperty] !== null) {
-                                    CSS.setPropertyValue(element, originalValueProperty, originalValues[originalValueProperty]); /* SETs */
-                                }
-                            }
+                            if (Velocity.debug >= 1) console.log("Unit ratios: " + JSON.stringify(unitRatios), element);
 
-                            /* SVG dimensions do not accept an "auto" value, so we skip this reset process for them. */
-                            if (!Data(element).isSVG) {
-                                /* In IE, revert to "auto" for width and height if it was originally set. */
-                                if (IE) {
-                                    if (isIEWidthAuto) {
-                                        CSS.setPropertyValue(element, "width", "auto"); /* SET */
-                                    }
-
-                                    if (isIEHeightAuto) {
-                                        CSS.setPropertyValue(element, "height", "auto"); /* SET */
-                                    }
-                                /* For other browsers, additional layout thrashing must unfortunately be triggered to determine whether a dimension property was originally "auto". */
-                                } else {
-                                    /* Set height to "auto" then compare the returned value against the element's current height value.
-                                       If they're identical, leave height set to "auto". If they're different, then "auto" wasn't originally
-                                       set on the element prior to our conversions, and we revert it to its actual value. */
-                                    /* Note: The following GETs and SETs cannot be batched together due to the cross-effect setting one axis to "auto" has on the other. */
-                                    CSS.setPropertyValue(element, "height", "auto"); /* SET */
-                                    if (originalValues.height !== CSS.getPropertyValue(element, "height", null, true)) { /* GET */
-                                        CSS.setPropertyValue(element, "height", originalValues.height); /* SET */
-                                    }
-
-                                    CSS.setPropertyValue(element, "width", "auto"); /* SET */
-                                    if (originalValues.width !== CSS.getPropertyValue(element, "width", null, true)) { /* GET */
-                                        CSS.setPropertyValue(element, "width", originalValues.width); /* SET */
-                                    }
-                                }
-                            }
-
-                            if (Velocity.debug >= 1) console.log("Unit ratios: " + JSON.stringify(elementUnitRatios), element);
-
-                            return elementUnitRatios;
+                            return unitRatios;
                         }
 
                         /* The * and / operators, which are not passed in with an associated unit, inherently use startValue's unit. Skip value and unit conversion. */
@@ -2625,7 +2567,7 @@ Velocity's structure:
                             } else {
                                 /* By this point, we cannot avoid unit conversion (it's undesirable since it causes layout thrashing).
                                    If we haven't already, we trigger calculateUnitRatios(), which runs once per element per call. */
-                                elementUnitRatios = elementUnitRatios || calculateUnitRatios();
+                                elementUnitConversionData = elementUnitConversionData || calculateUnitRatios();
 
                                 /* The following RegEx matches CSS properties that have their % values measured relative to the x-axis. */
                                 /* Note: W3C spec mandates that all of margin and padding's properties (even top and bottom) are %-relative to the *width* of the parent element. */
@@ -2638,7 +2580,7 @@ Velocity's structure:
                                         /* Note: translateX and translateY are the only properties that are %-relative to an element's own dimensions -- not its parent's dimensions.
                                            Velocity does not include a special conversion process to account for this behavior. Therefore, animating translateX/Y from a % value
                                            to a non-% value will produce an incorrect start value. Fortunately, this sort of cross-unit conversion is rarely done by users in practice. */
-                                        startValue *= (axis === "x" ? elementUnitRatios.percentToPxRatioWidth : elementUnitRatios.percentToPxRatioHeight);
+                                        startValue *= (axis === "x" ? elementUnitConversionData.percentToPxWidth : elementUnitConversionData.percentToPxHeight);
                                         break;
 
                                     case "px":
@@ -2646,13 +2588,13 @@ Velocity's structure:
                                         break;
 
                                     default:
-                                        startValue *= elementUnitRatios[startValueUnitType + "ToPx"];
+                                        startValue *= elementUnitConversionData[startValueUnitType + "ToPx"];
                                 }
 
                                 /* Invert the px ratios to convert into to the target unit. */
                                 switch (endValueUnitType) {
                                     case "%":
-                                        startValue *= 1 / (axis === "x" ? elementUnitRatios.percentToPxRatioWidth : elementUnitRatios.percentToPxRatioHeight);
+                                        startValue *= 1 / (axis === "x" ? elementUnitConversionData.percentToPxWidth : elementUnitConversionData.percentToPxHeight);
                                         break;
 
                                     case "px":
@@ -2660,7 +2602,7 @@ Velocity's structure:
                                         break;
 
                                     default:
-                                        startValue *= 1 / elementUnitRatios[endValueUnitType + "ToPx"];
+                                        startValue *= 1 / elementUnitConversionData[endValueUnitType + "ToPx"];
                                 }
                             }
                         }
@@ -2726,7 +2668,9 @@ Velocity's structure:
                     call.push(tweensContainer);
 
                     /* Store the tweensContainer on the element, plus the current call's opts so that Velocity can reference this data the next time this element is animated. */
-                    Data(element).tweensContainer = tweensContainer;
+                    if (opts.queue !== false) {
+                        Data(element).tweensContainer = tweensContainer;
+                    }
                     Data(element).opts = opts;
                     /* Switch on the element's animating flag. */
                     Data(element).isAnimating = true;
@@ -2781,7 +2725,7 @@ Velocity's structure:
                         /* Do not continue with animation queueing. */
                         return true;
                     }
-                    
+
                     /* This flag indicates to the upcoming completeCall() function that this queue entry was initiated by Velocity.
                        See completeCall() for further details. */
                     Velocity.velocityQueueEntryFlag = true;
@@ -2814,7 +2758,7 @@ Velocity's structure:
 
         /* If the "nodeType" property exists on the elements variable, we're animating a single element.
            Place it in an array so that $.each() can iterate over it. */
-        $.each(Type.isNode(elements) ? [ elements ] : elements, function(i, element) {
+        $.each(createElementsArray(elements), function(i, element) {
             /* Ensure each element in a set has a nodeType (is a real element) to avoid throwing errors. */
             if (Type.isNode(element)) {
                 processElement.call(element);
@@ -2849,11 +2793,13 @@ Velocity's structure:
 
                 /* If a complete callback was passed into this call, transfer it to the loop sequence's final "reverse" call
                    so that it's triggered when the entire sequence is complete (and not when the very first animation is complete). */
-                if (opts.complete && (x === reverseCallsCount - 1)) {
+                if (x === reverseCallsCount - 1) {
+                    reverseOptions.display = opts.display;
+                    reverseOptions.visibility = opts.visibility;
                     reverseOptions.complete = opts.complete;
                 }
 
-                Velocity.animate(elements, "reverse", reverseOptions);
+                Velocity(elements, "reverse", reverseOptions);
             }
         }
 
@@ -2865,9 +2811,39 @@ Velocity's structure:
         return getChain();
     };
 
-    /*****************************
-       Tick (Calls Processing)
-    *****************************/
+    /* Turn Velocity into the animation function, extended with the pre-existing Velocity object. */
+    Velocity = $.extend(animate, Velocity);
+    /* For legacy support, also expose the literal animate method. */
+    Velocity.animate = animate;
+
+    /**************
+        Timing
+    **************/
+
+    /* Inactive browser tabs pause rAF, which results in all active animations immediately sprinting to their completion states when the tab refocuses.
+       To get around this, we dynamically switch rAF to setTimeout (which the browser *doesn't* pause) when the tab loses focus. We skip this for mobile
+       devices to avoid wasting battery power on inactive tabs. */
+    /* Note: Tab focus detection doesn't work on older versions of IE, but that's okay since they don't support rAF to begin with. */
+    if (!Velocity.State.isMobile && document.hidden !== undefined) {
+        document.addEventListener("visibilitychange", function() {
+            /* Reassign the rAF function (which the global tick() function uses) based on the tab's focus state. */
+            if (document.hidden) {
+                ticker = function(callback) {
+                    /* The tick function needs a truthy first argument in order to pass its internal timestamp check. */
+                    return setTimeout(function() { callback(true) }, 16);
+                };
+
+                /* The rAF loop has been paused by the browser, so we manually restart the tick. */
+                tick();
+            } else {
+                ticker = window.requestAnimationFrame || rAFPollyfill;
+            }
+        });
+    }
+
+    /************
+        Tick
+    ************/
 
     /* Note: All calls to Velocity are pushed to the Velocity.State.calls array, which is fully iterated through upon each tick. */
     function tick (timestamp) {
@@ -3084,7 +3060,7 @@ Velocity's structure:
 
         /* Note: completeCall() sets the isTicking flag to false when the last call on Velocity.State.calls has completed. */
         if (Velocity.State.isTicking) {
-            rAF(tick);
+            ticker(tick);
         }
     }
 
@@ -3115,8 +3091,8 @@ Velocity's structure:
             var element = call[i].element;
 
             /* If the user set display to "none" (intending to hide the element), set it now that the animation has completed. */
-            /* Note: display:none isn't set when calls are manually stopped (via Velocity.animate("stop"). */
-            /* Note: Display is ignored with "reverse" calls, which is what loops are composed of, since this behavior would be undesirable. */
+            /* Note: display:none isn't set when calls are manually stopped (via Velocity("stop"). */
+            /* Note: Display gets ignored with "reverse" calls and infinite loops, since this behavior would be undesirable. */
             if (!isStopped && !opts.loop) {
                 if (opts.display === "none") {
                     CSS.setPropertyValue(element, "display", opts.display);
@@ -3140,12 +3116,12 @@ Velocity's structure:
                     Data(element).rootPropertyValueCache = {};
 
                     var transformHAPropertyExists = false;
-                    /* If any transform subproperty is at its default value (regardless of unit type), remove it. This has the
-                       dual benefit of avoiding random browser transform bugs and removing hardware acceleration to free up RAM. */
-                    $.each(Data(element).transformCache, function(transformName, transformValue) {
-                        var defaultValue = /^scale/.test(transformName) ? 1 : 0;
+                    /* If any 3D transform subproperty is at its default value (regardless of unit type), remove it. */
+                    $.each(CSS.Lists.transforms3D, function(i, transformName) {
+                        var defaultValue = /^scale/.test(transformName) ? 1 : 0,
+                            currentValue = Data(element).transformCache[transformName];
 
-                        if (new RegExp("^\\(" + defaultValue + "[^.]").test(transformValue)) {
+                        if (Data(element).transformCache[transformName] !== undefined && new RegExp("^\\(" + defaultValue + "[^.]").test(currentValue)) {
                             transformHAPropertyExists = true;
                             delete Data(element).transformCache[transformName];
                         }
@@ -3172,13 +3148,12 @@ Velocity's structure:
             *********************/
 
             /* Complete is fired once per call (not once per element) and is passed the full raw DOM element set as both its context and its first argument. */
-            /* Note: Callbacks aren't fired when calls are manually stopped (via Velocity.animate("stop"). */
-            /* Note: If this is a loop, complete callback firing is only triggered on the loop's final reverse call. */
+            /* Note: Callbacks aren't fired when calls are manually stopped (via Velocity("stop"). */
             if (!isStopped && opts.complete && !opts.loop && (i === callLength - 1)) {
                 /* We throw callbacks in a setTimeout so that thrown errors don't halt the execution of Velocity itself. */
                 try {
                     opts.complete.call(elements, elements);
-                } catch (error) { 
+                } catch (error) {
                     setTimeout(function() {
                         throw error;
                     }, 1);
@@ -3189,8 +3164,17 @@ Velocity's structure:
                Promise Resolving
             **********************/
 
-            if (resolver) {
+            /* Note: Infinite loops don't return promises. */
+            if (resolver && opts.loop !== true) {
                 resolver(elements);
+            }
+
+            /****************************
+               Option: Loop (Infinite)
+            ****************************/
+
+            if (opts.loop === true && !isStopped) {
+                Velocity(element, "reverse", { loop: true, delay: opts.delay });
             }
 
             /***************
@@ -3233,27 +3217,30 @@ Velocity's structure:
         }
     }
 
-    /*******************
-        Installation
-    *******************/
+    /******************
+        Frameworks
+    ******************/
 
     /* Both jQuery and Zepto allow their $.fn object to be extended to allow wrapped elements to be subjected to plugin calls.
        If either framework is loaded, register a "velocity" extension pointing to Velocity's core animate() method. */
-    var framework = window.jQuery || window.Zepto;
+    var framework;
 
-    if (framework) {
-        /* Assign the object function to Velocity's animate() method. */
-        framework.fn.velocity = Velocity.animate;
-
-        /* Assign the object function's defaults to Velocity's global defaults object. */
-        framework.fn.velocity.defaults = Velocity.defaults;
+    if (jQuery && jQuery.fn !== undefined) {
+        framework = jQuery;
+    } else if (window.Zepto) {
+        framework = window.Zepto;
     }
 
-    /* Support for AMD and CommonJS module loaders. */
-    if (typeof define !== "undefined" && define.amd) {
-        define(function() { return Velocity; });
-    } else if (typeof module !== "undefined" && module.exports) {
-        module.exports = Velocity;
+    /* Velocity registers itself onto a global container (window.jQuery || window.Zepto || window) so that certain features are
+       accessible beyond just a per-element scope. This master object contains an .animate() method, which is later assigned to $.fn
+       (if jQuery or Zepto are present). Accordingly, Velocity can both act on wrapped DOM elements and stand alone for targeting raw DOM elements. */
+    (framework || window).Velocity = Velocity;
+
+    if (framework) {
+        /* Assign the element function to Velocity's core animate() method. */
+        framework.fn.velocity = animate;
+        /* Assign the object function's defaults to Velocity's global defaults object. */
+        framework.fn.velocity.defaults = Velocity.defaults;
     }
 
     /***********************
@@ -3262,7 +3249,7 @@ Velocity's structure:
 
     /* slideUp, slideDown */
     $.each([ "Down", "Up" ], function(i, direction) {
-        Velocity.Sequences["slide" + direction] = function (element, options) {
+        Velocity.Sequences["slide" + direction] = function (element, options, elementsIndex, elementsSize, elements, promiseData) {
             var opts = $.extend({}, options),
                 originalValues = {
                     height: null,
@@ -3384,16 +3371,18 @@ Velocity's structure:
                 if (complete) {
                     complete.call(element, element);
                 }
+
+                promiseData && promiseData.resolver(elements || element);
             };
 
             /* Animation triggering. */
-            Velocity.animate(element, originalValues, opts);
+            Velocity(element, originalValues, opts);
         };
     });
 
     /* fadeIn, fadeOut */
     $.each([ "In", "Out" ], function(i, direction) {
-        Velocity.Sequences["fade" + direction] = function (element, options, elementsIndex, elementsSize) {
+        Velocity.Sequences["fade" + direction] = function (element, options, elementsIndex, elementsSize, elements, promiseData) {
             var opts = $.extend({}, options),
                 propertiesMap = {
                     opacity: (direction === "In") ? 1 : 0
@@ -3403,6 +3392,16 @@ Velocity's structure:
                callbacks by firing them only when the final element has been reached. */
             if (elementsIndex !== elementsSize - 1) {
                 opts.complete = opts.begin = null;
+            } else {
+                var originalComplete = opts.complete;
+
+                opts.complete = function() {
+                    if (originalComplete) {
+                        originalComplete.call(element, element);
+                    }
+
+                    promiseData && promiseData.resolver(elements || element);
+                }
             }
 
             /* If a display was passed in, use it. Otherwise, default to "none" for fadeOut or the element-specific default for fadeIn. */
@@ -3411,10 +3410,13 @@ Velocity's structure:
                 opts.display = opts.display || ((direction === "In") ? "auto" : "none");
             }
 
-            Velocity.animate(this, propertiesMap, opts);
+            Velocity(this, propertiesMap, opts);
         };
     });
-})((window.jQuery || window.Zepto || window), window, document);
+
+    return Velocity;
+}((jQuery || window), window, document);
+}));
 
 /******************
    Known Issues

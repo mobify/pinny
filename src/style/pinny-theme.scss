@@ -2,7 +2,7 @@ $title-font-color: #fff;
 $title-background: #3498db;
 
 
-.pinny__title {
+.pinny__header {
     position: relative;
 
     padding: 10px;
@@ -10,18 +10,6 @@ $title-background: #3498db;
     background: $title-background;
 
     color: $title-font-color;
-
-    .pinny__close {
-        position: absolute;
-        right: 10px;
-        top: 4px;
-
-        text-decoration: none;
-
-        font-size: 22px;
-
-        color: $title-font-color;
-    }
 }
 
 .pinny__content {

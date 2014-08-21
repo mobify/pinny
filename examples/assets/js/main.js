@@ -1,16 +1,17 @@
 require(['config'], function() {
     require([
-        'modal-center',
+        'sheet-top',
         'selectorEngine',
         'pinny'
     ],
     function(position, $) {
         // Initialize Pinny
         var $pinny = $('#somePinny').pinny({
-            position: position
+            position: position,
+            coverage: '80%',
         });
 
-        $('#pinnyActivator').on('click', function() {
+        $('.pinnyActivator').on('click', function() {
             $pinny.pinny('toggle');
         });
 
