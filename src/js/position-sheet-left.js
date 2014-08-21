@@ -23,16 +23,17 @@
 
             this.$pinny
                 .css({
+                    top: 0,
                     bottom: 0,
                     left: 0,
-                    right: 0,
-                    width: 'auto'
+                    height: 'auto',
+                    width: this.options.coverage
                 })
                 // Forcefeed the initial value
-                .velocity({ translateY: ['100%', '100%'] }, 0)
+                .velocity({ translateX: ['-100%', '-100%'] }, 0)
                 .velocity(
                     {
-                        translateY: 0
+                        translateX: 0
                     },
                     {
                         begin: function() {

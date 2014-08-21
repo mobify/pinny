@@ -17,7 +17,8 @@
     return {
         open: function() {
             var plugin = this;
-                    // Why is this needed? @WARN! @TODO!
+
+            // Why is this needed? @WARN! @TODO!
             var magicNumber = 40;
 
             this.$pinny

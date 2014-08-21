@@ -9,6 +9,7 @@ require.config({
         'velocity': 'bower_components/velocity/jquery.velocity',
         'modal-center': 'dist/position-modal-center',
         'sheet-bottom': 'dist/position-sheet-bottom',
+        'sheet-left': 'dist/position-sheet-left',
         'shade': 'dist/shade',
         'pinny': 'dist/pinny'
     },

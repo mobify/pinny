@@ -83,18 +83,21 @@
 
     Shade.prototype.setPosition = function () {
         var $element = this.$element;
-        var width = this.isBody ? $(window).width() : $element.outerWidth(false);
-        var height = this.isBody ? $(window).height() : $element.outerHeight(false);
+        var width = this.isBody ? 'auto' : $element.outerWidth(false);
+        var height = this.isBody ? 'auto' : $element.outerHeight(false);
+        var position = this.isBody ? 'fixed' : 'absolute';
 
         this.$shade
             .css({
                 left: this.options.padding ? -this.options.padding : 0,
                 top: this.options.padding ? -this.options.padding : 0,
+                bottom: this.options.padding ? -this.options.padding: 0,
+                right: this.options.padding ? -this.options.padding: 0,
                 width: this.options.padding ? width - this.options.padding: width,
                 height: this.options.padding ? height - this.options.padding : height,
                 backgroundColor: this.options.color,
                 opacity: this.options.opacity,
-                position: 'fixed',
+                position: position,
                 padding: this.options.padding,
                 zIndex: this.options.zIndex || $element.css('zIndex') + 1
             });

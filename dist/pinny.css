@@ -2,14 +2,7 @@
   position: fixed;
   display: none;
   background: white;
-  overflow: hidden;
-  -webkit-transform: translateY(0, 100%, 0);
-      -ms-transform: translateY(0, 100%, 0);
-          transform: translateY(0, 100%, 0); }
-  .pinny.pinny--is-open {
-    -webkit-transform: translateY(0, 0, 0);
-        -ms-transform: translateY(0, 0, 0);
-            transform: translateY(0, 0, 0); }
+  overflow: hidden; }
 
 .pinny__content {
   overflow: auto;
