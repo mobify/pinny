@@ -1,5 +1,6 @@
 .pinny,
 .pinny__header,
+.pinny__footer,
 .pinny__content {
     box-sizing: border-box;
 }
@@ -17,6 +18,10 @@
     overflow: auto;
 
     -webkit-overflow-scrolling: touch;
+}
+
+.pinny__footer {
+    height: 40px;
 }
 
 .pinny__hidden {

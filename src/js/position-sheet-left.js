@@ -27,7 +27,17 @@
                     width: this.options.coverage
                 })
                 // Forcefeed the initial value
-                .velocity({ translateX: ['-100%', '-100%'] }, 0)
+                .velocity(
+                    {
+                        translateX: ['-100%', '-100%']
+                    },
+                    {
+                        begin: function() {
+                            plugin._setContentHeight();
+                        },
+                        duration: 0
+                    }
+                )
                 .velocity(
                     {
                         translateX: 0
@@ -41,8 +51,6 @@
                         duration: this.options.duration,
                         display: 'auto',
                         complete: function() {
-                            plugin._setContentHeight();
-
                             $(document).off('touchmove', plugin.blockScroll);
                         }
                     }

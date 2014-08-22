@@ -34,6 +34,8 @@
                     },
                     {
                         begin: function() {
+                            plugin._setContentHeight();
+
                             $('html')
                                 .css('overflow', 'hidden');
                         },
@@ -41,8 +43,6 @@
                         duration: this.options.duration,
                         display: 'auto',
                         complete: function() {
-                            plugin._setContentHeight();
-
                             $(document).off('touchmove', plugin.blockScroll);
                         }
                     }

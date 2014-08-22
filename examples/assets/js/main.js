@@ -1,6 +1,6 @@
 require(['config'], function() {
     require([
-        'sheet-top',
+        'sheet-right',
         'selectorEngine',
         'pinny'
     ],
@@ -8,7 +8,7 @@ require(['config'], function() {
         // Initialize Pinny
         var $pinny = $('#somePinny').pinny({
             position: position,
-            coverage: '80%',
+            coverage: '100%',
         });
 
         $('.pinnyActivator').on('click', function() {

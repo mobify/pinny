@@ -38,6 +38,7 @@
             close: noop
         },
         header: 'Pinny',
+        footer: 'Footer',
         open: noop,
         opened: noop,
         close: noop,
@@ -87,6 +88,13 @@
         $(element)
             .appendTo(this.$content)
             .removeClass('pinny__hidden');
+
+        if (this.options.footer) {
+            this.$footer = $('<div />')
+                .addClass('pinny__footer')
+                .html(this.options.footer)
+                .appendTo(this.$pinny);
+        }
 
         bouncefix.add('pinny__content');
 
@@ -149,11 +157,17 @@
     };
 
     Pinny.prototype._setContentHeight = function() {
-        this.$content
-            .height(
-                this.$header ?
-                this.$pinny.height() - this.$header[0].scrollHeight : this.$pinny.height()
-            );
+        var contentHeight = parseFloat($.Velocity.CSS.getPropertyValue(this.$pinny[0], 'height'));
+
+        if (this.$header) {
+            contentHeight -= this.$header[0].scrollHeight;
+        }
+
+        if (this.$footer) {
+            contentHeight -= parseFloat($.Velocity.CSS.getPropertyValue(this.$footer[0], 'height'));
+        }
+
+        this.$content.height(contentHeight);
     }
 
     $.fn.pinny = function(option) {
