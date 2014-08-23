@@ -66,7 +66,7 @@
         this.setPosition();
         this.$shade
             .show()
-            .on('touchstart touchmove', function() { return false; });
+            .on('touchmove', function() { return false; });
 
         this._trigger('opened');
     };
@@ -76,7 +76,7 @@
 
         this.$shade
             .hide()
-            .off('touchstart touchmove');
+            .off('touchmove');
 
         this._trigger('closed');
     };
