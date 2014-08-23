@@ -27,17 +27,7 @@
                     width: this.options.coverage
                 })
                 // Forcefeed the initial value
-                .velocity(
-                    {
-                        translateX: ['-100%', '-100%']
-                    },
-                    {
-                        begin: function() {
-                            plugin._setContentHeight();
-                        },
-                        duration: 0
-                    }
-                )
+                .velocity({ translateX: ['-100%', '-100%'] }, 0)
                 .velocity(
                     {
                         translateX: 0
@@ -49,7 +39,7 @@
                         },
                         easing: this.options.easing,
                         duration: this.options.duration,
-                        display: 'auto',
+                        display: 'flex',
                         complete: function() {
                             $(document).off('touchmove', plugin.blockScroll);
                         }

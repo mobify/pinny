@@ -9,15 +9,27 @@
 .pinny {
   position: fixed;
   display: none;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
   overflow: hidden;
   background: white; }
 
+.pinny__header,
+.pinny__footer {
+  -webkit-flex-shrink: 0;
+      -ms-flex-negative: 0;
+          flex-shrink: 0; }
+
 .pinny__content {
   overflow: auto;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
   -webkit-overflow-scrolling: touch; }
-
-.pinny__footer {
-  height: 40px; }
 
 .pinny__hidden {
   display: none !important; }

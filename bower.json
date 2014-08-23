@@ -19,7 +19,7 @@
     "./!(src|dist|lib|templates)"
   ],
   "dependencies": {
-    "velocity": "~0.11.2",
+    "velocity": "~0.11.8",
     "requirejs-text": "~2.0.12",
     "requirejs": "~2.1.14",
     "bouncefix.js": "~0.3.0"

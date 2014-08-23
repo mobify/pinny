@@ -34,14 +34,14 @@
                     },
                     {
                         begin: function() {
-                            plugin._setContentHeight();
+
 
                             $('html')
                                 .css('overflow', 'hidden');
                         },
                         easing: this.options.easing,
                         duration: this.options.duration,
-                        display: 'auto',
+                        display: 'flex',
                         complete: function() {
                             $(document).off('touchmove', plugin.blockScroll);
                         }

@@ -38,10 +38,8 @@
                         },
                         easing: this.options.easing,
                         duration: this.options.duration,
-                        display: 'auto',
+                        display: 'flex',
                         complete: function() {
-                            plugin._setContentHeight();
-
                             $(document).off('touchmove', plugin.blockScroll);
                         }
                     }

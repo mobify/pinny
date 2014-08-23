@@ -9,19 +9,22 @@
     position: fixed;
 
     display: none;
+    flex-direction: column;
     overflow: hidden;
 
     background: white;
 }
 
-.pinny__content {
-    overflow: auto;
-
-    -webkit-overflow-scrolling: touch;
+.pinny__header,
+.pinny__footer {
+    flex-shrink: 0;
 }
 
-.pinny__footer {
-    height: 40px;
+.pinny__content {
+    overflow: auto;
+    flex: 1;
+
+    -webkit-overflow-scrolling: touch;
 }
 
 .pinny__hidden {
