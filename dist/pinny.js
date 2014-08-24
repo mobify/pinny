@@ -37,8 +37,9 @@
             open: noop,
             close: noop
         },
-        header: 'Pinny',
-        footer: 'Footer',
+        title: 'Pinny',
+        close: 'Close',
+        footer: '',
         open: noop,
         opened: noop,
         close: noop,
@@ -46,7 +47,7 @@
         zIndex: 2,
         coverage: '100%',
         easing: 'swing',
-        duration: 150,
+        duration: 200,
         shade: true
     };
 
@@ -56,7 +57,7 @@
 
         this.options = $.extend(true, {}, Pinny.DEFAULTS, options);
 
-        this.$pinny = $('<div />')
+        this.$pinny = $('<section />')
             .appendTo($body)
             .addClass('pinny')
             .css({
@@ -66,20 +67,23 @@
                 height: this.options.coverage
             });
 
-        if (this.options.header) {
-            this.$header = $('<div />')
+        if (this.options.title) {
+            this.$header = $('<header />')
                 .addClass('pinny__header')
-                .html(this.options.header)
+                .html('<h1 class="pinny__title">' + this.options.title + '</h1>')
                 .prependTo(this.$pinny);
 
-            $('<button />')
-                .html('Close')
-                .addClass('pinny__close')
-                .appendTo(this.$header)
-                .on('click', function(e) {
-                    e.preventDefault();
-                    plugin.close();
-                });
+            if (this.options.close) {
+                $('<button />')
+                    .html(this.options.closeText)
+                    .addClass('pinny__close')
+                    .appendTo(this.$header)
+                    .on('click', function(e) {
+                        e.preventDefault();
+                        plugin.close();
+                    }
+                );
+            }
         }
 
         this.$content = $('<div />')

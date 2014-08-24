@@ -24,8 +24,8 @@
     }
 
     Shade.DEFAULTS = {
-        color: 'white',
-        opacity: '0.75',
+        color: 'black',
+        opacity: '0.25',
         duration: 150,
         easing: 'swing',
         padding: 0,

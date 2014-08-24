@@ -1,16 +1,9 @@
-.pinny,
-.pinny__header,
-.pinny__footer,
-.pinny__content {
-    box-sizing: border-box;
-}
-
 .pinny {
     position: fixed;
 
     display: none;
-    flex-direction: column;
     overflow: hidden;
+    flex-direction: column;
 
     background: white;
 }
