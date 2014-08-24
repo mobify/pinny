@@ -34,8 +34,6 @@
                     },
                     {
                         begin: function() {
-
-
                             $('html')
                                 .css('overflow', 'hidden');
                         },
