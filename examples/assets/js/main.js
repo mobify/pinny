@@ -1,6 +1,6 @@
 require(['config'], function() {
     require([
-        'sheet-right',
+        'sheet-bottom',
         'selectorEngine',
         'pinny'
     ],

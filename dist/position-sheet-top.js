@@ -17,13 +17,16 @@
     return {
         open: function() {
             var plugin = this;
+            var coverage = this._coverageCalc(this.options.coverage) + '%';
 
             this.$pinny
                 .css({
                     top: 0,
                     left: 0,
                     right: 0,
-                    width: 'auto'
+                    bottom: coverage,
+                    width: 'auto',
+                    height: 'auto'
                 })
                 // Forcefeed the initial value
                 .velocity({ translateY: ['-100%', '-100%'] }, 0)
