@@ -44,9 +44,10 @@
         close: noop,
         closed: noop,
         zIndex: 2,
-        coverage: '90%',
+        coverage: '100%',
         easing: 'swing',
-        duration: 150
+        duration: 150,
+        shade: true
     };
 
     Pinny.prototype._init = function(element, options) {
@@ -129,14 +130,18 @@
 
     Pinny.prototype.open = function() {
         this._trigger('open');
-        this.$shade.shade('open');
+        if (this.options.shade) {
+            this.$shade.shade('open');
+        }
         this._open();
         this._trigger('opened');
     };
 
     Pinny.prototype.close = function() {
         this._trigger('close');
-        this.$shade.shade('close');
+        if (this.options.shade) {
+            this.$shade.shade('close');
+        }
         this.$pinny.removeClass(OPENED_CLASS);
         this._trigger('closed');
 
@@ -156,18 +161,17 @@
         event.preventDefault();
     };
 
-    Pinny.prototype._setContentHeight = function() {
-        var contentHeight = parseFloat($.Velocity.CSS.getPropertyValue(this.$pinny[0], 'height'));
+    Pinny.prototype._isPercent = function(str) {
+        return str[str.length - 1] == '%';
+    }
 
-        if (this.$header) {
-            contentHeight -= this.$header[0].scrollHeight;
+    // Turns coverage into a position value
+    Pinny.prototype._coverageCalc = function(coverage) {
+        if (this._isPercent(coverage)) {
+            coverage = 100 - parseInt(coverage);
         }
 
-        if (this.$footer) {
-            contentHeight -= parseFloat($.Velocity.CSS.getPropertyValue(this.$footer[0], 'height'));
-        }
-
-        this.$content.height(contentHeight);
+        return coverage;
     }
 
     $.fn.pinny = function(option) {

@@ -24,8 +24,10 @@
     }
 
     Shade.DEFAULTS = {
-        color: '#aaa',
-        opacity: '.7',
+        color: '',
+        opacity: '0.75',
+        duration: 150,
+        easing: 'swing',
         padding: 0,
         click: noop,
         open: noop,
@@ -45,6 +47,10 @@
 
         this.$shade = $('<div />')
             .addClass('shade')
+            .css({
+                background: this.options.color ? this.options.color : '',
+                opacity: 0,
+            })
             .hide()
             .appendTo(this.$element)
             .on('click', function() {
@@ -54,7 +60,7 @@
 
         $(window)
             .on('resize:shade', function () {
-                if (plugin.$shade.css('display') !== 'none') {
+                if (plugin.$shade.hasClass('shade--is-open')) {
                     plugin.setPosition.call(self);
                 }
             });
@@ -65,7 +71,17 @@
 
         this.setPosition();
         this.$shade
-            .show()
+            .velocity(
+                {
+                    opacity: this.options.opacity
+                },
+                {
+                    display: 'block',
+                    duration: this.options.duration,
+                    easing: this.options.easing
+                }
+            )
+            .addClass('shade--is-open')
             .on('touchmove', function() { return false; });
 
         this._trigger('opened');
@@ -75,7 +91,15 @@
         this._trigger('close');
 
         this.$shade
-            .hide()
+            .velocity(
+                'reverse',
+                {
+                    display: 'none',
+                    duration: this.options.duration,
+                    easing: this.options.easing
+                }
+            )
+            .removeClass('shade--is-open')
             .off('touchmove');
 
         this._trigger('closed');
@@ -91,12 +115,10 @@
             .css({
                 left: this.options.padding ? -this.options.padding : 0,
                 top: this.options.padding ? -this.options.padding : 0,
-                bottom: this.options.padding ? -this.options.padding: 0,
+                bottom: this.options.padding ? -this.options.padding : 0,
                 right: this.options.padding ? -this.options.padding: 0,
                 width: this.options.padding ? width - this.options.padding: width,
                 height: this.options.padding ? height - this.options.padding : height,
-                backgroundColor: this.options.color,
-                opacity: this.options.opacity,
                 position: position,
                 padding: this.options.padding,
                 zIndex: this.options.zIndex || $element.css('zIndex') + 1
