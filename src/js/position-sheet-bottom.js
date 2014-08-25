@@ -17,15 +17,18 @@
     return {
         open: function() {
             var plugin = this;
-            var coverage = this._coverageCalc(this.options.coverage) + '%';
+
+            if (this._isPercent(this.options.coverage)) {
+                var coverage = this._coverageCalc(this.options.coverage) + '%';
+            }
 
             this.$pinny
                 .css({
                     bottom: 0,
                     left: 0,
                     right: 0,
-                    top: coverage,
-                    height: 'auto',
+                    top: coverage ? coverage : 'auto',
+                    height: coverage ? 'auto': this.options.coverage,
                     width: 'auto'
                 })
                 // Forcefeed the initial value
