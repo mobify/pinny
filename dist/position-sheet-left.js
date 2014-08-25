@@ -18,13 +18,18 @@
         open: function() {
             var plugin = this;
 
+            if (this._isPercent(this.options.coverage)) {
+                var coverage = this._coverageCalc(this.options.coverage) + '%';
+            }
+
             this.$pinny
                 .css({
                     top: 0,
                     bottom: 0,
                     left: 0,
+                    right: coverage ? coverage : 'auto',
                     height: 'auto',
-                    width: this.options.coverage
+                    width: coverage ? 'auto' : this.options.coverage
                 })
                 // Forcefeed the initial value
                 .velocity({ translateX: ['-100%', '-100%'] }, 0)
