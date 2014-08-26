@@ -5,7 +5,8 @@
          to your selector engine. i.e. either zepto or jQuery.
          */
         define([
-            'selectorEngine'
+            '$',
+            'velocity'
         ], factory);
     } else {
         /*
@@ -13,7 +14,7 @@
          */
         factory(window.Zepto || window.jQuery);
     }
-}(function($) {
+}(function($, Velocity) {
     return {
         open: function() {
             var plugin = this;
@@ -24,18 +25,19 @@
 
             this.$pinny
                 .css({
+                    top: 0,
                     bottom: 0,
-                    left: 0,
                     right: 0,
-                    top: coverage ? coverage : 'auto',
-                    height: coverage ? 'auto': this.options.coverage,
-                    width: 'auto'
-                })
+                    left: coverage ? coverage : 'auto',
+                    height: 'auto',
+                    width: coverage ? 'auto' : this.options.coverage
+                });
                 // Forcefeed the initial value
-                .velocity({ translateY: ['100%', '100%'] }, 0)
-                .velocity(
+                Velocity.animate(this.$pinny, { translateX: ['100%', '100%'] }, 0);
+                Velocity.animate(
+                    this.$pinny,
                     {
-                        translateY: 0
+                        translateX: 0
                     },
                     {
                         begin: function() {
@@ -54,8 +56,8 @@
         close: function() {
             var plugin = this;
 
-            this.$pinny
-                .velocity(
+                Velocity.animate(
+                    this.$pinny,
                     'reverse',
                     {
                         begin: function() {

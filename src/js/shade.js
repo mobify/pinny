@@ -8,7 +8,7 @@
          In AMD environments, you will need to define an alias
          to your selector engine. i.e. either zepto or jQuery
          */
-        define(['selectorEngine'], factory);
+        define(['$'], factory);
     } else {
         /*
          Browser globals

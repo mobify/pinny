@@ -2,32 +2,19 @@ require.config({
     baseUrl: '../',
     paths: {
         'text': 'bower_components/requirejs-text/text',
-        'selectorEngine': 'bower_components/jquery/dist/jquery',
+        '$': 'lib/zeptojs/dist/zepto',
         'bouncefix': 'bower_components/bouncefix.js/dist/bouncefix.min',
-        'velocity-shim': 'lib/velocity-shim',
-        'velocity': 'bower_components/velocity/jquery.velocity',
-        'modal-center': 'dist/position-modal-center',
-        'sheet-bottom': 'dist/position-sheet-bottom',
-        'sheet-left': 'dist/position-sheet-left',
-        'sheet-right': 'dist/position-sheet-right',
-        'sheet-top': 'dist/position-sheet-top',
+        'velocity': 'bower_components/velocity/velocity',
+        'modal-center': 'dist/modal-center',
+        'sheet-bottom': 'dist/sheet-bottom',
+        'sheet-left': 'dist/sheet-left',
+        'sheet-right': 'dist/sheet-right',
+        'sheet-top': 'dist/sheet-top',
         'shade': 'dist/shade',
         'pinny': 'dist/pinny'
     },
     'shim': {
-        'selectorEngine': {
-            exports: '$'
-        },
-        'zappy': {
-            deps: ['selectorEngine'],
-            exports: '$'
-        },
-        // 'velocity-shim': {
-        //     deps: ['selectorEngine'],
-        //     exports: '$'
-        // },
-        'velocity': {
-            deps: ['selectorEngine'],
+        '$': {
             exports: '$'
         }
     }

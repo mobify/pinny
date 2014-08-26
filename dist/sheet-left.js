@@ -5,7 +5,8 @@
          to your selector engine. i.e. either zepto or jQuery.
          */
         define([
-            'selectorEngine'
+            '$',
+            'velocity'
         ], factory);
     } else {
         /*
@@ -13,29 +14,30 @@
          */
         factory(window.Zepto || window.jQuery);
     }
-}(function($) {
+}(function($, Velocity) {
     return {
         open: function() {
             var plugin = this;
-            var $window = $(window);
 
             if (this._isPercent(this.options.coverage)) {
-                var coverage = (this._coverageCalc(this.options.coverage) / 2) + '%';
+                var coverage = this._coverageCalc(this.options.coverage) + '%';
             }
 
             this.$pinny
                 .css({
-                    top: coverage ? coverage : (($window.height() - this.$pinny.height()) / 2),
-                    bottom: coverage ? coverage : ($window.height() - this.$pinny.height()) / 2,
-                    right: coverage ? coverage : ($window.width() - this.$pinny.width()) / 2,
-                    left: coverage ? coverage : ($window.width() - this.$pinny.width()) / 2,
-                    width: coverage ? 'auto' : this.options.coverage,
-                    height: coverage ? 'auto': this.options.coverage
-                })
-                .velocity({ scale: [0, 0] }, 0)
-                .velocity(
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: coverage ? coverage : 'auto',
+                    height: 'auto',
+                    width: coverage ? 'auto' : this.options.coverage
+                });
+                // Forcefeed the initial value
+                Velocity.animate(this.$pinny, { translateX: ['-100%', '-100%'] }, 0);
+                Velocity.animate(
+                    this.$pinny,
                     {
-                        scale: 1
+                        translateX: 0
                     },
                     {
                         begin: function() {
@@ -54,9 +56,8 @@
         close: function() {
             var plugin = this;
 
-            this.$pinny
-                .velocity(
-                    'reverse',
+            Velocity.animate(this.$pinny,
+                'reverse',
                     {
                         begin: function() {
                             $(document).on('touchmove', plugin.blockScroll);

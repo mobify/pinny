@@ -5,7 +5,8 @@
          to your selector engine. i.e. either zepto or jQuery.
          */
         define([
-            'selectorEngine'
+            '$',
+            'velocity'
         ], factory);
     } else {
         /*
@@ -13,7 +14,7 @@
          */
         factory(window.Zepto || window.jQuery);
     }
-}(function($) {
+}(function($, Velocity) {
     return {
         open: function() {
             var plugin = this;
@@ -24,18 +25,19 @@
 
             this.$pinny
                 .css({
-                    top: 0,
                     bottom: 0,
+                    left: 0,
                     right: 0,
-                    left: coverage ? coverage : 'auto',
-                    height: 'auto',
-                    width: coverage ? 'auto' : this.options.coverage
-                })
+                    top: coverage ? coverage : 'auto',
+                    height: coverage ? 'auto': this.options.coverage,
+                    width: 'auto'
+                });
                 // Forcefeed the initial value
-                .velocity({ translateX: ['100%', '100%'] }, 0)
-                .velocity(
+                Velocity.animate(this.$pinny, { translateY: ['100%', '100%'] }, 0);
+                Velocity.animate(
+                    this.$pinny,
                     {
-                        translateX: 0
+                        translateY: 0
                     },
                     {
                         begin: function() {
@@ -54,9 +56,9 @@
         close: function() {
             var plugin = this;
 
-            this.$pinny
-                .velocity(
-                    'reverse',
+            Velocity.animate(
+                this.$pinny,
+                'reverse',
                     {
                         begin: function() {
                             $(document).on('touchmove', plugin.blockScroll);

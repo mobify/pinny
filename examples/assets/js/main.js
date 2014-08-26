@@ -1,7 +1,7 @@
 require(['config'], function() {
     require([
         'modal-center',
-        'selectorEngine',
+        '$',
         'pinny'
     ],
     function(position, $) {
