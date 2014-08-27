@@ -34,11 +34,12 @@
                     height: coverage ? 'auto': this.options.coverage
                 });
 
-                Velocity.animate(this.$pinny, { scale: [0, 0] }, 0);
+                Velocity.animate(this.$pinny, { scale: [2, 2], opacity: [0, 0] }, 0);
                 Velocity.animate(
                     this.$pinny,
                     {
-                        scale: 1
+                        scale: 1,
+                        opacity: 1
                     },
                     {
                         begin: function() {
@@ -59,7 +60,10 @@
 
             Velocity.animate(
                 this.$pinny,
-                'reverse',
+                {
+                    scale: 0,
+                    opacity: 0
+                },
                 {
                     begin: function() {
                         $(document).on('touchmove', plugin.blockScroll);
