@@ -10,3 +10,8 @@ html {
 body {
     margin: 10px;
 }
+
+.button-section {
+    text-align: center;
+    padding: 10px 0;
+}
