@@ -17,7 +17,6 @@
 }(function($, Velocity) {
     return {
         open: function() {
-            var plugin = this;
             var $window = $(window);
 
             if (this._isPercent(this.options.coverage)) {
@@ -41,38 +40,24 @@
                         scale: 1
                     },
                     {
-                        begin: function() {
-                            $('html')
-                                .css('overflow', 'hidden');
-                        },
+                        begin: this.animation.begin,
                         easing: this.options.easing,
                         duration: this.options.duration,
                         display: 'flex',
-                        complete: function() {
-                            $(document).off('touchmove', plugin.blockScroll);
-                        }
+                        complete: this.animation.complete
                     }
                 );
         },
         close: function() {
-            var plugin = this;
-
             Velocity.animate(
                 this.$pinny,
                 'reverse',
                 {
-                    begin: function() {
-                        $(document).on('touchmove', plugin.blockScroll);
-
-                        $('html')
-                            .css('overflow', '');
-                    },
+                    begin: this.animation.beginClose,
                     easing: this.options.easing,
                     duration: this.options.duration,
                     display: 'none',
-                    complete: function() {
-                        $(document).off('touchmove', plugin.blockScroll);
-                    }
+                    complete: this.animation.complete
                 }
             );
         }

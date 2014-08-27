@@ -8,14 +8,17 @@
          In AMD environments, you will need to define an alias
          to your selector engine. i.e. either zepto or jQuery
          */
-        define(['$'], factory);
+        define([
+            '$',
+            'velocity'
+        ], factory);
     } else {
         /*
          Browser globals
          */
         factory(window.Zepto || window.jQuery);
     }
-}(function($) {
+}(function($, Velocity) {
     var pluginName = 'shade';
     var noop = function() {};
 
@@ -29,7 +32,9 @@
         duration: 150,
         easing: 'swing',
         padding: 0,
-        click: noop,
+        click: function() {
+            this.close();
+        },
         open: noop,
         opened: noop,
         close: noop,
@@ -49,19 +54,18 @@
             .addClass('shade')
             .css({
                 background: this.options.color ? this.options.color : '',
-                opacity: 0,
+                opacity: 0
             })
             .hide()
             .appendTo(this.$element)
             .on('click', function() {
-                plugin.options.click.call(self);
-                plugin.close();
+                plugin.options.click.call(plugin);
             });
 
         $(window)
             .on('resize:shade', function () {
                 if (plugin.$shade.hasClass('shade--is-open')) {
-                    plugin.setPosition.call(self);
+                    plugin.setPosition.call(plugin);
                 }
             });
     };
@@ -70,17 +74,20 @@
         this._trigger('open');
 
         this.setPosition();
+
+        Velocity.animate(
+            this.$shade,
+            {
+                opacity: this.options.opacity
+            },
+            {
+                display: 'block',
+                duration: this.options.duration,
+                easing: this.options.easing
+            }
+        );
+
         this.$shade
-            .velocity(
-                {
-                    opacity: this.options.opacity
-                },
-                {
-                    display: 'block',
-                    duration: this.options.duration,
-                    easing: this.options.easing
-                }
-            )
             .addClass('shade--is-open')
             .on('touchmove', function() { return false; });
 
@@ -90,15 +97,18 @@
     Shade.prototype.close = function() {
         this._trigger('close');
 
+
+        Velocity.animate(
+            this.$shade,
+            'reverse',
+            {
+                display: 'none',
+                duration: this.options.duration,
+                easing: this.options.easing
+            }
+        );
+
         this.$shade
-            .velocity(
-                'reverse',
-                {
-                    display: 'none',
-                    duration: this.options.duration,
-                    easing: this.options.easing
-                }
-            )
             .removeClass('shade--is-open')
             .off('touchmove');
 

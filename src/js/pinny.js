@@ -49,14 +49,33 @@
         shade: true
     };
 
+    Pinny.prototype.animation = {
+        blockScroll: function(event) {
+            event.preventDefault();
+        },
+        begin: function() {
+            $('html').css('overflow', 'hidden');
+        },
+        beginClose: function() {
+            $(document).on('touchmove', Pinny.prototype.animation.blockScroll);
+
+            $('html').css('overflow', '');
+        },
+        complete: function() {
+            $(document).off('touchmove', Pinny.prototype.animation.blockScroll);
+        }
+    };
+
     Pinny.prototype._init = function(element, options) {
         var plugin = this;
-        var $body = $(document.body);
 
         this.options = $.extend(true, {}, Pinny.DEFAULTS, options);
+        this.position = this.options.position;
+
+        this.$body = $(document.body);
 
         this.$pinny = $('<section />')
-            .appendTo($body)
+            .appendTo(this.$body)
             .addClass('pinny')
             .css({
                 position: 'fixed',
@@ -99,31 +118,15 @@
                 .appendTo(this.$pinny);
         }
 
-        bouncefix.add('pinny__content');
-
-        this.$shade = $body.shade({
+        this.$shade = this.$body.shade({
             click: function() {
                 plugin.close();
             }
         });
 
-        // Block scrolling on anything but pinny content
-        this.$pinny.on( 'touchmove', function( ev ) {
-            if (!$(ev.target).parents().hasClass( 'pinny__content' )) {
-                ev.preventDefault();
-            }
-        });
-
-        this.position = this.options.position;
+        bouncefix.add('pinny__content');
 
         this._bindEvents();
-    };
-
-    Pinny.prototype._trigger = function(eventName, data) {
-        eventName in this.options && this.options[eventName].call(this, $.Event(PLUGIN_NAME + ':' + eventName, { bubbles: false }), data);
-    };
-
-    Pinny.prototype._bindEvents = function() {
     };
 
     Pinny.prototype.toggle = function() {
@@ -150,6 +153,15 @@
         this._close();
     };
 
+    Pinny.prototype._bindEvents = function() {
+        // Block scrolling on anything but pinny content
+        this.$pinny.on( 'touchmove', function(e) {
+            if (!$(e.target).parents().hasClass( 'pinny__content' )) {
+                e.preventDefault();
+            }
+        });
+    };
+
     Pinny.prototype._open = function() {
         this.position.open.call(this);
         this.$pinny.addClass(OPENED_CLASS);
@@ -159,13 +171,13 @@
         this.position.close.call(this);
     };
 
-    Pinny.prototype._blockScroll = function(event) {
-        event.preventDefault();
-    };
-
     Pinny.prototype._isPercent = function(str) {
         return str[str.length - 1] == '%';
-    }
+    };
+
+    Pinny.prototype._trigger = function(eventName, data) {
+        eventName in this.options && this.options[eventName].call(this, $.Event(PLUGIN_NAME + ':' + eventName, { bubbles: false }), data);
+    };
 
     // Turns coverage into a position value
     Pinny.prototype._coverageCalc = function(coverage) {
@@ -174,7 +186,7 @@
         }
 
         return coverage;
-    }
+    };
 
     $.fn.pinny = function(option) {
         var args = Array.prototype.slice.call(arguments);

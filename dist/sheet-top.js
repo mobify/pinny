@@ -17,8 +17,6 @@
 }(function($, Velocity) {
     return {
         open: function() {
-            var plugin = this;
-
             if (this._isPercent(this.options.coverage)) {
                 var coverage = this._coverageCalc(this.options.coverage) + '%';
             }
@@ -40,40 +38,26 @@
                         translateY: 0
                     },
                     {
-                        begin: function() {
-                            $('html')
-                                .css('overflow', 'hidden');
-                        },
+                        begin: this.animation.begin,
                         easing: this.options.easing,
                         duration: this.options.duration,
                         display: 'flex',
-                        complete: function() {
-                            $(document).off('touchmove', plugin.blockScroll);
-                        }
+                        complete: this.animation.complete
                     }
                 );
         },
         close: function() {
-            var plugin = this;
-
             Velocity.animate(
                 this.$pinny,
                 'reverse',
-                    {
-                        begin: function() {
-                            $(document).on('touchmove', plugin.blockScroll);
-
-                            $('html')
-                                .css('overflow', '');
-                        },
-                        easing: this.options.easing,
-                        duration: this.options.duration,
-                        display: 'none',
-                        complete: function() {
-                            $(document).off('touchmove', plugin.blockScroll);
-                        }
-                    }
-                );
+                {
+                    begin: this.animation.beginClose,
+                    easing: this.options.easing,
+                    duration: this.options.duration,
+                    display: 'none',
+                    complete: this.animation.complete
+                }
+            );
         }
     };
 }));

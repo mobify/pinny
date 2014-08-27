@@ -1,14 +1,21 @@
 require(['config'], function() {
     require([
+        '$',
         'modal-center',
         'sheet-top',
         'sheet-right',
         'sheet-left',
         'sheet-bottom',
-        '$',
         'pinny'
     ],
-    function(modalCenter, sheetTop, sheetRight, sheetLeft, sheetBottom, $) {
+    function(
+        $,
+        modalCenter,
+        sheetTop,
+        sheetRight,
+        sheetLeft,
+        sheetBottom
+    ) {
         var $modalCenter = $('#modalCenterPinny').pinny({
             position: modalCenter,
             coverage: '80%'
