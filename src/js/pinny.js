@@ -3,19 +3,12 @@
  */
 (function(factory) {
     if (typeof define === 'function' && define.amd) {
-        /*
-         In AMD environments, you will need to define an alias
-         to your selector engine. i.e. either zepto or jQuery.
-         */
         define([
             '$',
             'bouncefix',
             'shade'
         ], factory);
     } else {
-        /*
-         Browser globals
-         */
         factory(window.Zepto || window.jQuery);
     }
 }(function($, bouncefix) {
