@@ -5,13 +5,13 @@ require.config({
         '$': 'bower_components/jquery/dist/jquery',
         'bouncefix': 'bower_components/bouncefix.js/dist/bouncefix.min',
         'velocity': 'bower_components/velocity/velocity',
-        'modal-center': 'dist/modal-center',
-        'sheet-bottom': 'dist/sheet-bottom',
-        'sheet-left': 'dist/sheet-left',
-        'sheet-right': 'dist/sheet-right',
-        'sheet-top': 'dist/sheet-top',
-        'shade': 'dist/shade',
-        'pinny': 'dist/pinny'
+        'modal-center': 'dist/position/modal-center.min',
+        'sheet-bottom': 'dist/position/sheet-bottom.min',
+        'sheet-left': 'dist/position/sheet-left.min',
+        'sheet-right': 'dist/position/sheet-right.min',
+        'sheet-top': 'dist/position/sheet-top.min',
+        'shade': 'dist/shade.min',
+        'pinny': 'dist/pinny.min'
     },
     'shim': {
         '$': {

@@ -39,15 +39,15 @@
         title: 'Pinny',
         closeText: 'Close',
         footer: '',
-        open: noop,
-        opened: noop,
-        close: noop,
-        closed: noop,
         zIndex: 2,
         coverage: '100%',
         easing: 'swing',
         duration: 200,
-        shade: true
+        shade: {},
+        open: noop,
+        opened: noop,
+        close: noop,
+        closed: noop
     };
 
     Pinny.prototype.animation = {
@@ -115,11 +115,11 @@
                 .appendTo(this.$pinny);
         }
 
-        this.$shade = this.$pinny.shade({
+        this.$shade = this.$pinny.shade($.extend(true, {}, {
             click: function() {
                 plugin.close();
             }
-        });
+        }, this.options.shade));
 
         bouncefix.add('pinny__content');
 
