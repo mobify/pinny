@@ -1,6 +1,6 @@
 {
   "name": "velocity",
-  "version": "0.11.9",
+  "version": "1.0.0",
   "homepage": "http://velocityjs.org",
   "authors": [
     {
@@ -9,7 +9,7 @@
     }
   ],
   "description": "Accelerated JavaScript animation.",
-  "main": "./jquery.velocity.js",
+  "main": "./velocity.js",
   "keywords": [
     "animation",
     "jquery",
@@ -34,13 +34,13 @@
     "type": "git",
     "url": "http://github.com/julianshapiro/velocity.git"
   },
-  "_release": "0.11.9",
+  "_release": "1.0.0",
   "_resolution": {
     "type": "version",
-    "tag": "0.11.9",
-    "commit": "5107680d5daf4ba52255c2520e9beea63cddd336"
+    "tag": "1.0.0",
+    "commit": "04c68cab3a58eda15b2804ed63c935a8f29db493"
   },
   "_source": "git://github.com/julianshapiro/velocity.git",
-  "_target": "*",
+  "_target": "1.0.0",
   "_originalSource": "velocity"
 }
