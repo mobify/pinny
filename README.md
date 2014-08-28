@@ -15,7 +15,7 @@ If you are using Zepto, you need to load `bower_components/velocity/velocity.js`
 
 ### jQuery Support
 
-Bellows supports jQuery but is not actively developed for it. You should be able to use Bellows directly with jQuery 2.0. While we don't actively support jQuery for Bellows, we welcome any and all issues and PRs to help us make it work.
+Pinny supports jQuery but is not actively developed for it. You should be able to use Pinny directly with jQuery 2.0. While we don't actively support jQuery for Pinny, we welcome any and all issues and PRs to help us make it work.
 
 
 ## Installation
@@ -46,13 +46,13 @@ To use with require.js, after installing through bower you merely have to refere
 
 ```
 
-And then require bellows in as needed:
+And then require pinny in as needed:
 
 ```
 define(
     ['zepto', 'modal-center', 'pinny'],
     function($, modalCenter) {
-        $('.bellows').pinny({
+        $('.pinny').pinny({
         	position: modalCenter
         });
     }
@@ -85,8 +85,8 @@ Pinny requires very minimal markup. In fact, all pinny needs is a div with your 
 <!-- Include pinny.js -->
 <script src="pinny.min.js"></script>
 
-<!-- Construct Bellows -->
-<script>$('.bellows').bellows()</script>
+<!-- Construct Pinny -->
+<script>$('.pinny').pinny()</script>
 ```
 
 ## Initializing the plugin
@@ -250,7 +250,7 @@ $('#myPinny').pinny({
 
 default: `function(e, ui) {}`
 
-Triggered every time the selected bellows item is starting to open.
+Triggered every time the selected pinny item is starting to open.
 
 **Parameters**
 
@@ -271,7 +271,7 @@ $('#myPinny').pinny({
 
 default: `function(e, ui) {}`
 
-Triggered every time the selected bellows item has finished opening.
+Triggered every time the selected pinny item has finished opening.
 
 **Parameters**
 
@@ -292,7 +292,7 @@ $('#myPinny').pinny({
 
 default: `function(e, ui) {}`
 
-Triggered every time an bellows item is starting to close.
+Triggered every time an pinny item is starting to close.
 
 | Parameter name | Description |
 |----------------|-------------|
@@ -311,7 +311,7 @@ $('#myPinny').pinny({
 
 default: `function(e, ui) {}`
 
-Triggered every time an bellows item is finished closing.
+Triggered every time an pinny item is finished closing.
 
 | Parameter name | Description |
 |----------------|-------------|
@@ -347,7 +347,7 @@ $pinny.pinny('open');
 Close the selected pinny item by element reference
 
 ```js
-$bellows.bellows('close');
+$pinny.pinny('close');
 ```
 
 ## Browser Compatibility
@@ -379,4 +379,4 @@ The `dist` directory will be populated with minified versions of the css and jav
 
 ## License
 
-_MIT License. Bellows is Copyright © 2014 Mobify. It is free software and may be redistributed under the terms specified in the LICENSE file._
+_MIT License. Pinny is Copyright © 2014 Mobify. It is free software and may be redistributed under the terms specified in the LICENSE file._
