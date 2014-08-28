@@ -1,8 +1,7 @@
-
 /*
  Shade.js v1.0.0
  */
-(function (factory) {
+(function(factory) {
     if (typeof define === 'function' && define.amd) {
         /*
          In AMD environments, you will need to define an alias
@@ -27,6 +26,7 @@
     }
 
     Shade.DEFAULTS = {
+        cover: document.body,
         color: 'black',
         opacity: '0.25',
         duration: 150,
@@ -48,7 +48,8 @@
         this.options = $.extend(true, {}, Shade.DEFAULTS, options);
 
         this.$element = $(element);
-        this.isBody = this.$element.get(0).nodeName.toLowerCase() === 'body';
+
+        this.isBody = $(this.options.cover).is('body');
 
         this.$shade = $('<div />')
             .addClass('shade')
@@ -57,16 +58,14 @@
                 opacity: 0
             })
             .hide()
-            .appendTo(this.$element)
             .on('click', function() {
                 plugin.options.click.call(plugin);
-            });
+            })
+            .insertAfter(this.$element);
 
         $(window)
-            .on('resize:shade', function () {
-                if (plugin.$shade.hasClass('shade--is-open')) {
-                    plugin.setPosition.call(plugin);
-                }
+            .on('resize:shade', function() {
+                plugin.$shade.hasClass('shade--is-open') && plugin.setPosition.call(plugin);
             });
     };
 
@@ -89,14 +88,15 @@
 
         this.$shade
             .addClass('shade--is-open')
-            .on('touchmove', function() { return false; });
+            .on('touchmove', function() {
+                return false;
+            });
 
         this._trigger('opened');
     };
 
     Shade.prototype.close = function() {
         this._trigger('close');
-
 
         Velocity.animate(
             this.$shade,
@@ -115,7 +115,7 @@
         this._trigger('closed');
     };
 
-    Shade.prototype.setPosition = function () {
+    Shade.prototype.setPosition = function() {
         var $element = this.$element;
         var width = this.isBody ? 'auto' : $element.outerWidth(false);
         var height = this.isBody ? 'auto' : $element.outerHeight(false);
@@ -126,15 +126,14 @@
                 left: this.options.padding ? -this.options.padding : 0,
                 top: this.options.padding ? -this.options.padding : 0,
                 bottom: this.options.padding ? -this.options.padding : 0,
-                right: this.options.padding ? -this.options.padding: 0,
-                width: this.options.padding ? width - this.options.padding: width,
+                right: this.options.padding ? -this.options.padding : 0,
+                width: this.options.padding ? width - this.options.padding : width,
                 height: this.options.padding ? height - this.options.padding : height,
                 position: position,
                 padding: this.options.padding,
                 zIndex: this.options.zIndex || $element.css('zIndex') + 1
             });
     };
-
 
     Shade.prototype._trigger = function(eventName, data) {
         eventName in this.options && this.options[eventName].call(this, $.Event(pluginName + ':' + eventName, { bubbles: false }), data);

@@ -1,26 +1,27 @@
 /*
-    Pinny.js v1.0.0
+ Pinny.js v1.0.0
  */
-(function (factory) {
+(function(factory) {
     if (typeof define === 'function' && define.amd) {
         /*
-            In AMD environments, you will need to define an alias
-            to your selector engine. i.e. either zepto or jQuery.
+         In AMD environments, you will need to define an alias
+         to your selector engine. i.e. either zepto or jQuery.
          */
         define([
-            'bouncefix',
             '$',
+            'bouncefix',
             'shade'
         ], factory);
     } else {
         /*
-            Browser globals
+         Browser globals
          */
         factory(window.Zepto || window.jQuery);
     }
-}(function(bouncefix, $) {
+}(function($, bouncefix) {
     var PLUGIN_NAME = 'pinny';
-    var noop = function() {};
+    var noop = function() {
+    };
 
     var OPENED_CLASS = 'pinny--is-open';
 
@@ -50,19 +51,16 @@
     };
 
     Pinny.prototype.animation = {
-        blockScroll: function(event) {
-            event.preventDefault();
-        },
         begin: function() {
             $('html').css('overflow', 'hidden');
         },
         beginClose: function() {
-            $(document).on('touchmove', Pinny.prototype.animation.blockScroll);
+            $(document).on('touchmove', Pinny.prototype._blockScroll);
 
             $('html').css('overflow', '');
         },
         complete: function() {
-            $(document).off('touchmove', Pinny.prototype.animation.blockScroll);
+            $(document).off('touchmove', Pinny.prototype._blockScroll);
         }
     };
 
@@ -70,7 +68,6 @@
         var plugin = this;
 
         this.options = $.extend(true, {}, Pinny.DEFAULTS, options);
-        this.position = this.options.position;
 
         this.$body = $(document.body);
 
@@ -118,13 +115,15 @@
                 .appendTo(this.$pinny);
         }
 
-        this.$shade = this.$body.shade({
+        this.$shade = this.$pinny.shade({
             click: function() {
                 plugin.close();
             }
         });
 
         bouncefix.add('pinny__content');
+
+        this.position = this.options.position;
 
         this._bindEvents();
     };
@@ -135,44 +134,43 @@
 
     Pinny.prototype.open = function() {
         this._trigger('open');
-        if (this.options.shade) {
-            this.$shade.shade('open');
-        }
-        this._open();
+
+        this.options.shade && this.$shade.shade('open');
+
+        this.position.open.call(this);
+
+        this.$pinny.addClass(OPENED_CLASS);
+
         this._trigger('opened');
     };
 
     Pinny.prototype.close = function() {
         this._trigger('close');
-        if (this.options.shade) {
-            this.$shade.shade('close');
-        }
-        this.$pinny.removeClass(OPENED_CLASS);
-        this._trigger('closed');
 
-        this._close();
+        this.options.shade && this.$shade.shade('close');
+
+        this.$pinny.removeClass(OPENED_CLASS);
+
+        this.position.close.call(this);
+
+        this._trigger('closed');
     };
 
     Pinny.prototype._bindEvents = function() {
         // Block scrolling on anything but pinny content
-        this.$pinny.on( 'touchmove', function(e) {
-            if (!$(e.target).parents().hasClass( 'pinny__content' )) {
+        this.$pinny.on('touchmove', function(e) {
+            if (!$(e.target).parents().hasClass('pinny__content')) {
                 e.preventDefault();
             }
         });
     };
 
-    Pinny.prototype._open = function() {
-        this.position.open.call(this);
-        this.$pinny.addClass(OPENED_CLASS);
-    };
-
-    Pinny.prototype._close = function() {
-        this.position.close.call(this);
+    Pinny.prototype._blockScroll = function(e) {
+        e.preventDefault();
     };
 
     Pinny.prototype._isPercent = function(str) {
-        return str[str.length - 1] == '%';
+        return str[str.length - 1] === '%';
     };
 
     Pinny.prototype._trigger = function(eventName, data) {
@@ -221,4 +219,5 @@
     $('[data-pinny]').pinny();
 
     return $;
-}));
+}
+));

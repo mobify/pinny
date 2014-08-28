@@ -1,4 +1,4 @@
-(function (factory) {
+(function(factory) {
     if (typeof define === 'function' && define.amd) {
         /*
          In AMD environments, you will need to define an alias
@@ -18,9 +18,10 @@
     return {
         open: function() {
             var $window = $(window);
+            var coverage;
 
             if (this._isPercent(this.options.coverage)) {
-                var coverage = (this._coverageCalc(this.options.coverage) / 2) + '%';
+                coverage = (this._coverageCalc(this.options.coverage) / 2) + '%';
             }
 
             this.$pinny
@@ -30,24 +31,24 @@
                     right: coverage ? coverage : ($window.width() - this.$pinny.width()) / 2,
                     left: coverage ? coverage : ($window.width() - this.$pinny.width()) / 2,
                     width: coverage ? 'auto' : this.options.coverage,
-                    height: coverage ? 'auto': this.options.coverage
+                    height: coverage ? 'auto' : this.options.coverage
                 });
 
-                Velocity.animate(this.$pinny, { scale: [2, 2], opacity: [0, 0] }, 0);
-                Velocity.animate(
-                    this.$pinny,
-                    {
-                        scale: 1,
-                        opacity: 1
-                    },
-                    {
-                        begin: this.animation.begin,
-                        easing: this.options.easing,
-                        duration: this.options.duration,
-                        display: 'flex',
-                        complete: this.animation.complete
-                    }
-                );
+            Velocity.animate(this.$pinny, { scale: [2, 2], opacity: [0, 0] }, 0);
+            Velocity.animate(
+                this.$pinny,
+                {
+                    scale: 1,
+                    opacity: 1
+                },
+                {
+                    begin: this.animation.begin,
+                    easing: this.options.easing,
+                    duration: this.options.duration,
+                    display: 'flex',
+                    complete: this.animation.complete
+                }
+            );
         },
         close: function() {
             Velocity.animate(
