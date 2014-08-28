@@ -33,6 +33,7 @@
         closeText: 'Close',
         footer: '',
         zIndex: 2,
+        cssClass: '',
         coverage: '100%',
         easing: 'swing',
         duration: 200,
@@ -67,6 +68,7 @@
         this.$pinny = $('<section />')
             .appendTo(this.$body)
             .addClass('pinny')
+            .addClass(this.options.cssClass)
             .css({
                 position: 'fixed',
                 zIndex: this.options.zIndex,
