@@ -212,5 +212,4 @@
     $('[data-pinny]').pinny();
 
     return $;
-}
-));
+}));
