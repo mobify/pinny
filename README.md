@@ -28,7 +28,7 @@ bower install https://github.com/mobify/pinny.git#pinny-1.0
 
 ## Usage with Require.js
 
-To use with require.js, after installing through bower you merely have to reference pinny ()along with the position modules) in your require config file:
+To use with require.js, after installing through bower you merely have to reference pinny (along with the position modules) in your require config file:
 
 ```config.js
 
@@ -49,8 +49,11 @@ To use with require.js, after installing through bower you merely have to refere
 And then require pinny in as needed:
 
 ```
-define(
-    ['zepto', 'modal-center', 'pinny'],
+define([
+    'zepto', 
+    'modal-center', 
+    'pinny'
+    ],
     function($, modalCenter) {
         $('.pinny').pinny({
         	position: modalCenter
@@ -135,7 +138,13 @@ default: ` {
         close: noop
     },`
 
-Specifies which position module pinny should use when opening.
+Specifies which position module pinny should use when opening. Position modules allow you to load specific functionality that tell pinny how to open and close. Available position modules can be found in the dist/position folder. Current position modules include:
+
+- Modal Center - opens pinny in the center of the screen
+- Sheet Top - slides down from the top of the screen
+- Sheet Bottom - slides up from the bottom of the screen
+- Sheet Left - slides in from the left of the screen
+- Sheet Right - slides in from the right of the screen
 
 ```js
 $('#myPinny').pinny({

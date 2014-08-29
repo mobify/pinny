@@ -164,21 +164,24 @@
         e.preventDefault();
     };
 
-    Pinny.prototype._isPercent = function(str) {
-        return str[str.length - 1] === '%';
-    };
-
     Pinny.prototype._trigger = function(eventName, data) {
         eventName in this.options && this.options[eventName].call(this, $.Event(PLUGIN_NAME + ':' + eventName, { bubbles: false }), data);
     };
 
     // Turns coverage into a position value
-    Pinny.prototype._coverageCalc = function(coverage) {
-        if (this._isPercent(coverage)) {
-            coverage = 100 - parseInt(coverage);
+    Pinny.prototype._coverage = function(divisor) {
+        var coverage;
+        var percent = this.options.coverage.match(/(\d*)%$/);
+
+        if (percent) {
+            coverage = 100 - parseInt(percent[1]);
+
+            if (divisor) {
+                coverage = coverage / divisor;
+            }
         }
 
-        return coverage;
+        return percent ? coverage + '%' : this.options.coverage;
     };
 
     $.fn.pinny = function(option) {

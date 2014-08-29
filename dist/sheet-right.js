@@ -10,11 +10,7 @@
 }(function($, Velocity) {
     return {
         open: function() {
-            var coverage;
-
-            if (this._isPercent(this.options.coverage)) {
-                coverage = this._coverageCalc(this.options.coverage) + '%';
-            }
+            var coverage = this._coverage();
 
             this.$pinny
                 .css({

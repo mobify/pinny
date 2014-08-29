@@ -18,11 +18,7 @@
     return {
         open: function() {
             var $window = $(window);
-            var coverage;
-
-            if (this._isPercent(this.options.coverage)) {
-                coverage = (this._coverageCalc(this.options.coverage) / 2) + '%';
-            }
+            var coverage = this._coverage(2);
 
             this.$pinny
                 .css({
