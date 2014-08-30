@@ -5,7 +5,8 @@
             'velocity'
         ], factory);
     } else {
-        factory(window.Zepto || window.jQuery);
+        var framework = window.Zepto || window.jQuery;
+        factory(framework, framework.Velocity);
     }
 }(function($, Velocity) {
     return {

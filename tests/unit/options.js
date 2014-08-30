@@ -21,18 +21,11 @@ define([
                 assert.isObject(pinny.options.position);
             });
 
-            it('correctly defines title', function() {
+            it('correctly defines header', function() {
                 var pinny = new Pinny(element);
 
-                assert.equal(pinny.options.title, 'Pinny');
-                assert.isString(pinny.options.title);
-            });
-
-            it('correctly defines closeText', function() {
-                var pinny = new Pinny(element);
-
-                assert.equal(pinny.options.closeText, 'Close');
-                assert.isString(pinny.options.closeText);
+                assert.equal(pinny.options.header, 'Pinny');
+                assert.isString(pinny.options.header);
             });
 
             it('correctly defines footer', function() {
@@ -80,7 +73,6 @@ define([
             });
         });
 
-
         describe('creates custom options when options parameter used', function() {
             it('correctly defines position', function() {
                 var pinny = new Pinny(element, { position: modalCenter });
@@ -89,18 +81,11 @@ define([
                 assert.isObject(pinny.options.position);
             });
 
-            it('correctly defines title of "pinnay"', function() {
-                var pinny = new Pinny(element, { title: 'pinnay' });
+            it('correctly defines header of "pinnay"', function() {
+                var pinny = new Pinny(element, { header: 'pinnay' });
 
-                assert.equal(pinny.options.title, 'pinnay');
-                assert.isString(pinny.options.title);
-            });
-
-            it('correctly defines closeText of "Shut the front door"', function() {
-                var pinny = new Pinny(element, { closeText: 'Shut the front door' });
-
-                assert.equal(pinny.options.closeText, 'Shut the front door');
-                assert.isString(pinny.options.closeText);
+                assert.equal(pinny.options.header, 'pinnay');
+                assert.isString(pinny.options.header);
             });
 
             it('correctly defines footer of <div></div>', function() {

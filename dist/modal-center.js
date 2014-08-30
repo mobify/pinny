@@ -1,31 +1,33 @@
 (function(factory) {
     if (typeof define === 'function' && define.amd) {
-        /*
-         In AMD environments, you will need to define an alias
-         to your selector engine. i.e. either zepto or jQuery.
-         */
         define([
             '$',
             'velocity'
         ], factory);
     } else {
-        /*
-         Browser globals
-         */
-        factory(window.Zepto || window.jQuery);
+        var framework = window.Zepto || window.jQuery;
+        factory(framework, framework.Velocity);
     }
 }(function($, Velocity) {
     return {
         open: function() {
+            var plugin = this;
             var $window = $(window);
             var coverage = this._coverage(2);
+            var size = {};
+            var getDimension = function(dimension) {
+                if (!size[dimension]) {
+                    size[dimension] = $window[dimension]() - plugin.$pinny[dimension]() / 2;
+                }
+                return size[dimension];
+            };
 
             this.$pinny
                 .css({
-                    top: coverage ? coverage : ($window.height() - this.$pinny.height()) / 2,
-                    bottom: coverage ? coverage : ($window.height() - this.$pinny.height()) / 2,
-                    right: coverage ? coverage : ($window.width() - this.$pinny.width()) / 2,
-                    left: coverage ? coverage : ($window.width() - this.$pinny.width()) / 2,
+                    top: coverage ? coverage : getDimension('height'),
+                    bottom: coverage ? coverage : getDimension('height'),
+                    right: coverage ? coverage : getDimension('width'),
+                    left: coverage ? coverage : getDimension('width'),
                     width: coverage ? 'auto' : this.options.coverage,
                     height: coverage ? 'auto' : this.options.coverage
                 });

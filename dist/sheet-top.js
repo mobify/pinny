@@ -5,7 +5,8 @@
             'velocity'
         ], factory);
     } else {
-        factory(window.Zepto || window.jQuery);
+        var framework = window.Zepto || window.jQuery;
+        factory(framework, framework.Velocity);
     }
 }(function($, Velocity) {
     return {
@@ -22,13 +23,11 @@
                     width: 'auto'
                 });
 
-            // Forcefeed the initial value
+            // Force feed the initial value
             Velocity.animate(this.$pinny, { translateY: ['-100%', '-100%'] }, 0);
             Velocity.animate(
                 this.$pinny,
-                {
-                    translateY: 0
-                },
+                { translateY: 0 },
                 {
                     begin: this.animation.begin,
                     easing: this.options.easing,

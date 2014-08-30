@@ -5,7 +5,8 @@
             'velocity'
         ], factory);
     } else {
-        factory(window.Zepto || window.jQuery);
+        var framework = window.Zepto || window.jQuery;
+        factory(framework, framework.Velocity);
     }
 }(function($, Velocity) {
     return {
@@ -18,17 +19,15 @@
                     bottom: 0,
                     right: 0,
                     left: coverage ? coverage : 'auto',
-                    height: 'auto',
-                    width: coverage ? 'auto' : this.options.coverage
+                    width: coverage ? 'auto' : this.options.coverage,
+                    height: 'auto'
                 });
 
-            // Forcefeed the initial value
+            // Force feed the initial value
             Velocity.animate(this.$pinny, { translateX: ['100%', '100%'] }, 0);
             Velocity.animate(
                 this.$pinny,
-                {
-                    translateX: 0
-                },
+                { translateX: 0 },
                 {
                     begin: this.animation.begin,
                     easing: this.options.easing,

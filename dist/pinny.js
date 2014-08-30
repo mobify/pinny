@@ -9,7 +9,8 @@
             'shade'
         ], factory);
     } else {
-        factory(window.Zepto || window.jQuery);
+        var framework = window.Zepto || window.jQuery;
+        factory(framework, framework.Velocity);
     }
 }(function($, bouncefix) {
     var PLUGIN_NAME = 'pinny';
@@ -29,8 +30,7 @@
             open: noop,
             close: noop
         },
-        title: 'Pinny',
-        closeText: 'Close',
+        header: 'Pinny',
         footer: '',
         zIndex: 2,
         cssClass: '',
@@ -76,23 +76,21 @@
                 height: this.options.coverage
             });
 
-        if (this.options.title) {
+        if (this.options.header) {
             this.$header = $('<header />')
                 .addClass('pinny__header')
-                .html('<h1 class="pinny__title">' + this.options.title + '</h1>')
+                .html('<h1 class="pinny__title">' + this.options.header + '</h1>')
                 .prependTo(this.$pinny);
 
-            if (this.options.close) {
-                $('<button />')
-                    .html(this.options.closeText)
-                    .addClass('pinny__close')
-                    .appendTo(this.$header)
-                    .on('click', function(e) {
-                        e.preventDefault();
-                        plugin.close();
-                    }
-                );
-            }
+            $('<button />')
+                .text('Close')
+                .addClass('pinny__close')
+                .appendTo(this.$header)
+                .on('click', function(e) {
+                    e.preventDefault();
+                    plugin.close();
+                }
+            );
         }
 
         this.$content = $('<div />')
@@ -158,6 +156,10 @@
                 e.preventDefault();
             }
         });
+    };
+
+    Pinny.prototype._isHtml = function(input) {
+        return /<[a-z][\s\S]*>/i.test(input);
     };
 
     Pinny.prototype._blockScroll = function(e) {
