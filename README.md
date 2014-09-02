@@ -28,7 +28,7 @@ bower install https://github.com/mobify/pinny.git#pinny-1.0
 
 ## Usage with Require.js
 
-To use with require.js, after installing through bower you merely have to reference pinny (along with the position modules) in your require config file:
+To use with require.js, after installing through bower you merely have to reference pinny, pinny's position modules, and pinny's dependencies (velocity, shade, and bouncefix) inside your require config file:
 
 ```config.js
 
@@ -39,8 +39,11 @@ To use with require.js, after installing through bower you merely have to refere
         'sheet-bottom': 'bower_components/pinny/dist/sheet-bottom',
         'sheet-left': 'bower_components/pinny/dist/sheet-left',
         'sheet-right': 'bower_components/pinny/dist/sheet-right',
-        'sheet-top': 'bower_components/pinny/dist/sheet-top'
-        'velocity': 'bower_components/velocity/velocity'
+        'sheet-top': 'bower_components/pinny/dist/sheet-top',
+        'shade': 'bower_components/pinny/dist/shade.min',
+        'velocity': 'bower_components/velocity/velocity',
+        'bouncefix': 'bower_components/bouncefix.js/dist/bouncefix.min'
+        
     }
 }
 
