@@ -70,6 +70,20 @@ define([
                 element.pinny('open');
             });
 
+            it('closes a pinny item using the close button', function(done) {
+                element.pinny({
+                    opened: function() {
+                        element.closest('.pinny').find('.pinny__close').trigger('click');
+                    },
+                    closed: function() {
+                        assert.isFalse(element.closest('.pinny').hasClass('pinny--is-open'));
+                        done();
+                    }
+                });
+
+                element.pinny('open');
+            });
+
             it('throws for method calls that don\'t exist', function() {
                 assert.throws(function() { element.pinny().pinny('noMethod'); });
             });

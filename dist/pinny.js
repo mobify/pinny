@@ -18,6 +18,7 @@
     };
 
     var OPENED_CLASS = 'pinny--is-open';
+    var HEADER_TEMPLATE = '<header class="pinny__header">{0}</header>';
 
     function Pinny(element, options) {
         this._init(element, options);
@@ -74,24 +75,13 @@
                 zIndex: this.options.zIndex,
                 width: this.options.coverage,
                 height: this.options.coverage
+            })
+            .on('click', '.pinny__close', function(e) {
+                e.preventDefault();
+                plugin.close();
             });
 
-        if (this.options.header) {
-            this.$header = $('<header />')
-                .addClass('pinny__header')
-                .html('<h1 class="pinny__title">' + this.options.header + '</h1>')
-                .prependTo(this.$pinny);
-
-            $('<button />')
-                .text('Close')
-                .addClass('pinny__close')
-                .appendTo(this.$header)
-                .on('click', function(e) {
-                    e.preventDefault();
-                    plugin.close();
-                }
-            );
-        }
+        this.$header = $(this._buildHeader()).prependTo(this.$pinny);
 
         this.$content = $('<div />')
             .addClass('pinny__content')
@@ -102,9 +92,8 @@
             .removeClass('pinny__hidden');
 
         if (this.options.footer) {
-            this.$footer = $('<div />')
+            this.$footer = $(this.options.footer)
                 .addClass('pinny__footer')
-                .html(this.options.footer)
                 .appendTo(this.$pinny);
         }
 
@@ -156,6 +145,12 @@
                 e.preventDefault();
             }
         });
+    };
+
+    Pinny.prototype._buildHeader = function() {
+        var header = this._isHtml(this.options.header) ? this.options.header : '<h1 class="pinny__title">{0}</h1><button class="pinny__close">Close</button>'.replace('{0}', this.options.header);
+
+        return HEADER_TEMPLATE.replace('{0}', header);
     };
 
     Pinny.prototype._isHtml = function(input) {

@@ -24,14 +24,14 @@ define([
             it('correctly defines header', function() {
                 var pinny = new Pinny(element);
 
-                assert.equal(pinny.options.header, 'Pinny');
+                assert.equal(pinny.options.header, Pinny.DEFAULTS.header);
                 assert.isString(pinny.options.header);
             });
 
             it('correctly defines footer', function() {
                 var pinny = new Pinny(element);
 
-                assert.equal(pinny.options.footer, '');
+                assert.equal(pinny.options.footer, Pinny.DEFAULTS.footer);
                 assert.isString(pinny.options.footer);
             });
 
@@ -81,17 +81,17 @@ define([
                 assert.isObject(pinny.options.position);
             });
 
-            it('correctly defines header of "pinnay"', function() {
-                var pinny = new Pinny(element, { header: 'pinnay' });
+            it('correctly defines custom header', function() {
+                var pinny = new Pinny(element, { header: '<header>Pinnay</header>' });
 
-                assert.equal(pinny.options.header, 'pinnay');
+                assert.equal(pinny.options.header, '<header>Pinnay</header>');
                 assert.isString(pinny.options.header);
             });
 
-            it('correctly defines footer of <div></div>', function() {
-                var pinny = new Pinny(element, { footer: '<div></div>' });
+            it('correctly defines custom footer', function() {
+                var pinny = new Pinny(element, { footer: '<footer>Stinky foot</footer>' });
 
-                assert.equal(pinny.options.footer, '<div></div>');
+                assert.equal(pinny.options.footer, '<footer>Stinky foot</footer>');
                 assert.isString(pinny.options.footer);
             });
 
