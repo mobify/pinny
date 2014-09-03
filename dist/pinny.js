@@ -148,7 +148,11 @@
     };
 
     Pinny.prototype._buildHeader = function() {
-        var header = this._isHtml(this.options.header) ? this.options.header : '<h1 class="pinny__title">{0}</h1><button class="pinny__close">Close</button>'.replace('{0}', this.options.header);
+        var header = this.options.header;
+
+        if (!header) return $([]);
+
+        header = this._isHtml(this.options.header) ? this.options.header : '<h1 class="pinny__title">{0}</h1><button class="pinny__close">Close</button>'.replace('{0}', this.options.header);
 
         return HEADER_TEMPLATE.replace('{0}', header);
     };
