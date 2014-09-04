@@ -1,3 +1,24 @@
+// Shade
+// =====
+//
+// Shade is the modal backdrop that is used to help focus the user on Pinny.
+// The styles are added inline by Pinny instead of using a stylesheet. As such,
+// if you want to customize `.shade` you will need to use Pinny's API.
+//
+// An explanation of Pinny's shade API can be found [here](https://github.com/mobify/pinny#shade)
+//
+// Example usage:
+//
+// ```js
+// $('#myPinny').pinny({
+//     shade: {
+//         background: #ff0000,
+//         color: #00ff00,
+//         opacity: 0.5
+//     }
+// });
+// ```
+
 .shade {
     -webkit-tap-highlight-color: rgba(black, 0);
 }
