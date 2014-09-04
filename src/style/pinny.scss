@@ -1,24 +1,111 @@
-.pinny {
-    position: fixed;
+// Pinny
+// =====
+//
+// The main plugin class `.pinny` is used by Pinny's javascript to identify
+// the opened modal popups and is not to be used in authored code.
+//
+// We repeat: you do not need to use the `.pinny` class in your code – instead
+// use `.pinny__hidden` (see before, or [here](https://github.com/mobify/pinny#usage)
+// for general usage)
+//
+// This file is REQUIRED
+//
+//
+// Example usage:
+//
+// ```html
+// <!-- Authored HTML -->
+//
+// <div id="myPinny" class="pinny__hidden">
+//     Content for your Pinny!
+// </div>
+// ```
+//
+// ```html
+// <!-- HTML After Pageload -->
+//
+// <section class="pinny pinny--is-open">
+//     <header class="pinny__header">
+//         <h1 class="pinny__title">Pinny</h1>
+//         <button class="pinny__close"></button>
+//     </header>
+//     <div class="pinny__content">
+//         Content for your Pinny!
+//     </div>
+// </section>
+// ```
+//
+//
+// Notes:
+//
+// 1. The exact position (top, right, bottom, left) is added automatically by
+//    Pinny. The positioning can be configured by using Pinny's `coverage` API,
+//    which is explained [here](https://github.com/mobify/pinny#coverage)
+// 2. The display is automatically set to "flex" by Pinny on pageload.
 
-    display: none;
+.pinny {
+    position: fixed; // 1
+
+    display: none; // 2
     overflow: hidden;
     flex-direction: column;
 
     background: white;
 }
 
+
+// Pinny: Header & Footer
+// ----------------------
+//
+// The header is the top section of a Pinny modal. Typically holds a heading or
+// title.
+//
+// There is no footer by default. However, you can pass HTML to Pinny via its API,
+// as explained [here](https://github.com/mobify/pinny#footer)
+//
+//
+// Notes:
+//
+// 1. Remember than `.pinny` is set to `display: flex` by Pinny on pageload
+
 .pinny__header,
 .pinny__footer {
-    flex-shrink: 0;
+    flex-shrink: 0; // 1
 }
+
+
+// Pinny: Content
+// --------------
+//
+// This is the actual container for a Pinny's content. This is added automically
+// by Pinny, so you do not need to use it in your code.
+//
+//
+// Notes:
+//
+// 1. Remember than `.pinny` is set to `display: flex` by Pinny on pageload
 
 .pinny__content {
     overflow: auto;
-    flex: 1;
+    flex: 1; // 1
 
     -webkit-overflow-scrolling: touch;
 }
+
+
+// Pinny: Hidden
+// -------------
+//
+// The `.pinny__hidden` class is the only one you need to include in your code!
+// For example...
+//
+// ```html
+// <div id="myPinny" class="pinny__hidden">
+//     Content for your Pinny!
+// </div>
+// ```
+//
+// Pinny will then take your code and generate the rest of the modal automatically!
 
 .pinny__hidden {
     display: none !important;

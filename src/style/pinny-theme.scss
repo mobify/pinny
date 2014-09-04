@@ -1,6 +1,17 @@
+// Pinny Theme
+// ===========
+//
+// This is the defauly Pinny Theme!
+//
+// This theme is OPTIONAL
+
 .pinny {
     box-shadow: -2px 0 5px rgba(black, 0.25);
 }
+
+
+// Pinny: Header
+// -------------
 
 .pinny__header {
     position: relative;
@@ -12,6 +23,10 @@
     background: white;
 }
 
+
+// Pinny: Title
+// ------------
+
 .pinny__title {
     flex: 1;
     margin: 0;
@@ -20,9 +35,15 @@
     font-size: 1.2em;
 }
 
-.pinny__close {
-    position: relative;
 
+// Pinny: Close Button
+// -------------------
+//
+// Notes:
+//
+// 1. Hide the "close" text, visually
+
+.pinny__close {
     overflow: hidden;
     flex-shrink: 0;
     width: 44px;
@@ -32,25 +53,41 @@
 
     background: none;
 
-    text-indent: 100%;
+    text-indent: 100%; // 1
 
     -webkit-appearance: none;
     -webkit-tap-highlight-color: rgba(black, 0);
+}
+
+
+// Pinny: Close Button Icon
+// ------------------------
+//
+// This creates the "X" shape
+//
+//
+// Notes:
+//
+// 1. Pseudo elements absolutely positioned relative to the parent `.pinny__close`
+// 2. Center vertically and horizontally
+
+.pinny__close {
+    position: relative; // 1
 
     &::before,
     &::after {
         content: '';
 
-        position: absolute;
-        top: 50%;
-        left: 50%;
+        position: absolute; // 1
+        top: 50%; // 2
+        left: 50%; // 2
         z-index: 2;
 
         display: block;
         width: 20px;
         height: 2px;
-        margin-top: -1px;
-        margin-left: -10px;
+        margin-top: -1px; // 2
+        margin-left: -10px; // 2
 
         border-radius: 2px;
         background: #59adeb;
@@ -73,6 +110,10 @@
         }
     }
 }
+
+
+// Pinny: Content
+// --------------
 
 .pinny__content {
     padding: 10px;
