@@ -47,11 +47,17 @@
     position: fixed; // 1
 
     display: none; // 2
-    overflow: hidden;
-    flex-direction: column;
 
     background: white;
 }
+
+.pinny__wrapper {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100%;
+}
+
 
 
 // Pinny: Header & Footer

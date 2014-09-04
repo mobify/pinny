@@ -81,11 +81,15 @@
                 plugin.close();
             });
 
-        this.$header = $(this._buildHeader()).prependTo(this.$pinny);
+        this.$wrapper = $('<div />')
+            .addClass('pinny__wrapper')
+            .appendTo(this.$pinny);
+
+        this.$header = $(this._buildHeader()).prependTo(this.$wrapper);
 
         this.$content = $('<div />')
             .addClass('pinny__content')
-            .appendTo(this.$pinny);
+            .appendTo(this.$wrapper);
 
         $(element)
             .appendTo(this.$content)
@@ -94,7 +98,7 @@
         if (this.options.footer) {
             this.$footer = $(this.options.footer)
                 .addClass('pinny__footer')
-                .appendTo(this.$pinny);
+                .appendTo(this.$wrapper);
         }
 
         this.$shade = this.$pinny.shade($.extend(true, {}, {

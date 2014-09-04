@@ -43,7 +43,7 @@
                     begin: this.animation.begin,
                     easing: this.options.easing,
                     duration: this.options.duration,
-                    display: 'flex',
+                    display: 'block',
                     complete: this.animation.complete
                 }
             );
@@ -52,7 +52,7 @@
             Velocity.animate(
                 this.$pinny,
                 {
-                    scale: 0,
+                    scale: 0.5,
                     opacity: 0
                 },
                 {

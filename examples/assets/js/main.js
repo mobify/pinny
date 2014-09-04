@@ -18,7 +18,11 @@ require(['config'], function() {
     ) {
         var $modalCenter = $('#modalCenterPinny').pinny({
             position: modalCenter,
-            coverage: '80%'
+            coverage: '90%',
+            shade: {
+                color: 'red',
+                duration: 500
+            }
         });
 
         $('#modalCenter').on('click', function() {
@@ -27,7 +31,10 @@ require(['config'], function() {
 
         var $sheetTop = $('#sheetTopPinny').pinny({
             position: sheetTop,
-            coverage: '80%'
+            coverage: '80%',
+            shade: {
+                duration: 500
+            }
         });
 
         $('#sheetTop').on('click', function() {

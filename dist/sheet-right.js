@@ -32,7 +32,7 @@
                     begin: this.animation.begin,
                     easing: this.options.easing,
                     duration: this.options.duration,
-                    display: 'flex',
+                    display: 'block',
                     complete: this.animation.complete
                 }
             );

@@ -22,7 +22,6 @@
   font-size: 1.2em; }
 
 .pinny__close {
-  position: relative;
   overflow: hidden;
   -webkit-flex-shrink: 0;
       -ms-flex-negative: 0;
@@ -35,6 +34,9 @@
   text-indent: 100%;
   -webkit-appearance: none;
   -webkit-tap-highlight-color: transparent; }
+
+.pinny__close {
+  position: relative; }
   .pinny__close::before, .pinny__close::after {
     content: '';
     position: absolute;
