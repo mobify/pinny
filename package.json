@@ -1,6 +1,6 @@
 {
     "name": "pinny",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "description": "A mobile first content fly-in UI plugin",
     "devDependencies": {
         "grunt": "~0.4.x",
