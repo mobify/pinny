@@ -40,7 +40,7 @@ To use with require.js, after installing through bower you merely have to refere
         'sheet-left': 'bower_components/pinny/dist/sheet-left',
         'sheet-right': 'bower_components/pinny/dist/sheet-right',
         'sheet-top': 'bower_components/pinny/dist/sheet-top',
-        'shade': 'bower_components/pinny/dist/shade.min',
+        'shade': 'bower_components/shade/dist/shade.min',
         'velocity': 'bower_components/velocity/velocity',
         'bouncefix': 'bower_components/bouncefix.js/dist/bouncefix.min'
         

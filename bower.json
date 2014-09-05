@@ -22,6 +22,7 @@
     "velocity": "1.0.0",
     "requirejs-text": "~2.0.12",
     "requirejs": "~2.1.14",
-    "bouncefix.js": "~0.3.0"
+    "bouncefix.js": "~0.3.0",
+    "shade": "0.1.0"
   }
 }

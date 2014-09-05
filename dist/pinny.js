@@ -1,6 +1,4 @@
-/*
- Pinny.js v1.0.0
- */
+
 (function(factory) {
     if (typeof define === 'function' && define.amd) {
         define([
@@ -45,6 +43,9 @@
         closed: noop
     };
 
+    /*
+     Common animation callbacks used in the position objects
+     */
     Pinny.prototype.animation = {
         begin: function() {
             $('html').css('overflow', 'hidden');
@@ -175,7 +176,9 @@
         eventName in this.options && this.options[eventName].call(this, $.Event(PLUGIN_NAME + ':' + eventName, { bubbles: false }), data);
     };
 
-    // Turns coverage into a position value
+    /*
+     Takes the coverage option and turns it into a position value
+     */
     Pinny.prototype._coverage = function(divisor) {
         var coverage;
         var percent = this.options.coverage.match(/(\d*)%$/);
