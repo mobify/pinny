@@ -4,7 +4,6 @@ machine:
 
 test:
     pre:
-        - bower cache clean velocity
         - bower install
     override:
         - grunt test 
