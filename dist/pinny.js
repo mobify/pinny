@@ -101,11 +101,13 @@
                 .appendTo(this.$wrapper);
         }
 
-        this.$shade = this.$pinny.shade($.extend(true, {}, {
-            click: function() {
-                plugin.close();
-            }
-        }, this.options.shade));
+        if (this.options.shade) {
+            this.$shade = this.$pinny.shade($.extend(true, {}, {
+                click: function() {
+                    plugin.close();
+                }
+            }, this.options.shade));
+        }
 
         bouncefix.add('pinny__content');
 

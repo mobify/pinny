@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAqBA,MAAO;EACH,2BAA2B,EAAE,WAAc",
-"sources": ["../src/style/shade.scss"],
-"names": [],
-"file": "shade.css"
-}
