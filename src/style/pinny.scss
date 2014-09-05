@@ -43,7 +43,7 @@
 // 1. The exact position (top, right, bottom, left) is added automatically by
 //    Pinny. The positioning can be configured by using Pinny's `coverage` API,
 //    which is explained [here](https://github.com/mobify/pinny#coverage)
-// 2. The display is automatically set to "flex" by Pinny on open.
+// 2. The display is automatically set to "block" by Pinny on open.
 
 .pinny {
     position: fixed; // 1
@@ -70,7 +70,7 @@
 //    and `.pinny__content`
 
 .pinny__wrapper {
-    display: flex;
+    display: flex; // 1
     flex-direction: column;
     overflow: hidden;
     height: 100%;
