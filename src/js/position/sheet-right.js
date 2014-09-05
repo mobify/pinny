@@ -24,10 +24,9 @@
                 });
 
             // Force feed the initial value
-            Velocity.animate(this.$pinny, { translateX: ['100%', '100%'] }, 0);
             Velocity.animate(
                 this.$pinny,
-                { translateX: 0 },
+                { translateX: [0, '100%'] },
                 {
                     begin: this.animation.begin,
                     easing: this.options.easing,

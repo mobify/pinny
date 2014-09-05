@@ -5,7 +5,7 @@
 // the opened modal popups and is not to be used in authored code.
 //
 // We repeat: you do not need to use the `.pinny` class in your code – instead
-// use `.pinny__hidden` (see before, or [here](https://github.com/mobify/pinny#usage)
+// use `.pinny__hidden` (see [here](https://github.com/mobify/pinny#usage)
 // for general usage)
 //
 // This file is REQUIRED
@@ -25,12 +25,14 @@
 // <!-- HTML After Pageload -->
 //
 // <section class="pinny pinny--is-open">
-//     <header class="pinny__header">
-//         <h1 class="pinny__title">Pinny</h1>
-//         <button class="pinny__close"></button>
-//     </header>
-//     <div class="pinny__content">
-//         Content for your Pinny!
+//     <div class="pinny__wrapper">
+//         <header class="pinny__header">
+//             <h1 class="pinny__title">Pinny</h1>
+//             <button class="pinny__close"></button>
+//         </header>
+//         <div class="pinny__content">
+//             Content for your Pinny!
+//         </div>
 //     </div>
 // </section>
 // ```
@@ -50,6 +52,22 @@
 
     background: white;
 }
+
+
+// Pinny: Wrapper
+// --------------
+//
+// The Pinny Wrapper is responsible for applying a flex context that will layout
+// the children inside (i.e. header, content and footer).
+//
+// This is added to the markup automatically by Pinny, so no need to include in
+// any authored code.
+//
+//
+// Notes:
+//
+// 1. The relevant flex children are the `.pinny__header`, `.pinny__footer`
+//    and `.pinny__content`
 
 .pinny__wrapper {
     display: flex;
@@ -72,11 +90,14 @@
 //
 // Notes:
 //
-// 1. Remember that `.pinny` is set to `display: flex` by Pinny on open
+// 1. `display: flex` is coming from `.pinny__wrapper`
+// 2. This prevents the header and footer from being forced to shrink relative to
+//    other flex children (read: the content) – in other words, the header and
+//    footer will not shrink to accomodate the `.pinny__content` element
 
 .pinny__header,
 .pinny__footer {
-    flex-shrink: 0; // 1
+    flex-shrink: 0; // 1, 2
 }
 
 
@@ -84,16 +105,18 @@
 // --------------
 //
 // This is the actual container for a Pinny's content. This is added automically
-// by Pinny, so you do not need to use it in your code.
+// by Pinny, so you do not need to use it in your code
 //
 //
 // Notes:
 //
-// 1. Remember that `.pinny` is set to `display: flex` by Pinny on open
+// 1. `display: flex` is coming from `.pinny__wrapper`
+// 2. This allows the content to grow or shrink as necessary based on content
+//    and the header/footer
 
 .pinny__content {
     overflow: auto;
-    flex: 1; // 1
+    flex: 1; // 1, 2
 
     -webkit-overflow-scrolling: touch;
 }
