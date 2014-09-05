@@ -21,23 +21,24 @@
                 }
                 return size[dimension];
             };
+            var height = getDimension('height');
+            var width = getDimension('width');
 
             this.$pinny
                 .css({
-                    top: coverage ? coverage : getDimension('height'),
-                    bottom: coverage ? coverage : getDimension('height'),
-                    right: coverage ? coverage : getDimension('width'),
-                    left: coverage ? coverage : getDimension('width'),
+                    top: coverage ? coverage : height,
+                    bottom: coverage ? coverage : height,
+                    right: coverage ? coverage : width,
+                    left: coverage ? coverage : width,
                     width: coverage ? 'auto' : this.options.coverage,
                     height: coverage ? 'auto' : this.options.coverage
                 });
 
-            Velocity.animate(this.$pinny, { scale: [2, 2], opacity: [0, 0] }, 0);
             Velocity.animate(
                 this.$pinny,
                 {
-                    scale: 1,
-                    opacity: 1
+                    scale: [1, 2],
+                    opacity: [1, 0]
                 },
                 {
                     begin: this.animation.begin,
