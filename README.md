@@ -117,8 +117,7 @@ $('#myPinny').pinny({
         open: noop,
         close: noop
     },
-    title: 'Pinny',
-    closeText: 'Close',
+    header: 'Pinny',
     footer: '',
     zIndex: 2,
     coverage: '100%',
@@ -155,27 +154,33 @@ $('#myPinny').pinny({
 });
 ```
 
-##### title
+##### header
 
 default `Pinny`
 
-Sets the title that pinny should use in its header bar.
+Sets the header that pinny should use in its header bar. Valid values are:
+
+`boolean` - specifies no default header generated. If chosen, the user is required to specify the header markup themselves.
+`string` - specifies the title text used in the header. The header structure will be generated automatically.
+`html|element` - specifies the HTML to be used for the header
 
 ```js
 $('#myPinny').pinny({
-    title: 'My Pinny'
+    header: false // generates no header
 });
 ```
-
-##### closeText
-
-default `Close`
-
-Sets the close text.
+or
 
 ```js
 $('#myPinny').pinny({
-    closeText: 'Close'
+    header: 'My Pinny' // generates a default header with the title 'My Pinny'
+});
+
+or
+
+```js
+$('#myPinny').pinny({
+    header: '<header class="pinny__header">My Pinny<button class="pinny__close">Close</button></header>'
 });
 ```
 
