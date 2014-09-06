@@ -165,22 +165,25 @@ Sets the header that pinny should use in its header bar. Valid values are:
 `html|element` - specifies the HTML to be used for the header
 
 ```js
+// generates no header
 $('#myPinny').pinny({
-    header: false // generates no header
+	header: false 
 });
 ```
 or
 
 ```js
+// generates a default header with the title "My Pinny"
 $('#myPinny').pinny({
-    header: 'My Pinny' // generates a default header with the title 'My Pinny'
+	header: 'My Pinny'
 });
+```
 
 or
 
 ```js
 $('#myPinny').pinny({
-    header: '<header class="pinny__header">My Pinny<button class="pinny__close">Close</button></header>'
+	header: '<header class="pinny__header">My Pinny<button class="pinny__close">Close</button></header>'
 });
 ```
 
