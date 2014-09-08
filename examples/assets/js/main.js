@@ -29,7 +29,7 @@ require(['config'], function() {
             position: sheetTop,
             coverage: '80%',
             shade: {
-                duration: 0
+                duration: 200
             }
         });
 
@@ -39,10 +39,7 @@ require(['config'], function() {
 
         var $sheetRight = $('#sheetRightPinny').pinny({
             position: sheetRight,
-            coverage: '80%',
-            shade: {
-                duration: 0
-            }
+            coverage: '80%'
         });
 
         $('#sheetRight').on('click', function() {
@@ -51,10 +48,7 @@ require(['config'], function() {
 
         var $sheetLeft = $('#sheetLeftPinny').pinny({
             position: sheetLeft,
-            coverage: '80%',
-            shade: {
-                duration: 0
-            }
+            coverage: '80%'
         });
 
         $('#sheetLeft').on('click', function() {
@@ -63,10 +57,7 @@ require(['config'], function() {
 
         var $sheetBottom = $('#sheetBottomPinny').pinny({
             position: sheetBottom,
-            coverage: '80%',
-            shade: {
-                duration: 0
-            }
+            coverage: '80%'
         });
 
         $('#sheetBottom').on('click', function() {
