@@ -35,11 +35,11 @@ To use with require.js, after installing through bower you merely have to refere
 {
     'paths': {
         'pinny': 'bower_components/pinny/dist/pinny.min',
-        'modal-center': 'bower_components/pinny/dist/position/modal-center',
-        'sheet-bottom': 'bower_components/pinny/dist/position/sheet-bottom',
-        'sheet-left': 'bower_components/pinny/dist/position/sheet-left',
-        'sheet-right': 'bower_components/pinny/dist/position/sheet-right',
-        'sheet-top': 'bower_components/pinny/dist/position/sheet-top',
+        'modal-center': 'bower_components/pinny/dist/effect/modal-center',
+        'sheet-bottom': 'bower_components/pinny/dist/effect/sheet-bottom',
+        'sheet-left': 'bower_components/pinny/dist/effect/sheet-left',
+        'sheet-right': 'bower_components/pinny/dist/effect/sheet-right',
+        'sheet-top': 'bower_components/pinny/dist/effect/sheet-top',
         'shade': 'bower_components/shade/dist/shade.min',
         'velocity': 'bower_components/velocity/velocity',
         'bouncefix': 'bower_components/bouncefix.js/dist/bouncefix.min'
@@ -59,7 +59,7 @@ define([
     ],
     function($, modalCenter) {
         $('.pinny').pinny({
-        	position: modalCenter
+        	effect: modalCenter
         });
     }
 );
@@ -86,8 +86,8 @@ Pinny requires very minimal markup. In fact, all pinny needs is a div with your 
 <script src="zepto.min.js"></script>
 <script src="velocity.min.js"></script>
 
-<!-- Include the position module you want to use -->
-<script src="modal-center.js"></script>
+<!-- Include the effect module you want to use -->
+<script src="effect/modal-center.js"></script>
 <!-- Include pinny.js -->
 <script src="pinny.min.js"></script>
 
@@ -103,7 +103,7 @@ Initializes the pinny.
 
 ```js
 $('#myPinny').pinny({
-	position: modalCenter
+	effect: modalCenter
 });
 ```
 
@@ -113,7 +113,7 @@ Initialize with options.
 
 ```js
 $('#myPinny').pinny({
-    position: {
+    effect: {
         open: noop,
         close: noop
     },
@@ -133,16 +133,16 @@ $('#myPinny').pinny({
 
 #### Options
 
-##### position
+##### effect
 
 default: ` {
         open: noop,
         close: noop
     },`
 
-Specifies which position module pinny should use when opening. Position modules allow you to load specific functionality that tell pinny how to open and close. Available position modules can be found in the dist/position folder. Current position modules include:
+Specifies which `effect` module Pinny should use when opening. `Effect` modules allow you to load specific functionality that tell Pinny how to open and close. Available `effect` modules can be found in the `dist/effect` folder. Current `effect` modules include:
 
-- Modal Center - opens pinny in the center of the screen
+- Modal Center - opens Pinny in the center of the screen
 - Sheet Top - slides down from the top of the screen
 - Sheet Bottom - slides up from the bottom of the screen
 - Sheet Left - slides in from the left of the screen
@@ -150,7 +150,7 @@ Specifies which position module pinny should use when opening. Position modules 
 
 ```js
 $('#myPinny').pinny({
-    position: sheetLeft
+    effect: sheetLeft
 });
 ```
 
