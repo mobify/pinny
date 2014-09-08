@@ -10,6 +10,7 @@ require.config({
         'sheet-left': 'dist/effect/sheet-left.min',
         'sheet-right': 'dist/effect/sheet-right.min',
         'sheet-top': 'dist/effect/sheet-top.min',
+        'plugin': 'bower_components/plugin/dist/plugin.min',
         'shade': 'bower_components/shade/dist/shade.min',
         'pinny': 'dist/pinny.min'
     },
