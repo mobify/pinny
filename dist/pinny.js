@@ -11,7 +11,10 @@
         factory(framework, framework.Velocity);
     }
 }(function($, bouncefix) {
-    var OPENED_CLASS = 'pinny--is-open';
+    var classes = {
+        OPENED: 'pinny--is-open'
+    };
+
     var HEADER_TEMPLATE = '<header class="pinny__header">{0}</header>';
 
     function Pinny(element, options) {
@@ -21,7 +24,7 @@
     Pinny.VERSION = '1.0.0';
 
     Pinny.DEFAULTS = {
-        position: {
+        effect: {
             open: $.noop,
             close: $.noop
         },
@@ -41,7 +44,7 @@
 
     $.plugin('pinny', Pinny, {
         /*
-         Common animation callbacks used in the position objects
+         Common animation callbacks used in the effect objects
          */
         animation: {
             begin: function() {
@@ -57,7 +60,7 @@
             }
         },
 
-        _init: function(element, options) {
+        _init: function(element) {
             var plugin = this;
 
             this.$body = $(document.body);
@@ -107,13 +110,13 @@
 
             bouncefix.add('pinny__content');
 
-            this.position = this.options.position;
+            this.effect = this.options.effect;
 
             this._bindEvents();
         },
 
         toggle: function() {
-            this[this.$pinny.hasClass(OPENED_CLASS) ? 'close' : 'open']();
+            this[this.$pinny.hasClass(classes.OPENED) ? 'close' : 'open']();
         },
 
         open: function() {
@@ -121,9 +124,9 @@
 
             this.options.shade && this.$shade.shade('open');
 
-            this.position.open.call(this);
+            this.effect.open.call(this);
 
-            this.$pinny.addClass(OPENED_CLASS);
+            this.$pinny.addClass(classes.OPENED);
 
             this._trigger('opened');
         },
@@ -133,9 +136,9 @@
 
             this.options.shade && this.$shade.shade('close');
 
-            this.$pinny.removeClass(OPENED_CLASS);
+            this.$pinny.removeClass(classes.OPENED);
 
-            this.position.close.call(this);
+            this.effect.close.call(this);
 
             this._trigger('closed');
         },
@@ -168,7 +171,7 @@
         },
 
         /*
-         Takes the coverage option and turns it into a position value
+         Takes the coverage option and turns it into a effect value
          */
         _coverage: function(divisor) {
             var coverage;
