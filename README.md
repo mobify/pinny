@@ -28,22 +28,22 @@ bower install https://github.com/mobify/pinny.git#pinny-1.0
 
 ## Usage with Require.js
 
-To use with require.js, after installing through bower you merely have to reference pinny, pinny's position modules, and pinny's dependencies (velocity, shade, and bouncefix) inside your require config file:
+To use with require.js, after installing through bower you merely have to reference pinny, pinny's effect modules, and pinny's dependencies (velocity, shade, and bouncefix) inside your require config file:
 
 ```config.js
 
 {
     'paths': {
         'pinny': 'bower_components/pinny/dist/pinny.min',
-        'modal-center': 'bower_components/pinny/dist/modal-center',
-        'sheet-bottom': 'bower_components/pinny/dist/sheet-bottom',
-        'sheet-left': 'bower_components/pinny/dist/sheet-left',
-        'sheet-right': 'bower_components/pinny/dist/sheet-right',
-        'sheet-top': 'bower_components/pinny/dist/sheet-top',
+        'modal-center': 'bower_components/pinny/dist/effect/modal-center',
+        'sheet-bottom': 'bower_components/pinny/dist/effect/sheet-bottom',
+        'sheet-left': 'bower_components/pinny/dist/effect/sheet-left',
+        'sheet-right': 'bower_components/pinny/dist/effect/sheet-right',
+        'sheet-top': 'bower_components/pinny/dist/effect/sheet-top',
         'shade': 'bower_components/shade/dist/shade.min',
         'velocity': 'bower_components/velocity/velocity',
         'bouncefix': 'bower_components/bouncefix.js/dist/bouncefix.min'
-        
+
     }
 }
 
@@ -53,13 +53,13 @@ And then require pinny in as needed:
 
 ```
 define([
-    'zepto', 
-    'modal-center', 
+    'zepto',
+    'modal-center',
     'pinny'
     ],
     function($, modalCenter) {
         $('.pinny').pinny({
-        	position: modalCenter
+        	effect: modalCenter
         });
     }
 );
@@ -86,8 +86,8 @@ Pinny requires very minimal markup. In fact, all pinny needs is a div with your 
 <script src="zepto.min.js"></script>
 <script src="velocity.min.js"></script>
 
-<!-- Include the position module you want to use -->
-<script src="modal-center.js"></script>
+<!-- Include the effect module you want to use -->
+<script src="effect/modal-center.js"></script>
 <!-- Include pinny.js -->
 <script src="pinny.min.js"></script>
 
@@ -103,7 +103,7 @@ Initializes the pinny.
 
 ```js
 $('#myPinny').pinny({
-	position: modalCenter
+	effect: modalCenter
 });
 ```
 
@@ -113,7 +113,7 @@ Initialize with options.
 
 ```js
 $('#myPinny').pinny({
-    position: {
+    effect: {
         open: noop,
         close: noop
     },
@@ -133,16 +133,16 @@ $('#myPinny').pinny({
 
 #### Options
 
-##### position
+##### effect
 
 default: ` {
         open: noop,
         close: noop
     },`
 
-Specifies which position module pinny should use when opening. Position modules allow you to load specific functionality that tell pinny how to open and close. Available position modules can be found in the dist/position folder. Current position modules include:
+Specifies which `effect` module Pinny should use when opening. `Effect` modules allow you to load specific functionality that tell Pinny how to open and close. Available `effect` modules can be found in the `dist/effect` folder. Current `effect` modules include:
 
-- Modal Center - opens pinny in the center of the screen
+- Modal Center - opens Pinny in the center of the screen
 - Sheet Top - slides down from the top of the screen
 - Sheet Bottom - slides up from the bottom of the screen
 - Sheet Left - slides in from the left of the screen
@@ -150,7 +150,7 @@ Specifies which position module pinny should use when opening. Position modules 
 
 ```js
 $('#myPinny').pinny({
-    position: sheetLeft
+    effect: sheetLeft
 });
 ```
 
@@ -167,7 +167,7 @@ Sets the header that pinny should use in its header bar. Valid values are:
 ```js
 // generates no header
 $('#myPinny').pinny({
-	header: false 
+	header: false
 });
 ```
 or
@@ -253,10 +253,10 @@ default: `swing`
 
 Sets the easing for the animation. Pinny takes all of the same easing properties that [Velocity.js](http://julian.com/research/velocity) accepts.
 
-> * [jQuery UI's easings](http://easings.net/) and CSS3's easings ("ease", "ease-in", "ease-out", and "ease-in-out"), which are pre-packaged into Velocity. A bonus "spring" easing (sampled in the CSS Support pane) is also included. 
-* CSS3's bezier curves: Pass in a four-item array of bezier points. (Refer to [Cubic-Bezier.com](http://cubic-bezier.com/) for crafing custom bezier curves.) 
-* Spring physics: Pass a two-item array in the form of [ tension, friction ]. A higher tension (default: 600) increases total speed and bounciness. A lower friction (default: 20) increases ending vibration speed. 
-* Step easing: Pass a one-item array in the form of [ steps ]. The animation will jump toward its end values using the specified number of steps. 
+> * [jQuery UI's easings](http://easings.net/) and CSS3's easings ("ease", "ease-in", "ease-out", and "ease-in-out"), which are pre-packaged into Velocity. A bonus "spring" easing (sampled in the CSS Support pane) is also included.
+* CSS3's bezier curves: Pass in a four-item array of bezier points. (Refer to [Cubic-Bezier.com](http://cubic-bezier.com/) for crafing custom bezier curves.)
+* Spring physics: Pass a two-item array in the form of [ tension, friction ]. A higher tension (default: 600) increases total speed and bounciness. A lower friction (default: 20) increases ending vibration speed.
+* Step easing: Pass a one-item array in the form of [ steps ]. The animation will jump toward its end values using the specified number of steps.
 
 For more information, check out [Velocity's docs on easing](http://julian.com/research/velocity/#easing).
 
@@ -277,11 +277,11 @@ Triggered every time the selected pinny item is starting to open.
 | Parameter name | Description |
 |----------------|-------------|
 | **e** | An Event object passed to the callback |
-| **ui** | An object containing any associated data for use inside the callback | 
+| **ui** | An object containing any associated data for use inside the callback |
 
 ```js
 $('#myPinny').pinny({
-    open: function(e, ui) { 
+    open: function(e, ui) {
         // ui.item contains the item opening
     }
 });
@@ -298,11 +298,11 @@ Triggered every time the selected pinny item has finished opening.
 | Parameter name | Description |
 |----------------|-------------|
 | **e** | An Event object passed to the callback |
-| **ui** | An object containing any associated data for use inside the callback | 
+| **ui** | An object containing any associated data for use inside the callback |
 
 ```js
 $('#myPinny').pinny({
-    opened: function(e, ui) { 
+    opened: function(e, ui) {
         // ui.item contains the item that opened
     }
 });
@@ -317,11 +317,11 @@ Triggered every time an pinny item is starting to close.
 | Parameter name | Description |
 |----------------|-------------|
 | **e** | An Event object passed to the callback |
-| **ui** | An object containing any associated data for use inside the callback | 
+| **ui** | An object containing any associated data for use inside the callback |
 
 ```js
 $('#myPinny').pinny({
-    close: function(e, ui) { 
+    close: function(e, ui) {
         // ui.item contains the item closing
     }
 });
@@ -336,11 +336,11 @@ Triggered every time an pinny item is finished closing.
 | Parameter name | Description |
 |----------------|-------------|
 | **e** | An Event object passed to the callback |
-| **ui** | An object containing any associated data for use inside the callback | 
+| **ui** | An object containing any associated data for use inside the callback |
 
 ```js
 $('#myPinny').pinny({
-    closed: function(e, ui) { 
+    closed: function(e, ui) {
         // ui.item contains the item that closed
     }
 });
@@ -363,7 +363,7 @@ $pinny.pinny('open');
 ```
 
 ### Close
-    
+
 Close the selected pinny item by element reference
 
 ```js

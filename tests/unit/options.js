@@ -14,11 +14,11 @@ define([
         });
 
         describe('creates default options when no options parameter not used', function() {
-            it('correctly defines position', function() {
+            it('correctly defines effect', function() {
                 var pinny = new Pinny(element);
 
-                assert.deepEqual(pinny.options.position, Pinny.DEFAULTS.position);
-                assert.isObject(pinny.options.position);
+                assert.deepEqual(pinny.options.effect, Pinny.DEFAULTS.effect);
+                assert.isObject(pinny.options.effect);
             });
 
             it('correctly defines header', function() {
@@ -74,11 +74,11 @@ define([
         });
 
         describe('creates custom options when options parameter used', function() {
-            it('correctly defines position', function() {
-                var pinny = new Pinny(element, { position: modalCenter });
+            it('correctly defines effect', function() {
+                var pinny = new Pinny(element, { effect: modalCenter });
 
-                assert.deepEqual(pinny.options.position, modalCenter);
-                assert.isObject(pinny.options.position);
+                assert.deepEqual(pinny.options.effect, modalCenter);
+                assert.isObject(pinny.options.effect);
             });
 
             it('correctly defines custom header', function() {
