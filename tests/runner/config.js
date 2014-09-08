@@ -13,6 +13,7 @@ require.config({
         'sheet-left': 'dist/position/sheet-left.min',
         'sheet-right': 'dist/position/sheet-right.min',
         'sheet-top': 'dist/position/sheet-top.min',
+        'plugin': 'bower_components/plugin/dist/plugin.min',
         'shade': 'bower_components/shade/dist/shade.min',
         'pinny': 'dist/pinny.min'
     },
