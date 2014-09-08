@@ -25,7 +25,7 @@
     Pinny.VERSION = '1.0.0';
 
     Pinny.DEFAULTS = {
-        effect: {
+        position: {
             open: noop,
             close: noop
         },
@@ -44,7 +44,7 @@
     };
 
     /*
-     Common animation callbacks used in the effect objects
+     Common animation callbacks used in the position objects
      */
     Pinny.prototype.animation = {
         begin: function() {
@@ -112,7 +112,7 @@
 
         bouncefix.add('pinny__content');
 
-        this.effect = this.options.effect;
+        this.position = this.options.position;
 
         this._bindEvents();
     };
@@ -126,7 +126,7 @@
 
         this.options.shade && this.$shade.shade('open');
 
-        this.effect.open.call(this);
+        this.position.open.call(this);
 
         this.$pinny.addClass(OPENED_CLASS);
 
@@ -140,7 +140,7 @@
 
         this.$pinny.removeClass(OPENED_CLASS);
 
-        this.effect.close.call(this);
+        this.position.close.call(this);
 
         this._trigger('closed');
     };
@@ -177,7 +177,7 @@
     };
 
     /*
-     Takes the coverage option and turns it into a effect value
+     Takes the coverage option and turns it into a position value
      */
     Pinny.prototype._coverage = function(divisor) {
         var coverage;

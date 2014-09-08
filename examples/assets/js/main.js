@@ -17,7 +17,7 @@ require(['config'], function() {
         sheetBottom
     ) {
         var $modalCenter = $('#modalCenterPinny').pinny({
-            effect: modalCenter,
+            position: modalCenter,
             coverage: '90%'
         });
 
@@ -26,7 +26,7 @@ require(['config'], function() {
         });
 
         var $sheetTop = $('#sheetTopPinny').pinny({
-            effect: sheetTop,
+            position: sheetTop,
             coverage: '80%',
             shade: {
                 duration: 200
@@ -38,7 +38,7 @@ require(['config'], function() {
         });
 
         var $sheetRight = $('#sheetRightPinny').pinny({
-            effect: sheetRight,
+            position: sheetRight,
             coverage: '80%'
         });
 
@@ -47,7 +47,7 @@ require(['config'], function() {
         });
 
         var $sheetLeft = $('#sheetLeftPinny').pinny({
-            effect: sheetLeft,
+            position: sheetLeft,
             coverage: '80%'
         });
 
@@ -56,7 +56,7 @@ require(['config'], function() {
         });
 
         var $sheetBottom = $('#sheetBottomPinny').pinny({
-            effect: sheetBottom,
+            position: sheetBottom,
             coverage: '80%'
         });
 
