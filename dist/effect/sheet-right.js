@@ -28,11 +28,11 @@
                 this.$pinny,
                 { translateX: [0, '100%'] },
                 {
-                    begin: this.animation.begin,
+                    begin: this.animation.beginOpen.bind(this),
                     easing: this.options.easing,
                     duration: this.options.duration,
                     display: 'block',
-                    complete: this.animation.complete
+                    complete: this.animation.openComplete.bind(this)
                 }
             );
         },
@@ -41,11 +41,11 @@
                 this.$pinny,
                 'reverse',
                 {
-                    begin: this.animation.beginClose,
+                    begin: this.animation.beginClose.bind(this),
                     easing: this.options.easing,
                     duration: this.options.duration,
                     display: 'none',
-                    complete: this.animation.complete
+                    complete: this.animation.closeComplete.bind(this)
                 }
             );
         }

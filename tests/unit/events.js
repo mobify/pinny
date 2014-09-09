@@ -1,8 +1,9 @@
 define([
     'text!fixtures/pinny.html',
     '$',
+    'modal-center',
     'pinny'
-], function(fixture, $) {
+], function(fixture, $, modalCenter) {
     var element;
 
     describe('Pinny events', function() {
@@ -10,8 +11,14 @@ define([
             element = $(fixture);
         });
 
+        afterEach(function() {
+            element.remove();
+            element = null;
+        });
+
         it('fires the open event when pinny is opened', function(done) {
             element.pinny({
+                effect: modalCenter,
                 open: function() {
                     done();
                 }
@@ -22,6 +29,7 @@ define([
 
         it('fires the opened event when pinny is opened', function(done) {
             element.pinny({
+                effect: modalCenter,
                 opened: function() {
                     done();
                 }
@@ -32,6 +40,7 @@ define([
 
         it('fires the close event when pinny is closed', function(done) {
             element.pinny({
+                effect: modalCenter,
                 opened: function() {
                     element.pinny('close');
                 },
@@ -45,6 +54,7 @@ define([
 
         it('fires the closed event when pinny is closed', function(done) {
             element.pinny({
+                effect: modalCenter,
                 opened: function() {
                     element.pinny('close');
                 },

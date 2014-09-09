@@ -2,13 +2,19 @@ define([
     'text!fixtures/pinny.html',
     'text!fixtures/fullPinny.html',
     '$',
+    'modal-center',
     'pinny'
-], function(fixture, fullFixture, $) {
+], function(fixture, fullFixture, $, modalCenter) {
     var element;
 
     describe('Pinny plugin', function() {
         beforeEach(function() {
             element = $(fixture);
+        });
+
+        afterEach(function() {
+            element.remove();
+            element = null;
         });
 
         describe('binding to Zepto\'s fn', function() {
@@ -48,6 +54,7 @@ define([
         describe('invoking pinny methods using the plugin interface', function() {
             it('opens a pinny using the open method', function(done) {
                 element.pinny({
+                    effect: modalCenter,
                     opened: function() {
                         assert.isTrue(element.closest('.pinny').hasClass('pinny--is-open'));
                         done();
@@ -59,6 +66,7 @@ define([
 
             it('closes a pinny item using the close method', function(done) {
                 element.pinny({
+                    effect: modalCenter,
                     opened: function() {
                         element.pinny('close');
                     },
@@ -73,6 +81,7 @@ define([
 
             it('closes a pinny item using the close button', function(done) {
                 element.pinny({
+                    effect: modalCenter,
                     opened: function() {
                         element.closest('.pinny').find('.pinny__close').trigger('click');
                     },

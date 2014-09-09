@@ -41,14 +41,11 @@
                     opacity: [1, 0]
                 },
                 {
-                    begin: this.animation.begin,
+                    begin: this.animation.beginOpen.bind(this),
                     easing: this.options.easing,
                     duration: this.options.duration,
                     display: 'block',
-                    complete: function() {
-                        plugin._trigger('opened');
-                        plugin.animation.complete();
-                    }
+                    complete: this.animation.openComplete.bind(this)
                 }
             );
         },
@@ -60,11 +57,11 @@
                     opacity: 0
                 },
                 {
-                    begin: this.animation.beginClose,
+                    begin: this.animation.beginClose.bind(this),
                     easing: this.options.easing,
                     duration: this.options.duration,
                     display: 'none',
-                    complete: this.animation.complete
+                    complete: this.animation.closeComplete.bind(this)
                 }
             );
         }

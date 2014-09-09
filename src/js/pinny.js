@@ -11,6 +11,9 @@
         factory(framework, framework.Velocity);
     }
 }(function($, bouncefix) {
+    var $doc = $(document);
+    var $html = $('html');
+
     var classes = {
         OPENED: 'pinny--is-open'
     };
@@ -47,16 +50,21 @@
          Common animation callbacks used in the effect objects
          */
         animation: {
-            begin: function() {
-                $('html').css('overflow', 'hidden');
+            beginOpen: function() {
+                $html.css('overflow', 'hidden');
             },
             beginClose: function() {
-                $(document).on('touchmove', Pinny.prototype._blockScroll);
+                $doc.on('touchmove', this._blockScroll);
 
-                $('html').css('overflow', '');
+                $html.css('overflow', '');
             },
-            complete: function() {
-                $(document).off('touchmove', Pinny.prototype._blockScroll);
+            openComplete: function() {
+                this._trigger('opened');
+                $doc.off('touchmove', this._blockScroll);
+            },
+            closeComplete: function() {
+                this._trigger('closed');
+                $doc.off('touchmove', this._blockScroll);
             }
         },
 
@@ -131,8 +139,6 @@
             this.effect.open.call(this);
 
             this.$pinny.addClass(classes.OPENED);
-
-            this._trigger('opened');
         },
 
         close: function() {
@@ -143,8 +149,6 @@
             this.$pinny.removeClass(classes.OPENED);
 
             this.effect.close.call(this);
-
-            this._trigger('closed');
         },
 
         _bindEvents: function() {
