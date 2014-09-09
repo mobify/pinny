@@ -90,24 +90,8 @@
                 });
 
             if (this.options.header !== false) {
-                this.$wrapper = $('<div />')
-                    .addClass('pinny__wrapper')
-                    .appendTo(this.$pinny);
-
-                this.$header = $(this._buildHeader()).prependTo(this.$wrapper);
-
-                this.$content = $('<div />').addClass('pinny__content').appendTo(this.$wrapper);
-
-                if (this.options.footer) {
-                    this.$footer = $(this.options.footer)
-                        .addClass('pinny__footer')
-                        .appendTo(this.$wrapper);
-                }
-
-                this.$element.appendTo(this.$content);
+                this._build();
             } else {
-                this.$content = this.$element.find('.pinny__content');
-
                 this.$element.appendTo(this.$pinny);
             }
 
@@ -159,6 +143,39 @@
                     e.preventDefault();
                 }
             });
+        },
+
+        /*
+         Builds Pinny using the following structure:
+
+         <section class="pinny">
+             <div class="pinny__wrapper">
+                <header class="pinny__header">{header content}</header>
+                <div class="pinny__content">
+                    {content}
+                </div>
+             </div>
+             // footer is optional
+             <footer class="pinny__footer"></footer>
+         </section>
+         */
+        _build: function() {
+            var $wrapper = $('<div />')
+                .addClass('pinny__wrapper')
+                .appendTo(this.$pinny);
+
+            $(this._buildHeader()).prependTo($wrapper);
+
+            $('<div />')
+                .addClass('pinny__content')
+                .append(this.$element)
+                .appendTo($wrapper);
+
+            if (this.options.footer) {
+                $(this.options.footer)
+                    .addClass('pinny__footer')
+                    .appendTo($wrapper);
+            }
         },
 
         _buildHeader: function() {
