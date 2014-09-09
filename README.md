@@ -239,11 +239,13 @@ $('#myPinny').pinny({
 
 default: `{}`
 
-Specifies whether pinny should use the shade overlay.
+Specifies whether pinny should use the shade overlay. You can pass options through to [Shade](http://github.com/mobify/shade) using this property. For more information on available options, see the [Shade documentation](http://github.com/mobify/shade). 
 
 ```js
 $('#myPinny').pinny({
-    shade: { duration: 400 }
+    shade: {
+        duration: 400
+    }
 });
 ```
 
