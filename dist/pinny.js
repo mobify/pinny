@@ -86,9 +86,13 @@
 
             this.$header = $(this._buildHeader()).prependTo(this.$wrapper);
 
-            this.$content = $('<div />')
-                .addClass('pinny__content')
-                .appendTo(this.$wrapper);
+            this.$content = $('<div />').appendTo(this.$wrapper);
+
+            /*
+             We apply the content class only if the header is defined. If the header
+             is not defined (false), the entire HTML is controlled by the user.
+             */
+            this.options.header !== false && this.$content.addClass('pinny__content');
 
             $(element)
                 .appendTo(this.$content)

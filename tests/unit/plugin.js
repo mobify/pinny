@@ -1,8 +1,9 @@
 define([
     'text!fixtures/pinny.html',
+    'text!fixtures/fullPinny.html',
     '$',
     'pinny'
-], function(fixture, $) {
+], function(fixture, fullFixture, $) {
     var element;
 
     describe('Pinny plugin', function() {
@@ -94,6 +95,41 @@ define([
 
             it('throws when attempting to invoke methods that aren\'t functions', function() {
                 assert.throws(function() { element.pinny().pinny('singleItemOpen'); });
+            });
+        });
+
+        describe('creates a pinny with correct header', function() {
+            it('creates the structure with header = false', function() {
+                var $pinny = $(fullFixture).pinny({
+                    header: false
+                });
+
+                assert.equal($pinny.find('.pinny__header').length, 1);
+                assert.equal($pinny.find('.pinny__content').length, 1);
+            });
+
+            it('creates the correct structure with header = "Something"', function() {
+                var $pinny = $(fixture)
+                    .pinny({
+                        header: 'Something'
+                    })
+                    .closest('.pinny');
+
+                assert.equal($pinny.find('.pinny__header').length, 1);
+                assert.equal($pinny.find('.pinny__content').length, 1);
+                assert.include($pinny.find('.pinny__header').text(), 'Something');
+            });
+
+            it('creates the correct structure with an HTML header', function() {
+                var $pinny = $(fixture)
+                    .pinny({
+                        header: '<span class="pinny__header--custom">Custom header</span><button class="pinny__close"></button>'
+                    })
+                    .closest('.pinny');
+
+                assert.equal($pinny.find('.pinny__header').length, 1);
+                assert.equal($pinny.find('.pinny__header--custom').length, 1);
+                assert.include($pinny.find('.pinny__header--custom').text(), 'Custom header');
             });
         });
     });

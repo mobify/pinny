@@ -45,7 +45,10 @@
                     easing: this.options.easing,
                     duration: this.options.duration,
                     display: 'block',
-                    complete: this.animation.complete
+                    complete: function() {
+                        plugin._trigger('opened');
+                        plugin.animation.complete();
+                    }
                 }
             );
         },
