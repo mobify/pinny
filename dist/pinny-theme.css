@@ -1,6 +1,6 @@
 .pinny {
-  -webkit-box-shadow: -2px 0 5px rgba(0, 0, 0, 0.25);
-          box-shadow: -2px 0 5px rgba(0, 0, 0, 0.25); }
+  -webkit-box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.25);
+          box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.25); }
 
 .pinny__header {
   position: relative;

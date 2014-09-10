@@ -13,6 +13,8 @@
 }(function($, bouncefix) {
     var $doc = $(document);
     var $html = $('html');
+    var scrollPosition;
+    var isChrome = /chrome/i.test( navigator.userAgent );
 
     var classes = {
         OPENED: 'pinny--is-open'
@@ -51,18 +53,26 @@
          */
         animation: {
             beginOpen: function() {
-                $html.css('overflow', 'hidden');
+                alert(isChrome);
             },
             beginClose: function() {
                 $doc.on('touchmove', this._blockScroll);
-
-                $html.css('overflow', '');
             },
             openComplete: function() {
+                if (isChrome & ) {
+                    scrollPosition = document.body.scrollTop;
+                    $html.css('position', 'fixed');
+                    $html.css('top', scrollPosition * -1);
+                }
                 this._trigger('opened');
                 $doc.off('touchmove', this._blockScroll);
             },
             closeComplete: function() {
+                if (isChrome & ) {
+                    $html.css('position', '');
+                    $html.css('top', '');
+                    window.scrollTo(0, scrollPosition);
+                }
                 this._trigger('closed');
                 $doc.off('touchmove', this._blockScroll);
             }
