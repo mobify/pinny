@@ -53,7 +53,6 @@
          */
         animation: {
             beginOpen: function() {
-                alert(isChrome);
             },
             beginClose: function() {
                 $doc.on('touchmove', this._blockScroll);
