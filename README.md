@@ -380,6 +380,7 @@ $pinny.pinny('close');
 | Android Browser   | 4.0+    | Degraded. No scroll locking. |
 | Android Browser   | 2.3.x   | Degraded. No transitions.    |
 | IE for Win Phone  | 8.0+    | Degraded. No scroll locking. |
+| Firefox (Android) | 23.0+     | Supported. (Support may exist for earlier versions but has not been tested) |
 
 
 ## Building a distribution
