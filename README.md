@@ -373,13 +373,13 @@ $pinny.pinny('close');
 
 ## Browser Compatibility
 
-| Browser           | Version | Support                    |
-|-------------------|---------|----------------------------|
-| Mobile Safari     | 4.0.x   | Degraded. No transitions.  |
-| Mobile Safari     | 5.0+    | Supported.                 |
-| Android Browser   | 4.0+    | Supported.                 |
-| Android Browser   | 2.3.x   | Degraded. No transitions.  |
-| Chrome (Android)  | 1.0+    | Supported.                 |
+| Browser           | Version | Support                      |
+|-------------------|---------|------------------------------|
+| Mobile Safari     | 6.0+    | Supported.                   |
+| Chrome (Android)  | 1.0+    | Supported.                   |
+| Android Browser   | 4.0+    | Degraded. No scroll locking. |
+| Android Browser   | 2.3.x   | Degraded. No transitions.    |
+| IE for Win Phone  | 8.0+    | Degraded. No scroll locking. |
 
 
 ## Building a distribution
