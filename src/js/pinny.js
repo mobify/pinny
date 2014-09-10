@@ -59,7 +59,7 @@
                 $doc.on('touchmove', this._blockScroll);
             },
             openComplete: function() {
-                if (isChrome & ) {
+                if (isChrome) {
                     scrollPosition = document.body.scrollTop;
                     $html.css('position', 'fixed');
                     $html.css('top', scrollPosition * -1);
@@ -68,7 +68,7 @@
                 $doc.off('touchmove', this._blockScroll);
             },
             closeComplete: function() {
-                if (isChrome & ) {
+                if (isChrome) {
                     $html.css('position', '');
                     $html.css('top', '');
                     window.scrollTo(0, scrollPosition);
