@@ -52,8 +52,6 @@
          Common animation callbacks used in the effect objects
          */
         animation: {
-            beginOpen: function() {
-            },
             beginClose: function() {
                 $doc.on('touchmove', this._blockScroll);
             },

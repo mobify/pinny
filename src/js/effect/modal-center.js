@@ -41,7 +41,6 @@
                     opacity: [1, 0]
                 },
                 {
-                    begin: this.animation.beginOpen.bind(this),
                     easing: this.options.easing,
                     duration: this.options.duration,
                     display: 'block',

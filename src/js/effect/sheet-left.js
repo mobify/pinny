@@ -28,7 +28,6 @@
                 this.$pinny,
                 { translateX: [0, '-100%'] },
                 {
-                    begin: this.animation.beginOpen.bind(this),
                     easing: this.options.easing,
                     duration: this.options.duration,
                     display: 'block',
