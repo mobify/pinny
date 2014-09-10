@@ -81,6 +81,7 @@
         _init: function(element) {
             var plugin = this;
 
+            this.$element = $(element);
             this.$body = $(document.body);
 
             this.$pinny = $('<section />')
@@ -98,28 +99,10 @@
                     plugin.close();
                 });
 
-            this.$wrapper = $('<div />')
-                .addClass('pinny__wrapper')
-                .appendTo(this.$pinny);
-
-            this.$header = $(this._buildHeader()).prependTo(this.$wrapper);
-
-            this.$content = $('<div />').appendTo(this.$wrapper);
-
-            /*
-             We apply the content class only if the header is defined. If the header
-             is not defined (false), the entire HTML is controlled by the user.
-             */
-            this.options.header !== false && this.$content.addClass('pinny__content');
-
-            $(element)
-                .appendTo(this.$content)
-                .removeClass('pinny__hidden');
-
-            if (this.options.footer) {
-                this.$footer = $(this.options.footer)
-                    .addClass('pinny__footer')
-                    .appendTo(this.$wrapper);
+            if (this.options.header !== false) {
+                this._build();
+            } else {
+                this.$element.appendTo(this.$pinny);
             }
 
             if (this.options.shade) {
@@ -133,6 +116,8 @@
             bouncefix.add('pinny__content');
 
             this.effect = this.options.effect;
+
+            this.$pinny.find('.pinny__hidden').removeClass('pinny__hidden');
 
             this._bindEvents();
         },
@@ -168,6 +153,39 @@
                     e.preventDefault();
                 }
             });
+        },
+
+        /*
+         Builds Pinny using the following structure:
+
+         <section class="pinny">
+             <div class="pinny__wrapper">
+                <header class="pinny__header">{header content}</header>
+                <div class="pinny__content">
+                    {content}
+                </div>
+             </div>
+             // footer is optional
+             <footer class="pinny__footer"></footer>
+         </section>
+         */
+        _build: function() {
+            var $wrapper = $('<div />')
+                .addClass('pinny__wrapper')
+                .appendTo(this.$pinny);
+
+            $(this._buildHeader()).prependTo($wrapper);
+
+            $('<div />')
+                .addClass('pinny__content')
+                .append(this.$element)
+                .appendTo($wrapper);
+
+            if (this.options.footer) {
+                $(this.options.footer)
+                    .addClass('pinny__footer')
+                    .appendTo($wrapper);
+            }
         },
 
         _buildHeader: function() {
