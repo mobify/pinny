@@ -3,7 +3,6 @@
         define([
             '$',
             'bouncefix',
-            'modal-center',
             'plugin',
             'shade'
         ], factory);
@@ -34,7 +33,10 @@
     Pinny.VERSION = '0';
 
     Pinny.DEFAULTS = {
-        effect: modalCenter,
+        effect: {
+            open: $.noop,
+            close: $.noop
+        },
         header: 'Pinny',
         footer: false,
         zIndex: 2,
