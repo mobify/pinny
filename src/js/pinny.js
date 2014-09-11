@@ -20,7 +20,11 @@
         OPENED: 'pinny--is-open'
     };
 
-    var HEADER_TEMPLATE = '<header class="pinny__header">{0}</header>';
+    var template = {
+        COMPONENT: '<{0} class="pinny__{0}">{1}</{0}>',
+        HEADER: '<h1 class="pinny__title">{0}</h1><button class="pinny__close">Close</button>',
+        FOOTER: '{0}'
+    };
 
     function Pinny(element, options) {
         Pinny._super.call(this, element, options, Pinny.DEFAULTS);
@@ -34,7 +38,7 @@
             close: $.noop
         },
         header: 'Pinny',
-        footer: '',
+        footer: false,
         zIndex: 2,
         cssClass: '',
         coverage: '100%',
@@ -162,7 +166,6 @@
                     {content}
                 </div>
              </div>
-             // footer is optional
              <footer class="pinny__footer"></footer>
          </section>
          */
@@ -171,28 +174,24 @@
                 .addClass('pinny__wrapper')
                 .appendTo(this.$pinny);
 
-            $(this._buildHeader()).prependTo($wrapper);
+            $(this._buildComponent('header')).prependTo($wrapper);
 
             $('<div />')
                 .addClass('pinny__content')
                 .append(this.$element)
                 .appendTo($wrapper);
 
-            if (this.options.footer) {
-                $(this.options.footer)
-                    .addClass('pinny__footer')
-                    .appendTo($wrapper);
-            }
+            this.options.footer && $(this._buildComponent('footer')).appendTo($wrapper);
         },
 
-        _buildHeader: function() {
-            var header = this.options.header;
+        _buildComponent: function(name) {
+            var component = this.options[name];
 
-            if (!header) return $([]);
+            if (!component) return $([]);
 
-            header = this._isHtml(this.options.header) ? this.options.header : '<h1 class="pinny__title">{0}</h1><button class="pinny__close">Close</button>'.replace('{0}', this.options.header);
+            component = this._isHtml(component) ? component : template[name.toUpperCase()].replace('{0}', component);
 
-            return HEADER_TEMPLATE.replace('{0}', header);
+            return template.COMPONENT.replace(/\{0\}/g, name).replace(/\{1\}/g, component);
         },
 
         _isHtml: function(input) {

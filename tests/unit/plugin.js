@@ -141,5 +141,43 @@ define([
                 assert.include($pinny.find('.pinny__header--custom').text(), 'Custom header');
             });
         });
+
+        describe('creates a pinny with correct footer', function() {
+            it('creates the structure with footer = false', function() {
+                var $pinny = $(fullFixture).pinny({
+                    header: false,
+                    footer: false
+                });
+
+                assert.equal($pinny.find('.pinny__header').length, 1);
+                assert.equal($pinny.find('.pinny__content').length, 1);
+                assert.equal($pinny.find('.pinny__footer').length, 0);
+            });
+
+            it('creates the correct structure with footer = "Footer"', function() {
+                var $pinny = $(fixture)
+                    .pinny({
+                        footer: 'Footer'
+                    })
+                    .closest('.pinny');
+
+                assert.equal($pinny.find('.pinny__header').length, 1);
+                assert.equal($pinny.find('.pinny__content').length, 1);
+                assert.equal($pinny.find('.pinny__footer').length, 1);
+                assert.include($pinny.find('.pinny__footer').text(), 'Footer');
+            });
+
+            it('creates the correct structure with an HTML footer', function() {
+                var $pinny = $(fixture)
+                    .pinny({
+                        footer: '<span class="pinny__footer--custom">Custom footer</span>'
+                    })
+                    .closest('.pinny');
+
+                assert.equal($pinny.find('.pinny__header').length, 1);
+                assert.equal($pinny.find('.pinny__footer--custom').length, 1);
+                assert.include($pinny.find('.pinny__footer--custom').text(), 'Custom footer');
+            });
+        });
     });
 });

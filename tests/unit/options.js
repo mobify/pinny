@@ -32,7 +32,7 @@ define([
                 var pinny = new Pinny(element);
 
                 assert.equal(pinny.options.footer, Pinny.DEFAULTS.footer);
-                assert.isString(pinny.options.footer);
+                assert.isBoolean(pinny.options.footer);
             });
 
             it('correctly defines zIndex', function() {
