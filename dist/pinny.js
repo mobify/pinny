@@ -3,6 +3,7 @@
         define([
             '$',
             'bouncefix',
+            'modal-center',
             'plugin',
             'shade'
         ], factory);
@@ -10,7 +11,7 @@
         var framework = window.Zepto || window.jQuery;
         factory(framework, framework.Velocity);
     }
-}(function($, bouncefix) {
+}(function($, bouncefix, modalCenter) {
     var $doc = $(document);
     var $html = $('html');
     var scrollPosition;
@@ -33,10 +34,7 @@
     Pinny.VERSION = '1.0.0';
 
     Pinny.DEFAULTS = {
-        effect: {
-            open: $.noop,
-            close: $.noop
-        },
+        effect: modalCenter,
         header: 'Pinny',
         footer: false,
         zIndex: 2,
