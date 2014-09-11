@@ -34,6 +34,7 @@ To use with require.js, after installing through bower you merely have to refere
 
 {
     'paths': {
+    	'plugin': 'bower_components/plugin/dist/plugin.min',
         'pinny': 'bower_components/pinny/dist/pinny.min',
         'modal-center': 'bower_components/pinny/dist/effect/modal-center',
         'sheet-bottom': 'bower_components/pinny/dist/effect/sheet-bottom',
@@ -159,9 +160,9 @@ default `Pinny`
 
 Sets the header that pinny should use in its header bar. Valid values are:
 
-`boolean` - specifies no default header generated. If chosen, the user is required to specify the header markup themselves.
+`boolean` - specifies no default header generated. If chosen, the user is required to specify the header markup themselves, including the appropriate class, `pinny__header`. It will be expected that this will be a part of the element that is used to invoke pinny.
 `string` - specifies the title text used in the header. The header structure will be generated automatically.
-`html|element` - specifies the HTML to be used for the header
+`html|element` - specifies the HTML to be used for the header.
 
 ```js
 // generates no header
@@ -188,13 +189,34 @@ $('#myPinny').pinny({
 
 ##### footer
 
-default `''`
+default `false`
 
-Sets the footer.
+Sets the footer that pinny should use in its footer. Valid values are:
+
+`boolean` - specifies no default footer generated. If chosen, the user is required to specify the footer markup themselves, including the appropriate class, `pinny__footer`.
+`string` - specifies the title text used in the footer. The footer structure will be generated automatically.
+`html|element` - specifies the HTML to be used for the footer.
+
+```js
+// generates no footer
+$('#myPinny').pinny({
+	footer: false
+});
+```
+or
+
+```js
+// generates a default footer with the contents "My Footer"
+$('#myPinny').pinny({
+	footer: 'My Footer'
+});
+```
+
+or
 
 ```js
 $('#myPinny').pinny({
-    footer: '<div>some footer</div>'
+	footer: '<footer class="pinny__footer">My Footer</footer>'
 });
 ```
 

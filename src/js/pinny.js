@@ -10,7 +10,7 @@
         var framework = window.Zepto || window.jQuery;
         factory(framework, framework.Velocity);
     }
-}(function($, bouncefix, modalCenter) {
+}(function($, bouncefix) {
     var $doc = $(document);
     var $html = $('html');
     var scrollPosition;
