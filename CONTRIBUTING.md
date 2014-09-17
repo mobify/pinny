@@ -20,7 +20,7 @@ Ensure the tests pass:
 grunt test
 ```
 	
-Make your changes, and tests for your changes, then run the tests again:
+Make your changes, add tests for your changes, then run the tests again:
 
 ```
 grunt test
