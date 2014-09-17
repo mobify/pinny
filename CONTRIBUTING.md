@@ -1,5 +1,4 @@
 ## Contributing
-===============
 
 We love pull requests, and other people helping maintain our code. If you want to contribute, please follow these guidelines.
 
