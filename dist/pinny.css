@@ -1,7 +1,8 @@
 .pinny {
   position: fixed;
   display: none;
-  background: white; }
+  background: white;
+  -webkit-tap-highlight-color: transparent; }
 
 .pinny__wrapper {
   display: -webkit-box;
