@@ -19,6 +19,7 @@
     /**
      * Function.prototype.bind polyfill required for < iOS6
      */
+    /* jshint ignore:start */
     if (!Function.prototype.bind) {
         Function.prototype.bind = function (scope) {
             var fn = this;
@@ -27,6 +28,7 @@
             };
         };
     }
+    /* jshint ignore:end */
 
     var classes = {
         OPENED: 'pinny--is-open'
