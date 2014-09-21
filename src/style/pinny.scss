@@ -1,42 +1,6 @@
 // Pinny
 // =====
 //
-// The main plugin class `.pinny` is used by Pinny's javascript to identify
-// the opened modal popups and is not to be used in authored code.
-//
-// We repeat: you do not need to use the `.pinny` class in your code – instead
-// use `.pinny__hidden` (see [here](https://github.com/mobify/pinny#usage)
-// for general usage)
-//
-// This file is REQUIRED
-//
-//
-// Example usage:
-//
-// ```html
-// <!-- Authored HTML -->
-//
-// <div id="myPinny" class="pinny__hidden">
-//     Content for your Pinny!
-// </div>
-// ```
-//
-// ```html
-// <!-- HTML After Pageload -->
-//
-// <section class="pinny pinny--is-open">
-//     <div class="pinny__wrapper">
-//         <header class="pinny__header">
-//             <h1 class="pinny__title">Pinny</h1>
-//             <button class="pinny__close"></button>
-//         </header>
-//         <div class="pinny__content">
-//             Content for your Pinny!
-//         </div>
-//     </div>
-// </section>
-// ```
-//
 //
 // Notes:
 //
