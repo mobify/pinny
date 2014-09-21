@@ -10,16 +10,32 @@
         var framework = window.Zepto || window.jQuery;
         factory(framework, framework.Velocity);
     }
-}(function($, bouncefix, modalCenter) {
+}(function($, bouncefix) {
     var $doc = $(document);
     var $html = $('html');
     var scrollPosition;
     var isChrome = /chrome/i.test( navigator.userAgent );
 
+    /**
+     * Function.prototype.bind polyfill required for < iOS6
+     */
+    if (!Function.prototype.bind) {
+        Function.prototype.bind = function (scope) {
+            var fn = this;
+            return function () {
+                return fn.apply(scope);
+            };
+        };
+    }
+
     var classes = {
         OPENED: 'pinny--is-open'
     };
 
+    /**
+     * Template constants required for building the default HTML structure
+     * @type {{COMPONENT: string, HEADER: string, FOOTER: string}}
+     */
     var template = {
         COMPONENT: '<{0} class="pinny__{0}">{1}</{0}>',
         HEADER: '<h1 class="pinny__title">{0}</h1><button class="pinny__close">Close</button>',
