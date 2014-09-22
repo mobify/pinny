@@ -80,7 +80,7 @@ Pinny requires very minimal markup. All Pinny needs is a div with your content a
 <link rel="stylesheet" href="pinny-style.min.css">
 
 <!-- Include the markup -->
-<div id="yourPinny" [hidden]>
+<div id="yourPinny" hidden>
 	Your pinny content
 </div>
 
