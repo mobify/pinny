@@ -128,7 +128,12 @@
                     click: function() {
                         plugin.close();
                     }
-                }, this.options.shade));
+                }, $.extend(
+                    this.options.shade,
+                    {
+                        duration: this.options.duration
+                    }
+                )));
             }
 
             bouncefix.add('pinny__content');

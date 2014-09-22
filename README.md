@@ -264,6 +264,8 @@ default: `{}`
 
 Specifies whether pinny should use the shade overlay. You can pass options through to [Shade](http://github.com/mobify/shade) using this property. For more information on available options, see the [Shade documentation](http://github.com/mobify/shade).
 
+> **Warning:** We currently force Shade's duration to match the one provided to Pinny. This is to limit DOM thrashing as much as possible during Pinny's animation. Pinny hitches a little if we don't do this.
+
 ```js
 $('#myPinny').pinny({
     shade: {
