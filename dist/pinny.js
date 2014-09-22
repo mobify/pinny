@@ -8,7 +8,7 @@
         ], factory);
     } else {
         var framework = window.Zepto || window.jQuery;
-        factory(framework, framework.Velocity);
+        factory(framework, window.bouncefix, window.Plugin);
     }
 }(function($, bouncefix, Plugin) {
     var $doc = $(document);
