@@ -93,17 +93,10 @@
 // Pinny: Hidden
 // -------------
 //
-// The `.pinny__hidden` class is the only one you need to include in your code!
-// For example...
-//
-// ```html
-// <div id="myPinny" class="pinny__hidden">
-//     Content for your Pinny!
-// </div>
-// ```
-//
-// Pinny will then take your code and generate the rest of the modal automatically!
+// We polyfill the hidden attribute here to ensure it hides all content when
+// applied. Pinny uses [hidden] to hide content from FOUT before the plugin is
+// initialized.
 
-.pinny__hidden {
+[hidden] {
     display: none !important;
 }

@@ -68,7 +68,9 @@ define([
 
 ## Usage
 
-Pinny requires very minimal markup. In fact, all pinny needs is a div with your content, and a class attribute with the class `pinny__hidden`.
+Pinny requires very minimal markup. All Pinny needs is a div with your content and it will automatically transform into what we need.
+
+> To avoid any unwanted FOUT, decorate the content you will be passing to Pinny with the `hidden` attribute. We will remove that attribute when Pinny is initialized.
 
 ```html
 <!-- Include the CSS -->
@@ -78,7 +80,7 @@ Pinny requires very minimal markup. In fact, all pinny needs is a div with your 
 <link rel="stylesheet" href="pinny-style.min.css">
 
 <!-- Include the markup -->
-<div class="pinny_hidden">
+<div id="yourPinny" [hidden]>
 	Your pinny content
 </div>
 
@@ -92,7 +94,7 @@ Pinny requires very minimal markup. In fact, all pinny needs is a div with your 
 <script src="pinny.min.js"></script>
 
 <!-- Construct Pinny -->
-<script>$('.pinny').pinny()</script>
+<script>$('#yourPinny').pinny()</script>
 ```
 
 ## Initializing the plugin
@@ -260,7 +262,7 @@ $('#myPinny').pinny({
 
 default: `{}`
 
-Specifies whether pinny should use the shade overlay. You can pass options through to [Shade](http://github.com/mobify/shade) using this property. For more information on available options, see the [Shade documentation](http://github.com/mobify/shade). 
+Specifies whether pinny should use the shade overlay. You can pass options through to [Shade](http://github.com/mobify/shade) using this property. For more information on available options, see the [Shade documentation](http://github.com/mobify/shade).
 
 ```js
 $('#myPinny').pinny({
