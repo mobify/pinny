@@ -10,7 +10,7 @@
         var framework = window.Zepto || window.jQuery;
         factory(framework, framework.Velocity);
     }
-}(function($, bouncefix) {
+}(function($, bouncefix, Plugin) {
     var $doc = $(document);
     var $html = $('html');
     var scrollPosition;
@@ -36,7 +36,6 @@
 
     /**
      * Template constants required for building the default HTML structure
-     * @type {{COMPONENT: string, HEADER: string, FOOTER: string}}
      */
     var template = {
         COMPONENT: '<{0} class="pinny__{0}">{1}</{0}>',
@@ -45,7 +44,7 @@
     };
 
     function Pinny(element, options) {
-        Pinny._super.call(this, element, options, Pinny.DEFAULTS);
+        Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
     }
 
     Pinny.VERSION = '0';
@@ -69,9 +68,9 @@
         closed: $.noop
     };
 
-    $.plugin('pinny', Pinny, {
-        /*
-         Common animation callbacks used in the effect objects
+    Plugin.create('pinny', Pinny, {
+        /**
+         * Common animation callbacks used in the effect objects
          */
         animation: {
             beginClose: function() {
@@ -174,7 +173,7 @@
             });
         },
 
-        /*
+        /**
          Builds Pinny using the following structure:
 
          <section class="pinny">
@@ -220,8 +219,8 @@
             e.preventDefault();
         },
 
-        /*
-         Takes the coverage option and turns it into a effect value
+        /**
+         * Takes the coverage option and turns it into a effect value
          */
         _coverage: function(divisor) {
             var coverage;
