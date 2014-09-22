@@ -135,7 +135,7 @@
 
             this.effect = this.options.effect;
 
-            this.$pinny.find('.pinny__hidden').removeClass('pinny__hidden');
+            this.$element.removeAttr('hidden');
 
             this._bindEvents();
         },
