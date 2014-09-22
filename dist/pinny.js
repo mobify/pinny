@@ -54,7 +54,7 @@
             open: $.noop,
             close: $.noop
         },
-        header: 'Pinny',
+        header: '',
         footer: false,
         zIndex: 2,
         cssClass: '',
@@ -209,7 +209,7 @@
         _buildComponent: function(name) {
             var component = this.options[name];
 
-            if (!component) return $([]);
+            if (component === false) return $([]);
 
             component = this._isHtml(component) ? component : template[name.toUpperCase()].replace('{0}', component);
 
