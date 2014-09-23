@@ -158,7 +158,7 @@ $('#myPinny').pinny({
 
 ##### header
 
-default `Pinny`
+default `''`
 
 Sets the header that pinny should use in its header bar. Valid values are:
 
