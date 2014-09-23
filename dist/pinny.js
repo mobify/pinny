@@ -47,7 +47,7 @@
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
     }
 
-    Pinny.VERSION = '1.0.0';
+    Pinny.VERSION = '0.1.0';
 
     Pinny.DEFAULTS = {
         effect: {
