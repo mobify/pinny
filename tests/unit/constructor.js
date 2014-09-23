@@ -1,6 +1,6 @@
 define([
     'text!fixtures/pinny.html',
-    'zepto',
+    '$',
     'pinny'
 ], function(fixture, $) {
     var Pinny;

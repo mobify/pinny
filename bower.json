@@ -1,6 +1,6 @@
 {
   "name": "pinny",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "homepage": "https://github.com/mobify/pinny",
   "authors": [
     "Mobify <jobs@mobify.com>"
@@ -19,9 +19,11 @@
     "./!(src|dist|lib|templates)"
   ],
   "dependencies": {
-    "velocity": "1.0.0",
+    "plugin": "2.0.0",
+    "velocity": "1.1.0",
     "requirejs-text": "~2.0.12",
     "requirejs": "~2.1.14",
-    "bouncefix.js": "~0.3.0"
+    "bouncefix.js": "~0.3.0",
+    "shade": "1.0.0"
   }
 }

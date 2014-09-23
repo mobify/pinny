@@ -37,7 +37,8 @@ module.exports = function(grunt) {
         'grunt-contrib-copy',
         'grunt-autoprefixer',
         'grunt-contrib-sass',
-        'grunt-mocha-phantomjs'
+        'grunt-mocha-phantomjs',
+        'grunt-version'
     ];
 
     npmTasks.forEach(function(taskName) {
@@ -46,10 +47,10 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('serve', ['connect:server', 'watch']);
-    grunt.registerTask('build', ['copy', 'uglify', 'sass', 'autoprefixer', 'cssmin']);
-    grunt.registerTask('release', ['test', 'shell:tagRelease']);
-    grunt.registerTask('test', ['build', 'connect:test', 'mocha_phantomjs']);
-    grunt.registerTask('test:browser', ['build', 'connect:test:keepalive']);
-    grunt.registerTask('default', 'build');
+    grunt.registerTask('serve', ['build-dist', 'connect:server', 'watch']);
+    grunt.registerTask('build-dist', ['lint:dev', 'copy', 'uglify', 'version:all', 'sass', 'autoprefixer', 'cssmin']);
+    grunt.registerTask('release', ['lint:dev', 'test', 'shell:tagRelease']);
+    grunt.registerTask('test', ['build-dist', 'connect:test', 'mocha_phantomjs']);
+    grunt.registerTask('test:browser', ['build-dist', 'connect:test:keepalive']);
+    grunt.registerTask('default', 'build-dist');
 };

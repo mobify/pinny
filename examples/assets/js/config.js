@@ -1,13 +1,10 @@
 require.config({
-    baseUrl: '../../',
+    baseUrl: '../',
     paths: {
         'text': 'bower_components/requirejs-text/text',
-        'fixtures': 'tests/fixtures',
+        '$': 'bower_components/jquery/dist/jquery',
         'bouncefix': 'bower_components/bouncefix.js/dist/bouncefix.min',
-        '$': 'lib/zeptojs/dist/zepto',
         'velocity': 'bower_components/velocity/velocity',
-        'chai': 'node_modules/chai/chai',
-        'mocha': 'node_modules/mocha/mocha',
         'modal-center': 'dist/effect/modal-center',
         'sheet-bottom': 'dist/effect/sheet-bottom',
         'sheet-left': 'dist/effect/sheet-left',
@@ -18,12 +15,6 @@ require.config({
         'pinny': 'dist/pinny'
     },
     'shim': {
-        'mocha': {
-            init: function() {
-                this.mocha.setup('bdd');
-                return this.mocha;
-            }
-        },
         '$': {
             exports: '$'
         }

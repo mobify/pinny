@@ -1,6 +1,6 @@
 module.exports = {
     targets: [
-        'src/js/pinny.js'
+        'src/js/**/*.js'
     ],
     excludes: []
 };
