@@ -2,7 +2,7 @@
 
 A mobile-first content fly-in UI plugin.
 
-![Pinny in action](https://raw.githubusercontent.com/mobify/pinny/pinny-1.0/examples/assets/i/pinny.gif "Pinny in action")
+![Pinny in action](https://raw.githubusercontent.com/mobify/pinny/master/examples/assets/i/pinny.gif "Pinny in action")
 
 ## Requirements
 
