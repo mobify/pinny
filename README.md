@@ -115,17 +115,17 @@ Initialize with options.
 
 ```js
 $('#myPinny').pinny({
-    effect: {
-        open: noop,
-        close: noop
-    },
-    header: 'Pinny',
-    footer: '',
+    effect: sheetBottom,
+    header: 'My Pinny Title',
+    footer: false,
     zIndex: 2,
+    cssClass: 'my-pinny-class',
     coverage: '100%',
     easing: 'swing',
     duration: 200,
-   	shade: true,
+   	shade: {
+        color: '#404040'
+    },
     open: noop,
     opened: noop,
     close: noop,
@@ -226,11 +226,23 @@ $('#myPinny').pinny({
 
 default `2`
 
-Sets the z-index value for the pinny. Use this value if you need to specify a specific stacking order.
+Sets the z-index value for Pinny. Use this value if you need to specify a specific stacking order.
 
 ```js
 $('#myPinny').pinny({
     zIndex: 10
+});
+```
+
+#### cssClass
+
+default `''`
+
+Sets a class to apply to the main Pinny parent element for ease of styling.
+
+```js
+#('#myPinny').pinny({
+    cssClass: 'my-pinny-class'
 });
 ```
 
