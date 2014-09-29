@@ -11,7 +11,7 @@ A mobile-first content fly-in UI plugin.
 
 ### Velocity
 
-If you are using Zepto, you need to load `bower_components/velocity/velocity.js` (this file comes with a jQuery shim bundled directly in it). If you are using jQuery, you need to load `bower_components/velocity/jquery.velocity.js`.
+If you are using Zepto, you need to load `bower_components/mobify-velocity/velocity.js` (this file comes with a jQuery shim bundled directly in it). If you are using jQuery, you need to load `bower_components/velocity/jquery.velocity.js`.
 
 ### jQuery Support
 
@@ -42,7 +42,7 @@ To use with require.js, after installing through bower you merely have to refere
         'sheet-right': 'bower_components/pinny/dist/effect/sheet-right',
         'sheet-top': 'bower_components/pinny/dist/effect/sheet-top',
         'shade': 'bower_components/shade/dist/shade.min',
-        'velocity': 'bower_components/velocity/velocity',
+        'velocity': 'bower_components/mobify-velocity/velocity',
         'bouncefix': 'bower_components/bouncefix.js/dist/bouncefix.min'
     }
 }

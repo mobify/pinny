@@ -5,7 +5,7 @@ require.config({
         'fixtures': 'tests/fixtures',
         'bouncefix': 'bower_components/bouncefix.js/dist/bouncefix.min',
         '$': 'lib/zeptojs/dist/zepto',
-        'velocity': 'bower_components/velocity/velocity',
+        'velocity': 'bower_components/mobify-velocity/velocity',
         'chai': 'node_modules/chai/chai',
         'mocha': 'node_modules/mocha/mocha',
         'modal-center': 'dist/effect/modal-center',
