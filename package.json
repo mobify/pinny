@@ -1,5 +1,9 @@
 {
   "name": "pinny",
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/mobify/pinny.git"
+  },
   "version": "0.1.1",
   "description": "A mobile first content fly-in UI plugin",
   "devDependencies": {
