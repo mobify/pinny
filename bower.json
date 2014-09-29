@@ -24,6 +24,6 @@
     "requirejs-text": "~2.0.12",
     "requirejs": "~2.1.14",
     "bouncefix.js": "~0.3.0",
-    "shade": "1.0.0"
+    "shade": "https://github.com/mobify/shade.git#mobify-velocity"
   }
 }
