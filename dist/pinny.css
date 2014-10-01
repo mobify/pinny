@@ -2,6 +2,7 @@
   position: fixed;
   display: none;
   background: white;
+  outline: none;
   -webkit-tap-highlight-color: transparent; }
 
 .pinny__wrapper {
