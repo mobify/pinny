@@ -15,6 +15,7 @@
     var $html = $('html');
     var scrollPosition;
     var isChrome = /chrome/i.test( navigator.userAgent );
+    var initialFocus;
 
     /**
      * Function.prototype.bind polyfill required for < iOS6
@@ -39,7 +40,7 @@
      */
     var template = {
         COMPONENT: '<{0} class="pinny__{0}">{1}</{0}>',
-        HEADER: '<h1 class="pinny__title">{0}</h1><button class="pinny__close">Close</button>',
+        HEADER: '<h1 class="pinny__title">{0}</h1><button class="pinny__close" role="button">Close</button>',
         FOOTER: '{0}'
     };
 
@@ -82,6 +83,7 @@
                     $html.css('position', 'fixed');
                     $html.css('top', scrollPosition * -1);
                 }
+
                 this._trigger('opened');
                 $doc.off('touchmove', this._blockScroll);
             },
@@ -98,6 +100,8 @@
 
         _init: function(element) {
             var plugin = this;
+
+            this.id = 'pinny-' + this._uuid();
 
             this.$element = $(element);
             this.$body = $(document.body);
@@ -157,6 +161,8 @@
             this.effect.open.call(this);
 
             this.$pinny.addClass(classes.OPENED);
+
+            this._focusPinny();
         },
 
         close: function() {
@@ -165,6 +171,8 @@
             this.options.shade && this.$shade.shade('close');
 
             this.$pinny.removeClass(classes.OPENED);
+
+            this._unfocusPinny();
 
             this.effect.close.call(this);
         },
@@ -196,7 +204,8 @@
                 .addClass('pinny__wrapper')
                 .appendTo(this.$pinny);
 
-            $(this._buildComponent('header')).prependTo($wrapper);
+            $(this._buildComponent('header'))
+                .prependTo($wrapper);
 
             $('<div />')
                 .addClass('pinny__content')
@@ -204,6 +213,8 @@
                 .appendTo($wrapper);
 
             this.options.footer && $(this._buildComponent('footer')).appendTo($wrapper);
+
+            this._initA11y();
         },
 
         _buildComponent: function(name) {
@@ -240,7 +251,50 @@
             }
 
             return percent ? coverage + '%' : this.options.coverage;
-        }
+        },
+
+        /**
+         * Accessibility Considerations
+         */
+        _initA11y: function() {
+            var headerID = this.id + '__header';
+            var $header = this.$pinny.find('.pinny__header h1').first();
+            var $wrapper = this.$pinny.find('.pinny__wrapper');
+
+            this.$pinny
+                .attr('role', 'dialog')
+                .attr('aria-labelledby', headerID)
+                .attr('aria-hidden', 'true')
+                .attr('tabindex', '-1');
+
+            $wrapper
+                .attr('role', 'document');
+
+            $header
+                .attr('id', headerID);
+        },
+
+        _focusPinny: function() {
+            initialFocus = document.activeElement;
+
+            this.$pinny.attr('aria-hidden', 'false');
+            this.$pinny.find('.pinny__wrapper').click();
+        },
+
+        _unfocusPinny: function() {
+            this.$pinny.attr('aria-hidden', 'true');
+
+            initialFocus.focus();
+        },
+
+        _uuid: (function() {
+            var uuid = 0;
+
+            return function() {
+                uuid += 1;
+                return uuid;
+            };
+        })()
     });
 
     $('[data-pinny]').pinny();
