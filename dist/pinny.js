@@ -294,8 +294,12 @@
             initialFocus.focus();
         },
 
+        /**
+         * Trap any tabbing within the visible Pinny window
+         * Adapted from https://github.com/gdkraus/accessible-modal-dialog
+         */
         _trapTabs: function(obj, evt) {
-            var focusableElementsString = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]';
+            var focusableElementsString = 'a[href], area[href], input, select, textarea, button, iframe, object, embed, [tabindex], [contenteditable]';
 
             // if tab or shift-tab pressed
             if (evt.which === 9) {
