@@ -86,6 +86,8 @@
 
                 this._trigger('opened');
                 $doc.off('touchmove', this._blockScroll);
+
+                this._focusPinny();
             },
             closeComplete: function() {
                 if (isChrome) {
@@ -95,6 +97,8 @@
                 }
                 this._trigger('closed');
                 $doc.off('touchmove', this._blockScroll);
+
+                this._unfocusPinny();
             }
         },
 
@@ -161,8 +165,6 @@
             this.effect.open.call(this);
 
             this.$pinny.addClass(classes.OPENED);
-
-            this._focusPinny();
         },
 
         close: function() {
@@ -171,8 +173,6 @@
             this.options.shade && this.$shade.shade('close');
 
             this.$pinny.removeClass(classes.OPENED);
-
-            this._unfocusPinny();
 
             this.effect.close.call(this);
         },
@@ -278,7 +278,8 @@
             initialFocus = document.activeElement;
 
             this.$pinny.attr('aria-hidden', 'false');
-            this.$pinny.find('.pinny__wrapper').click();
+
+            this.$pinny.focus();
         },
 
         _unfocusPinny: function() {
