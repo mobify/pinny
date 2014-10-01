@@ -57,7 +57,7 @@ require(['config'], function() {
 
         var $sheetBottom = $('#sheetBottomPinny').pinny({
             effect: sheetBottom,
-            coverage: '80%'
+            coverage: '100%'
         });
 
         $('#sheetBottom').on('click', function() {
