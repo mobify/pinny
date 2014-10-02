@@ -277,18 +277,16 @@
         _focusPinny: function() {
             initialFocus = document.activeElement;
 
+            this._disableInputs();
+
             this.$pinny.attr('aria-hidden', 'false');
 
             this.$pinny.focus();
-
-            var self = this;
-
-            this.$pinny.keydown(function(event) {
-                self._trapTabs($(this), event);
-            });
         },
 
         _unfocusPinny: function() {
+            this._enableInputs();
+
             this.$pinny.attr('aria-hidden', 'true');
 
             initialFocus.focus();
@@ -296,50 +294,43 @@
 
         /**
          * Trap any tabbing within the visible Pinny window
-         * Adapted from https://github.com/gdkraus/accessible-modal-dialog
          */
-        _trapTabs: function(obj, evt) {
+        _disableInputs: function() {
             var focusableElementsString = 'a[href], area[href], input, select, textarea, button, iframe, object, embed, [tabindex], [contenteditable]';
 
-            // if tab or shift-tab pressed
-            if (evt.which === 9) {
+            var $focusableElements = $(focusableElementsString).not(function() {
+                return $(this).closest('.pinny').length
+            });
 
-                // get list of all children elements in given object
-                var o = obj.find('*');
+            $focusableElements.each(function(idx, el) {
+                var $el = $(el);
+                var currentTabIndex = $el.attr('tabindex');
 
-                // get list of focusable items
-                var focusableItems;
-                focusableItems = o.filter(focusableElementsString).filter(':visible');
-
-                // get currently focused item
-                var focusedItem;
-                focusedItem = document.activeElement;
-
-                // get the number of focusable items
-                var numberOfFocusableItems;
-                numberOfFocusableItems = focusableItems.length;
-
-                // get the index of the currently focused item
-                var focusedItemIndex;
-                focusedItemIndex = focusableItems.index(focusedItem);
-
-                if (evt.shiftKey) {
-                    //back tab
-                    // if focused on first item and user preses back-tab, go to the last focusable item
-                    if (focusedItemIndex === 0) {
-                        focusableItems.get(numberOfFocusableItems - 1).focus();
-                        evt.preventDefault();
-                    }
-
-                } else {
-                    //forward tab
-                    // if focused on the last item and user preses tab, go to the first focusable item
-                    if (focusedItemIndex === numberOfFocusableItems - 1) {
-                        focusableItems.get(0).focus();
-                        evt.preventDefault();
-                    }
+                if (!currentTabIndex) {
+                    currentTabIndex = '';
                 }
-            }
+
+                $el
+                    .attr('data-pinny-tabindex', currentTabIndex)
+                    .attr('tabindex', '-1');
+            });
+        },
+
+        _enableInputs: function() {
+            var $disabledInputs = $('[data-pinny-tabindex]');
+
+            $disabledInputs.each(function(idx, el) {
+                var $el = $(el);
+                var oldTabIndex = $el.attr('data-pinny-tabindex');
+
+                if (oldTabIndex) {
+                    $el.attr('tabindex', oldTabIndex);
+                } else {
+                    $el.removeAttr('tabindex');
+                }
+
+                $el.removeAttr('data-pinny-tabindex');
+            });
         },
 
         _uuid: (function() {
