@@ -72,6 +72,8 @@ Pinny requires very minimal markup. All Pinny needs is a div with your content a
 
 > To avoid any unwanted FOUT, decorate the content you will be passing to Pinny with the `hidden` attribute. We will remove that attribute when Pinny is initialized.
 
+For accessibility and functional purposes, Pinny will wrap all of your body content in a wrapping container. This could conflict with other plugins that alter your page's markup. If you're seeing issues, try initializing Pinny after your other plugins.
+
 ```html
 <!-- Include the CSS -->
 <link rel="stylesheet" href="pinny.min.css">
@@ -420,6 +422,9 @@ $pinny.pinny('close');
 | IE for Win Phone  | 8.0+    | Degraded. No scroll locking. |
 | Firefox (Android) | 23.0+     | Supported. (Support may exist for earlier versions but has not been tested) |
 
+## Known Issues
+
+Currently, form inputs and selects inside of Pinny have issues on iOS7 and under. This is due to not being able to lock scrolling without causing rendering issues as well as iOS attempting to scroll the page when the keyboard opens. Forms work but will cause some visual jumping.
 
 ## Building a distribution
 
