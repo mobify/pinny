@@ -106,7 +106,7 @@
             this.$body = $(document.body);
 
             if (!$('.pinny__body-wrapper').length) {
-                this.$body.wrapInner('<div class="pinny__body-wrapper">');
+                this.$body.wrapInner('<div class="pinny__body-wrapper" aria-hidden="false">');
             }
 
             this.$bodyWrapper = this.$body.find('.pinny__body-wrapper');
@@ -376,10 +376,14 @@
             this.$pinny.attr('aria-hidden', 'false');
 
             this.$pinny.focus();
+
+            this.$bodyWrapper.attr('aria-hidden', 'true')
         },
 
         _unfocusPinny: function() {
             this._enableInputs();
+
+            this.$bodyWrapper.attr('aria-hidden', 'false')
 
             this.$pinny.attr('aria-hidden', 'true');
 
