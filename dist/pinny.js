@@ -136,7 +136,6 @@
                 )));
             }
 
-            bouncefix.add('pinny__content');
 
             this.effect = this.options.effect;
 
@@ -152,6 +151,8 @@
         open: function() {
             this._trigger('open');
 
+            bouncefix.add('pinny__content');
+
             this.options.shade && this.$shade.shade('open');
 
             this.effect.open.call(this);
@@ -161,6 +162,8 @@
 
         close: function() {
             this._trigger('close');
+
+            bouncefix.remove('pinny__content');
 
             this.options.shade && this.$shade.shade('close');
 
