@@ -54,8 +54,10 @@
             open: $.noop,
             close: $.noop
         },
-        header: '',
-        footer: false,
+        structure: {
+            header: '',
+            footer: false
+        },
         zIndex: 2,
         cssClass: '',
         coverage: '100%',
@@ -117,24 +119,7 @@
                     plugin.close();
                 });
 
-            if (this.options.header !== false) {
-                this._build();
-            } else {
-                this.$element.appendTo(this.$pinny);
-            }
-
-            if (this.options.shade) {
-                this.$shade = this.$pinny.shade($.extend(true, {}, {
-                    click: function() {
-                        plugin.close();
-                    }
-                }, $.extend(
-                    this.options.shade,
-                    {
-                        duration: this.options.duration
-                    }
-                )));
-            }
+            this._build();
 
             bouncefix.add('pinny__content');
 
@@ -192,28 +177,50 @@
          </section>
          */
         _build: function() {
-            var $wrapper = $('<div />')
-                .addClass('pinny__wrapper')
-                .appendTo(this.$pinny);
+            var plugin = this;
 
-            $(this._buildComponent('header')).prependTo($wrapper);
+            if (this.options.structure) {
+                var $wrapper = $('<div />')
+                    .addClass('pinny__wrapper')
+                    .appendTo(this.$pinny);
 
-            $('<div />')
-                .addClass('pinny__content')
-                .append(this.$element)
-                .appendTo($wrapper);
+                this._buildComponent('header').appendTo($wrapper);
 
-            this.options.footer && $(this._buildComponent('footer')).appendTo($wrapper);
+                $('<div />')
+                    .addClass('pinny__content')
+                    .append(this.$element)
+                    .appendTo($wrapper);
+
+                this._buildComponent('footer').appendTo($wrapper);
+            } else {
+                this.$element.appendTo(this.$pinny);
+            }
+
+            if (this.options.shade) {
+                this.$shade = this.$pinny.shade($.extend(true, {}, {
+                    click: function() {
+                        plugin.close();
+                    }
+                }, $.extend(
+                    this.options.shade,
+                    {
+                        duration: this.options.duration
+                    }
+                )));
+            }
         },
 
         _buildComponent: function(name) {
-            var component = this.options[name];
+            var component = this.options.structure[name];
+            var $element = $([]);
 
-            if (component === false) return $([]);
+            if (component !== false) {
+                var html = this._isHtml(component) ? component : template[name.toUpperCase()].replace('{0}', component);
 
-            component = this._isHtml(component) ? component : template[name.toUpperCase()].replace('{0}', component);
+                $element = $(template.COMPONENT.replace(/\{0\}/g, name).replace(/\{1\}/g, html));
+            }
 
-            return template.COMPONENT.replace(/\{0\}/g, name).replace(/\{1\}/g, component);
+            return $element;
         },
 
         _isHtml: function(input) {

@@ -24,15 +24,15 @@ define([
             it('correctly defines header', function() {
                 var pinny = new Pinny(element);
 
-                assert.equal(pinny.options.header, Pinny.DEFAULTS.header);
-                assert.isString(pinny.options.header);
+                assert.equal(pinny.options.structure.header, Pinny.DEFAULTS.structure.header);
+                assert.isString(pinny.options.structure.header);
             });
 
             it('correctly defines footer', function() {
                 var pinny = new Pinny(element);
 
-                assert.equal(pinny.options.footer, Pinny.DEFAULTS.footer);
-                assert.isBoolean(pinny.options.footer);
+                assert.equal(pinny.options.structure.footer, Pinny.DEFAULTS.structure.footer);
+                assert.isBoolean(pinny.options.structure.footer);
             });
 
             it('correctly defines zIndex', function() {
@@ -82,17 +82,17 @@ define([
             });
 
             it('correctly defines custom header', function() {
-                var pinny = new Pinny(element, { header: '<header>Pinnay</header>' });
+                var pinny = new Pinny(element, { structure: { header: '<header>Pinnay</header>' } });
 
-                assert.equal(pinny.options.header, '<header>Pinnay</header>');
-                assert.isString(pinny.options.header);
+                assert.equal(pinny.options.structure.header, '<header>Pinnay</header>');
+                assert.isString(pinny.options.structure.header);
             });
 
             it('correctly defines custom footer', function() {
-                var pinny = new Pinny(element, { footer: '<footer>Stinky foot</footer>' });
+                var pinny = new Pinny(element, { structure: { footer: '<footer>Stinky foot</footer>' } });
 
-                assert.equal(pinny.options.footer, '<footer>Stinky foot</footer>');
-                assert.isString(pinny.options.footer);
+                assert.equal(pinny.options.structure.footer, '<footer>Stinky foot</footer>');
+                assert.isString(pinny.options.structure.footer);
             });
 
             it('correctly defines zIndex of 5', function() {

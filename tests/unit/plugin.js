@@ -110,7 +110,9 @@ define([
         describe('creates a pinny with correct header', function() {
             it('creates the structure with header = false', function() {
                 var $pinny = $(fullFixture).pinny({
-                    header: false
+                    structure: {
+                        header: false
+                    }
                 });
 
                 assert.equal($pinny.find('.pinny__header').length, 1);
@@ -120,7 +122,9 @@ define([
             it('creates the correct structure with header = "Something"', function() {
                 var $pinny = $(fixture)
                     .pinny({
-                        header: 'Something'
+                        structure: {
+                            header: 'Something'
+                        }
                     })
                     .closest('.pinny');
 
@@ -132,7 +136,9 @@ define([
             it('creates the correct structure with an HTML header', function() {
                 var $pinny = $(fixture)
                     .pinny({
-                        header: '<span class="pinny__header--custom">Custom header</span><button class="pinny__close"></button>'
+                        structure: {
+                            header: '<span class="pinny__header--custom">Custom header</span><button class="pinny__close"></button>'
+                        }
                     })
                     .closest('.pinny');
 
@@ -145,8 +151,10 @@ define([
         describe('creates a pinny with correct footer', function() {
             it('creates the structure with footer = false', function() {
                 var $pinny = $(fullFixture).pinny({
-                    header: false,
-                    footer: false
+                    structure: {
+                        header: false,
+                        footer: false
+                    }
                 });
 
                 assert.equal($pinny.find('.pinny__header').length, 1);
@@ -157,7 +165,9 @@ define([
             it('creates the correct structure with footer = "Footer"', function() {
                 var $pinny = $(fixture)
                     .pinny({
-                        footer: 'Footer'
+                        structure: {
+                            footer: 'Footer'
+                        }
                     })
                     .closest('.pinny');
 
@@ -170,7 +180,9 @@ define([
             it('creates the correct structure with an HTML footer', function() {
                 var $pinny = $(fixture)
                     .pinny({
-                        footer: '<span class="pinny__footer--custom">Custom footer</span>'
+                        structure: {
+                            footer: '<span class="pinny__footer--custom">Custom footer</span>'
+                        }
                     })
                     .closest('.pinny');
 
