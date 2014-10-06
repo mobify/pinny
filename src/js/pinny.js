@@ -101,10 +101,10 @@
             var plugin = this;
 
             this.$element = $(element);
-            this.$target = $(this.options.appendTo);
+            this.$container = $(this.options.appendTo);
 
             this.$pinny = $('<section />')
-                .appendTo(this.$target)
+                .appendTo(this.$container)
                 .addClass('pinny')
                 .addClass(this.options.cssClass)
                 .css({
