@@ -129,7 +129,8 @@ $('#myPinny').pinny({
     open: noop,
     opened: noop,
     close: noop,
-    closed: noop
+    closed: noop,
+    appendTo: '#container'
 });
 ```
 
@@ -384,6 +385,12 @@ $('#myPinny').pinny({
     }
 });
 ```
+
+#### appendTo
+
+default: `body`
+
+Specify the container the pinny will be created within
 
 ### Storing pinny object for future use
 
