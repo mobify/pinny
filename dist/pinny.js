@@ -377,13 +377,13 @@
 
             this.$pinny.focus();
 
-            this.$bodyWrapper.attr('aria-hidden', 'true')
+            this.$bodyWrapper.attr('aria-hidden', 'true');
         },
 
         _unfocusPinny: function() {
             this._enableInputs();
 
-            this.$bodyWrapper.attr('aria-hidden', 'false')
+            this.$bodyWrapper.attr('aria-hidden', 'false');
 
             this.$pinny.attr('aria-hidden', 'true');
 
