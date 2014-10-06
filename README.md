@@ -283,7 +283,7 @@ Specifies whether pinny should use the shade overlay. You can pass options throu
 ```js
 $('#myPinny').pinny({
     shade: {
-        duration: 400
+        color: '#333333'
     }
 });
 ```
