@@ -164,9 +164,9 @@ default `''`
 
 Sets the header that pinny should use in its header bar. Valid values are:
 
-`boolean` - specifies no default header generated. If chosen, the user is required to specify the header markup themselves, including the appropriate class, `pinny__header`. It will be expected that this will be a part of the element that is used to invoke pinny.
-`string` - specifies the title text used in the header. The header structure will be generated automatically.
-`html|element` - specifies the HTML to be used for the header.
+- `boolean` - specifies no default header generated. If chosen, the user is required to specify the header markup themselves, including the appropriate class, `pinny__header`. It will be expected that this will be a part of the element that is used to invoke pinny.
+- `string` - specifies the title text used in the header. The header structure will be generated automatically.
+- `html|element` - specifies the HTML to be used for the header.
 
 ```js
 // generates no header
@@ -197,9 +197,9 @@ default `false`
 
 Sets the footer that pinny should use in its footer. Valid values are:
 
-`boolean` - specifies no default footer generated. If chosen, the user is required to specify the footer markup themselves, including the appropriate class, `pinny__footer`.
-`string` - specifies the title text used in the footer. The footer structure will be generated automatically.
-`html|element` - specifies the HTML to be used for the footer.
+- `boolean` - specifies no default footer generated. If chosen, the user is required to specify the footer markup themselves, including the appropriate class, `pinny__footer`.
+- `string` - specifies the title text used in the footer. The footer structure will be generated automatically.
+- `html|element` - specifies the HTML to be used for the footer.
 
 ```js
 // generates no footer
