@@ -7,7 +7,7 @@ A mobile-first content fly-in UI plugin.
 ## Requirements
 
 * [Zepto](http://zeptojs.com/)
-* [Velocity.js](http://velocityjs.org)
+* [Mobify's fork of Velocity.js](http://github.com/mobify/velocity)
 
 ### Velocity
 
@@ -28,7 +28,7 @@ bower install https://github.com/mobify/pinny.git#pinny-1.0
 
 ## Usage with Require.js
 
-To use with require.js, after installing through bower you merely have to reference pinny, pinny's effect modules, and pinny's dependencies (velocity, shade, and bouncefix) inside your require config file:
+To use with require.js, after installing through bower you merely have to reference Pinny, Pinny's effect modules, and Pinny's dependencies (velocity, shade, and bouncefix) inside your require config file:
 
 ```config.js
 
