@@ -80,19 +80,10 @@
                 $doc.on('touchmove', this._blockScroll);
             },
             openComplete: function() {
-                if (isChrome) {
-                    $html.css('position', 'fixed');
-                    $html.css('top', scrollPosition * -1);
-                }
                 this._trigger('opened');
                 $doc.off('touchmove', this._blockScroll);
             },
             closeComplete: function() {
-                if (isChrome) {
-                    $html.css('position', '');
-                    $html.css('top', '');
-                    window.scrollTo(0, scrollPosition);
-                }
                 this._trigger('closed');
                 $doc.off('touchmove', this._blockScroll);
             }
