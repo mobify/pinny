@@ -15,6 +15,9 @@
     var $html = $('html');
     var scrollPosition;
     var isChrome = /chrome/i.test( navigator.userAgent );
+    var isAndroid = /android/i.test( navigator.userAgent );
+    var webkitVer = parseInt((/WebKit\/([0-9]+)/.exec(navigator.appVersion) || 0)[1],10) || void 0;
+    var isAndroidBrowser = isAndroid && webkitVer < 537;
 
     /**
      * Function.prototype.bind polyfill required for < iOS6
@@ -80,7 +83,6 @@
             },
             openComplete: function() {
                 if (isChrome) {
-                    scrollPosition = document.body.scrollTop;
                     $html.css('position', 'fixed');
                     $html.css('top', scrollPosition * -1);
                 }
@@ -101,8 +103,17 @@
         _init: function(element) {
             var plugin = this;
 
+            this.iOSVersion = this._iOSVersion();
+            this.iOSVersion = (this.iOSVersion && this.iOSVersion[0]) || false;
+
             this.$element = $(element);
             this.$body = $(document.body);
+
+            if (!$('.pinny__body-wrapper').length) {
+                this.$body.wrapInner('<div class="pinny__body-wrapper">');
+            }
+
+            this.$bodyWrapper = this.$body.find('.pinny__body-wrapper');
 
             this.$pinny = $('<section />')
                 .appendTo(this.$body)
@@ -142,6 +153,8 @@
             this.effect.open.call(this);
 
             this.$pinny.addClass(classes.OPENED);
+
+            this._enableScrollFix();
         },
 
         close: function() {
@@ -152,6 +165,8 @@
             this.$pinny.removeClass(classes.OPENED);
 
             this.effect.close.call(this);
+
+            this._disableScrollFix();
         },
 
         _bindEvents: function() {
@@ -247,6 +262,95 @@
             }
 
             return percent ? coverage + '%' : this.options.coverage;
+        },
+
+        /**
+         * This function contains several methods for fixing scrolling issues
+         * across different browsers. See each if statement for an in depth
+         * explanation.
+         */
+        _enableScrollFix: function() {
+            scrollPosition = document.body.scrollTop;
+
+            /**
+             * On Chrome, we can get away with fixing the position of the html
+             * and moving it up to the equivalent of the scroll position
+             * to lock scrolling.
+             */
+            if (isChrome) {
+                $html.css('position', 'fixed');
+                $html.css('top', scrollPosition * -1);
+            }
+            /**
+             * On iOS8, we lock the height of Pinny's body wrapping div as well
+             * as do some scrolling magic to make sure forms don't jump the page
+             * around when they're focused.
+             */
+            else if (this.iOSVersion >= 8) {
+                var bodyTopPadding = parseInt(
+                        getComputedStyle(document.body).paddingTop
+                );
+                var bodyBottomPadding = parseInt(
+                        getComputedStyle(document.body).paddingBottom
+                );
+                var bodyTotalPadding = bodyTopPadding + bodyBottomPadding;
+
+                this.$body
+                    .css('margin-top', 0)
+                    .css('margin-bottom', 0);
+
+                this.$bodyWrapper
+                    .height(window.innerHeight)
+                    .css('overflow', 'hidden')
+                    .scrollTop(scrollPosition - bodyTotalPadding);
+            }
+            /**
+             * On iOS7 and under, the browser can't handle what we're doing
+             * above so we need to do the less sexy version. Wait for the
+             * focus to trigger and then jump scroll back to the initial
+             * position. Looks like crap but it works.
+             */
+            else if (this.iOSVersion <= 7) {
+                this.$pinny.find('input, select, textarea')
+                    .bind('focus', function() {
+                        setTimeout(function() {
+                            window.scrollTo(0, scrollPosition);
+                        }, 0);
+                    });
+            }
+        },
+
+        /**
+         * Undo all the things above
+         */
+        _disableScrollFix: function() {
+            if (isChrome) {
+                $html.css('position', '');
+                $html.css('top', '');
+                window.scrollTo(0, scrollPosition);
+            } else if (this.iOSVersion >= 8) {
+                this.$body
+                    .css('margin', '');
+
+                this.$bodyWrapper
+                    .css('overflow', '')
+                    .css('height', '');
+
+                window.scrollTo(0, scrollPosition);
+            } else if (this.iOSVersion <= 7) {
+                this.$pinny.find('input, select, textarea').unbind('focus');
+            }
+        },
+
+        /**
+         * Returns the current iOS Version Number
+         */
+        _iOSVersion: function() {
+            if (/ip(hone|od|ad)/i.test(navigator.platform)) {
+                // supports iOS 2.0 and later: <http://bit.ly/TJjs1V>
+                var v = (navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/);
+                return [parseInt(v[1], 10), parseInt(v[2], 10), parseInt(v[3] || 0, 10)];
+            }
         }
     });
 
