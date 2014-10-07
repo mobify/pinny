@@ -116,6 +116,7 @@ Initialize with options.
 ```js
 $('#myPinny').pinny({
     effect: sheetBottom,
+    appendTo: '#container',
     header: 'My Pinny Title',
     footer: false,
     zIndex: 2,
@@ -153,6 +154,18 @@ Specifies which `effect` module Pinny should use when opening. `Effect` modules 
 ```js
 $('#myPinny').pinny({
     effect: sheetLeft
+});
+```
+
+#### appendTo
+
+default: `body`
+
+Specify the container the pinny will be created within
+
+```js
+$('#myPinny').pinny({
+    appendTo: $('#mainForm') // or appendTo: '#mainForm'
 });
 ```
 

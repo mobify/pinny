@@ -47,7 +47,7 @@
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
     }
 
-    Pinny.VERSION = '0.1.2';
+    Pinny.VERSION = '0.2.0';
 
     Pinny.DEFAULTS = {
         effect: {
@@ -65,7 +65,8 @@
         open: $.noop,
         opened: $.noop,
         close: $.noop,
-        closed: $.noop
+        closed: $.noop,
+        appendTo: 'body'
     };
 
     Plugin.create('pinny', Pinny, {
@@ -100,10 +101,9 @@
             var plugin = this;
 
             this.$element = $(element);
-            this.$body = $(document.body);
 
             this.$pinny = $('<section />')
-                .appendTo(this.$body)
+                .appendTo(this.options.appendTo)
                 .addClass('pinny')
                 .addClass(this.options.cssClass)
                 .css({
