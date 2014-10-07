@@ -106,10 +106,11 @@
             this.$body = $(document.body);
 
             if (!$('.pinny__body-wrapper').length) {
-                this.$body.wrapInner('<div class="pinny__body-wrapper" aria-hidden="false">');
+                this.$bodyWrapper = $('<div class="pinny__body-wrapper">');
+                this.$body.wrapInner(this.$bodyWrapper);
+            } else {
+                this.$bodyWrapper = this.$body.find('.pinny__body-wrapper');
             }
-
-            this.$bodyWrapper = this.$body.find('.pinny__body-wrapper');
 
             this.$pinny = $('<section />')
                 .appendTo(this.$body)
@@ -354,6 +355,9 @@
             var headerID = this.id + '__header';
             var $header = this.$pinny.find('.pinny__header h1').first();
             var $wrapper = this.$pinny.find('.pinny__wrapper');
+
+            this.$bodyWrapper
+                .attr('aria-hidden', 'false');
 
             this.$pinny
                 .attr('role', 'dialog')

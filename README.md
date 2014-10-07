@@ -7,7 +7,7 @@ A mobile-first content fly-in UI plugin.
 ## Requirements
 
 * [Zepto](http://zeptojs.com/)
-* [Velocity.js](http://velocityjs.org)
+* [Mobify's fork of Velocity.js](http://github.com/mobify/velocity)
 
 ### Velocity
 
@@ -28,7 +28,7 @@ bower install https://github.com/mobify/pinny.git#pinny-1.0
 
 ## Usage with Require.js
 
-To use with require.js, after installing through bower you merely have to reference pinny, pinny's effect modules, and pinny's dependencies (velocity, shade, and bouncefix) inside your require config file:
+To use with require.js, after installing through bower you merely have to reference Pinny, Pinny's effect modules, and Pinny's dependencies (velocity, shade, and bouncefix) inside your require config file:
 
 ```config.js
 
@@ -72,7 +72,7 @@ Pinny requires very minimal markup. All Pinny needs is a div with your content a
 
 > To avoid any unwanted FOUT, decorate the content you will be passing to Pinny with the `hidden` attribute. We will remove that attribute when Pinny is initialized.
 
-For accessibility and functional purposes, Pinny will wrap all of your body content in a wrapping container. This could conflict with other plugins that alter your page's markup. If you're seeing issues, try initializing Pinny after your other plugins.
+For accessibility and functional purposes, Pinny will wrap all of your body content in a wrapping container. This could conflict with other plugins that alter your page's markup. If you're seeing issues, try initializing Pinny after your other plugins. If you want to specify your own wrapping container, add a class of `pinny__body-wrapper` to the element. This element should be a root level element to be effective.
 
 ```html
 <!-- Include the CSS -->
@@ -80,6 +80,11 @@ For accessibility and functional purposes, Pinny will wrap all of your body cont
 
 <!-- Optionally include the Theme file -->
 <link rel="stylesheet" href="pinny-style.min.css">
+
+<!-- Optionally include a wrapping container -->
+<div id="bodyContent" class="pinny__body-wrapper">
+    Your specified body content
+</div>
 
 <!-- Include the markup -->
 <div id="yourPinny" hidden>
@@ -164,9 +169,9 @@ default `''`
 
 Sets the header that pinny should use in its header bar. Valid values are:
 
-`boolean` - specifies no default header generated. If chosen, the user is required to specify the header markup themselves, including the appropriate class, `pinny__header`. It will be expected that this will be a part of the element that is used to invoke pinny.
-`string` - specifies the title text used in the header. The header structure will be generated automatically.
-`html|element` - specifies the HTML to be used for the header.
+- `boolean` - specifies no default header generated. If chosen, the user is required to specify the header markup themselves, including the appropriate class, `pinny__header`. It will be expected that this will be a part of the element that is used to invoke pinny.
+- `string` - specifies the title text used in the header. The header structure will be generated automatically.
+- `html|element` - specifies the HTML to be used for the header.
 
 ```js
 // generates no header
@@ -197,9 +202,9 @@ default `false`
 
 Sets the footer that pinny should use in its footer. Valid values are:
 
-`boolean` - specifies no default footer generated. If chosen, the user is required to specify the footer markup themselves, including the appropriate class, `pinny__footer`.
-`string` - specifies the title text used in the footer. The footer structure will be generated automatically.
-`html|element` - specifies the HTML to be used for the footer.
+- `boolean` - specifies no default footer generated. If chosen, the user is required to specify the footer markup themselves, including the appropriate class, `pinny__footer`.
+- `string` - specifies the title text used in the footer. The footer structure will be generated automatically.
+- `html|element` - specifies the HTML to be used for the footer.
 
 ```js
 // generates no footer
@@ -283,7 +288,7 @@ Specifies whether pinny should use the shade overlay. You can pass options throu
 ```js
 $('#myPinny').pinny({
     shade: {
-        duration: 400
+        color: '#333333'
     }
 });
 ```
