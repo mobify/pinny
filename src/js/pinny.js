@@ -104,7 +104,7 @@
             this.$body = $('body');
 
             if (!$('.pinny__body-wrapper').length) {
-                this.$bodyWrapper = $('<div class="pinny__body-wrapper">');
+                this.$bodyWrapper = $('<div>').addClass('pinny__body-wrapper');
                 this.$body.wrapInner(this.$bodyWrapper);
             } else {
                 this.$bodyWrapper = this.$body.find('.pinny__body-wrapper');

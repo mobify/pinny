@@ -34,6 +34,9 @@
     /* jshint ignore:end */
 
     var classes = {
+        PINNY: 'pinny',
+        WRAPPER: 'pinny__wrapper',
+        CONTENT: 'pinny__content',
         OPENED: 'pinny--is-open'
     };
 
@@ -98,10 +101,10 @@
             this.iOSVersion = (this.iOSVersion && this.iOSVersion[0]) || false;
 
             this.$element = $(element);
-            this.$body = $(document.body);
+            this.$body = $('body');
 
             if (!$('.pinny__body-wrapper').length) {
-                this.$bodyWrapper = $('<div class="pinny__body-wrapper">');
+                this.$bodyWrapper = $('<div>').addClass('pinny__body-wrapper');
                 this.$body.wrapInner(this.$bodyWrapper);
             } else {
                 this.$bodyWrapper = this.$body.find('.pinny__body-wrapper');
@@ -109,7 +112,7 @@
 
             this.$pinny = $('<section />')
                 .appendTo(this.$body)
-                .addClass('pinny')
+                .addClass(classes.PINNY)
                 .addClass(this.options.cssClass)
                 .css({
                     position: 'fixed',
@@ -124,7 +127,7 @@
 
             this._build();
 
-            bouncefix.add('pinny__content');
+            bouncefix.add(classes.CONTENT);
 
             this.effect = this.options.effect;
 
@@ -164,7 +167,7 @@
         _bindEvents: function() {
             // Block scrolling on anything but pinny content
             this.$pinny.on('touchmove', function(e) {
-                if (!$(e.target).parents().hasClass('pinny__content')) {
+                if (!$(e.target).parents().hasClass(classes.CONTENT)) {
                     e.preventDefault();
                 }
             });
@@ -188,13 +191,13 @@
 
             if (this.options.structure) {
                 var $wrapper = $('<div />')
-                    .addClass('pinny__wrapper')
+                    .addClass(classes.WRAPPER)
                     .appendTo(this.$pinny);
 
                 this._buildComponent('header').appendTo($wrapper);
 
                 $('<div />')
-                    .addClass('pinny__content')
+                    .addClass(classes.CONTENT)
                     .append(this.$element)
                     .appendTo($wrapper);
 
