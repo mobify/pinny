@@ -385,12 +385,6 @@ $('#myPinny').pinny({
 });
 ```
 
-### Storing pinny object for future use
-
-```js
-$('#myPinny').pinny();
-```
-
 ## Methods
 
 ### Open
