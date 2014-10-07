@@ -72,7 +72,7 @@ Pinny requires very minimal markup. All Pinny needs is a div with your content a
 
 > To avoid any unwanted FOUT, decorate the content you will be passing to Pinny with the `hidden` attribute. We will remove that attribute when Pinny is initialized.
 
-For accessibility and functional purposes, Pinny will wrap all of your body content in a wrapping container. This could conflict with other plugins that alter your page's markup. If you're seeing issues, try initializing Pinny after your other plugins.
+For accessibility and functional purposes, Pinny will wrap all of your body content in a wrapping container. This could conflict with other plugins that alter your page's markup. If you're seeing issues, try initializing Pinny after your other plugins. If you want to specify your own wrapping container, add a class of `pinny__body-wrapper` to the element. This element should be a root level element to be effective.
 
 ```html
 <!-- Include the CSS -->
@@ -80,6 +80,11 @@ For accessibility and functional purposes, Pinny will wrap all of your body cont
 
 <!-- Optionally include the Theme file -->
 <link rel="stylesheet" href="pinny-style.min.css">
+
+<!-- Optionally include a wrapping container -->
+<div id="bodyContent" class="pinny__body-wrapper">
+    Your specified body content
+</div>
 
 <!-- Include the markup -->
 <div id="yourPinny" hidden>
