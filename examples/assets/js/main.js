@@ -6,6 +6,7 @@ require(['config'], function() {
         'sheet-right',
         'sheet-left',
         'sheet-bottom',
+        'drawer-left',
         'pinny'
     ],
     function(
@@ -14,7 +15,8 @@ require(['config'], function() {
         sheetTop,
         sheetRight,
         sheetLeft,
-        sheetBottom
+        sheetBottom,
+        drawerLeft
     ) {
         var $modalCenter = $('#modalCenterPinny').pinny({
             effect: modalCenter,
@@ -47,7 +49,7 @@ require(['config'], function() {
         });
 
         var $sheetLeft = $('#sheetLeftPinny').pinny({
-            effect: sheetLeft,
+            effect: drawerLeft,
             coverage: '80%'
         });
 

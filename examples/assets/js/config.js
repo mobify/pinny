@@ -8,6 +8,7 @@ require.config({
         'modal-center': 'dist/effect/modal-center',
         'sheet-bottom': 'dist/effect/sheet-bottom',
         'sheet-left': 'dist/effect/sheet-left',
+        'drawer-left': 'dist/effect/drawer-left',
         'sheet-right': 'dist/effect/sheet-right',
         'sheet-top': 'dist/effect/sheet-top',
         'plugin': 'bower_components/plugin/dist/plugin.min',
