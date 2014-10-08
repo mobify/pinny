@@ -14,19 +14,16 @@
     var $doc = $(document);
     var $html = $('html');
     var scrollPosition;
-    var isChrome = /chrome/i.test( navigator.userAgent );
-    var isAndroid = /android/i.test( navigator.userAgent );
-    var webkitVer = parseInt((/WebKit\/([0-9]+)/.exec(navigator.appVersion) || 0)[1],10) || void 0;
-    var isAndroidBrowser = isAndroid && webkitVer < 537;
+    var isChrome = /chrome/i.test(navigator.userAgent);
 
     /**
      * Function.prototype.bind polyfill required for < iOS6
      */
     /* jshint ignore:start */
     if (!Function.prototype.bind) {
-        Function.prototype.bind = function (scope) {
+        Function.prototype.bind = function(scope) {
             var fn = this;
-            return function () {
+            return function() {
                 return fn.apply(scope);
             };
         };
@@ -36,6 +33,7 @@
     var classes = {
         PINNY: 'pinny',
         WRAPPER: 'pinny__wrapper',
+        CLOSE: 'pinny__close',
         CONTENT: 'pinny__content',
         OPENED: 'pinny--is-open'
     };
@@ -45,7 +43,7 @@
      */
     var template = {
         COMPONENT: '<{0} class="pinny__{0}">{1}</{0}>',
-        HEADER: '<h1 class="pinny__title">{0}</h1><button class="pinny__close">Close</button>',
+        HEADER: '<h1 class="pinny__title">{0}</h1><button class="' + classes.CLOSE + '">Close</button>',
         FOOTER: '{0}'
     };
 
@@ -120,7 +118,7 @@
                     width: this.options.coverage,
                     height: this.options.coverage
                 })
-                .on('click', '.pinny__close', function(e) {
+                .on('click', '.' + classes.CLOSE, function(e) {
                     e.preventDefault();
                     plugin.close();
                 });
@@ -177,13 +175,13 @@
          Builds Pinny using the following structure:
 
          <section class="pinny">
-             <div class="pinny__wrapper">
-                <header class="pinny__header">{header content}</header>
-                <div class="pinny__content">
-                    {content}
-                </div>
-             </div>
-             <footer class="pinny__footer"></footer>
+         <div class="pinny__wrapper">
+         <header class="pinny__header">{header content}</header>
+         <div class="pinny__content">
+         {content}
+         </div>
+         </div>
+         <footer class="pinny__footer"></footer>
          </section>
          */
         _build: function() {
@@ -283,10 +281,10 @@
              */
             else if (this.iOSVersion >= 8) {
                 var bodyTopPadding = parseInt(
-                        getComputedStyle(document.body).paddingTop
+                    getComputedStyle(document.body).paddingTop
                 );
                 var bodyBottomPadding = parseInt(
-                        getComputedStyle(document.body).paddingBottom
+                    getComputedStyle(document.body).paddingBottom
                 );
                 var bodyTotalPadding = bodyTopPadding + bodyBottomPadding;
 
