@@ -32,7 +32,9 @@
 
     var classes = {
         PINNY: 'pinny',
+        BODYWRAPPER: 'pinny__body-wrapper',
         WRAPPER: 'pinny__wrapper',
+        TITLE: 'pinny__title',
         CLOSE: 'pinny__close',
         CONTENT: 'pinny__content',
         OPENED: 'pinny--is-open'
@@ -42,8 +44,8 @@
      * Template constants required for building the default HTML structure
      */
     var template = {
-        COMPONENT: '<{0} class="pinny__{0}">{1}</{0}>',
-        HEADER: '<h1 class="pinny__title">{0}</h1><button class="' + classes.CLOSE + '">Close</button>',
+        COMPONENT: '<{0} class="' + classes.PINNY + '__{0}">{1}</{0}>',
+        HEADER: '<h1 class="' + classes.TITLE + '">{0}</h1><button class="' + classes.CLOSE + '">Close</button>',
         FOOTER: '{0}'
     };
 
@@ -101,11 +103,11 @@
             this.$element = $(element);
             this.$body = $('body');
 
-            if (!$('.pinny__body-wrapper').length) {
-                this.$bodyWrapper = $('<div>').addClass('pinny__body-wrapper');
+            if (!$('.' + classes.BODYWRAPPER).length) {
+                this.$bodyWrapper = $('<div>').addClass(classes.BODYWRAPPER);
                 this.$body.wrapInner(this.$bodyWrapper);
             } else {
-                this.$bodyWrapper = this.$body.find('.pinny__body-wrapper');
+                this.$bodyWrapper = this.$body.find('.' + classes.BODYWRAPPER);
             }
 
             this.$pinny = $('<section />')
