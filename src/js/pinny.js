@@ -89,13 +89,13 @@
                 this._trigger('opened');
                 $doc.off('touchmove', this._blockScroll);
 
-                this._focusPinny();
+                this._focus();
             },
             closeComplete: function() {
                 this._trigger('closed');
                 $doc.off('touchmove', this._blockScroll);
 
-                this._unfocusPinny();
+                this._resetFocus();
             }
         },
 
@@ -360,8 +360,8 @@
          */
         _initA11y: function() {
             var headerID = this.id + '__header';
-            var $header = this.$pinny.find('.pinny__header h1').first();
-            var $wrapper = this.$pinny.find('.pinny__wrapper');
+            var $header = this.$pinny.find('h1, .' + classes.TITLE).first();
+            var $wrapper = this.$pinny.find('.' + classes.WRAPPER);
 
             this.$bodyWrapper
                 .attr('aria-hidden', 'false');
@@ -379,7 +379,7 @@
                 .attr('id', headerID);
         },
 
-        _focusPinny: function() {
+        _focus: function() {
             initialFocus = document.activeElement;
 
             this._disableInputs();
@@ -391,7 +391,7 @@
             this.$bodyWrapper.attr('aria-hidden', 'true');
         },
 
-        _unfocusPinny: function() {
+        _resetFocus: function() {
             this._enableInputs();
 
             this.$bodyWrapper.attr('aria-hidden', 'false');
