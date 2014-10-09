@@ -123,8 +123,10 @@ Initialize with options.
 ```js
 $('#myPinny').pinny({
     effect: sheetBottom,
-    header: 'My Pinny Title',
-    footer: false,
+    structure: {
+        header: 'My Pinny Title',
+        footer: false
+    },
     zIndex: 2,
     cssClass: 'my-pinny-class',
     coverage: '100%',
@@ -144,7 +146,7 @@ $('#myPinny').pinny({
 
 ##### effect
 
-default: ` {
+default: `{
         open: noop,
         close: noop
     },`
@@ -163,9 +165,20 @@ $('#myPinny').pinny({
 });
 ```
 
+##### structure
+
+default: `{
+            header: '',
+            footer: false
+        }`
+
+Defines the structure to use for pinny. Specifically, pinny tries to build its own HTML structure if passed the default options. Setting the `structure` option to false will allow the developer to supply their own HTML structure.
+
+Please see below for available sub-options for `header` and `footer`.
+
 ##### header
 
-default `''`
+default: `''`
 
 Sets the header that pinny should use in its header bar. Valid values are:
 
@@ -198,7 +211,7 @@ $('#myPinny').pinny({
 
 ##### footer
 
-default `false`
+default: `false`
 
 Sets the footer that pinny should use in its footer. Valid values are:
 
@@ -231,7 +244,7 @@ $('#myPinny').pinny({
 
 ##### zIndex
 
-default `2`
+default: `2`
 
 Sets the z-index value for Pinny. Use this value if you need to specify a specific stacking order.
 
@@ -243,7 +256,7 @@ $('#myPinny').pinny({
 
 #### cssClass
 
-default `''`
+default: `''`
 
 Sets a class to apply to the main Pinny parent element for ease of styling.
 
@@ -255,7 +268,7 @@ Sets a class to apply to the main Pinny parent element for ease of styling.
 
 ##### coverage
 
-default `80%`
+default: `80%`
 
 Sets the coverage value. This will allow you to specify that the pinny covers only a portion of the screen.
 

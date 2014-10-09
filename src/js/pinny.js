@@ -16,18 +16,15 @@
     var scrollPosition;
     var initialFocus;
     var isChrome = /chrome/i.test( navigator.userAgent );
-    var isAndroid = /android/i.test( navigator.userAgent );
-    var webkitVer = parseInt((/WebKit\/([0-9]+)/.exec(navigator.appVersion) || 0)[1],10) || void 0;
-    var isAndroidBrowser = isAndroid && webkitVer < 537;
 
     /**
      * Function.prototype.bind polyfill required for < iOS6
      */
     /* jshint ignore:start */
     if (!Function.prototype.bind) {
-        Function.prototype.bind = function (scope) {
+        Function.prototype.bind = function(scope) {
             var fn = this;
-            return function () {
+            return function() {
                 return fn.apply(scope);
             };
         };
@@ -35,6 +32,12 @@
     /* jshint ignore:end */
 
     var classes = {
+        PINNY: 'pinny',
+        BODYWRAPPER: 'pinny__body-wrapper',
+        WRAPPER: 'pinny__wrapper',
+        TITLE: 'pinny__title',
+        CLOSE: 'pinny__close',
+        CONTENT: 'pinny__content',
         OPENED: 'pinny--is-open'
     };
 
@@ -42,8 +45,8 @@
      * Template constants required for building the default HTML structure
      */
     var template = {
-        COMPONENT: '<{0} class="pinny__{0}">{1}</{0}>',
-        HEADER: '<h1 class="pinny__title">{0}</h1><button class="pinny__close" role="button">Close</button>',
+        COMPONENT: '<{0} class="' + classes.PINNY + '__{0}">{1}</{0}>',
+        HEADER: '<h1 class="' + classes.TITLE + '">{0}</h1><button class="' + classes.CLOSE + '">Close</button>',
         FOOTER: '{0}'
     };
 
@@ -58,8 +61,10 @@
             open: $.noop,
             close: $.noop
         },
-        header: '',
-        footer: false,
+        structure: {
+            header: '',
+            footer: false
+        },
         zIndex: 2,
         cssClass: '',
         coverage: '100%',
@@ -103,18 +108,18 @@
             this.iOSVersion = (this.iOSVersion && this.iOSVersion[0]) || false;
 
             this.$element = $(element);
-            this.$body = $(document.body);
+            this.$body = $('body');
 
-            if (!$('.pinny__body-wrapper').length) {
-                this.$bodyWrapper = $('<div class="pinny__body-wrapper">');
+            if (!$('.' + classes.BODYWRAPPER).length) {
+                this.$bodyWrapper = $('<div>').addClass(classes.BODYWRAPPER);
                 this.$body.wrapInner(this.$bodyWrapper);
             } else {
-                this.$bodyWrapper = this.$body.find('.pinny__body-wrapper');
+                this.$bodyWrapper = this.$body.find('.' + classes.BODYWRAPPER);
             }
 
             this.$pinny = $('<section />')
                 .appendTo(this.$body)
-                .addClass('pinny')
+                .addClass(classes.PINNY)
                 .addClass(this.options.cssClass)
                 .css({
                     position: 'fixed',
@@ -122,31 +127,14 @@
                     width: this.options.coverage,
                     height: this.options.coverage
                 })
-                .on('click', '.pinny__close', function(e) {
+                .on('click', '.' + classes.CLOSE, function(e) {
                     e.preventDefault();
                     plugin.close();
                 });
 
-            if (this.options.header !== false) {
-                this._build();
-            } else {
-                this.$element.appendTo(this.$pinny);
-            }
+            this._build();
 
-            if (this.options.shade) {
-                this.$shade = this.$pinny.shade($.extend(true, {}, {
-                    click: function() {
-                        plugin.close();
-                    }
-                }, $.extend(
-                    this.options.shade,
-                    {
-                        duration: this.options.duration
-                    }
-                )));
-            }
-
-            bouncefix.add('pinny__content');
+            bouncefix.add(classes.CONTENT);
 
             this.effect = this.options.effect;
 
@@ -186,7 +174,7 @@
         _bindEvents: function() {
             // Block scrolling on anything but pinny content
             this.$pinny.on('touchmove', function(e) {
-                if (!$(e.target).parents().hasClass('pinny__content')) {
+                if (!$(e.target).parents().hasClass(classes.CONTENT)) {
                     e.preventDefault();
                 }
             });
@@ -201,36 +189,55 @@
                 <div class="pinny__content">
                     {content}
                 </div>
+                <footer class="pinny__footer">{footer content}</footer>
              </div>
-             <footer class="pinny__footer"></footer>
          </section>
          */
         _build: function() {
-            var $wrapper = $('<div />')
-                .addClass('pinny__wrapper')
-                .appendTo(this.$pinny);
+            var plugin = this;
 
-            $(this._buildComponent('header'))
-                .prependTo($wrapper);
+            if (this.options.structure) {
+                var $wrapper = $('<div />')
+                    .addClass(classes.WRAPPER)
+                    .appendTo(this.$pinny);
 
-            $('<div />')
-                .addClass('pinny__content')
-                .append(this.$element)
-                .appendTo($wrapper);
+                this._buildComponent('header').appendTo($wrapper);
 
-            this.options.footer && $(this._buildComponent('footer')).appendTo($wrapper);
+                $('<div />')
+                    .addClass(classes.CONTENT)
+                    .append(this.$element)
+                    .appendTo($wrapper);
 
-            this._initA11y();
+                this._buildComponent('footer').appendTo($wrapper);
+            } else {
+                this.$element.appendTo(this.$pinny);
+            }
+
+            if (this.options.shade) {
+                this.$shade = this.$pinny.shade($.extend(true, {}, {
+                    click: function() {
+                        plugin.close();
+                    }
+                }, $.extend(
+                    this.options.shade,
+                    {
+                        duration: this.options.duration
+                    }
+                )));
+            }
         },
 
         _buildComponent: function(name) {
-            var component = this.options[name];
+            var component = this.options.structure[name];
+            var $element = $([]);
 
-            if (component === false) return $([]);
+            if (component !== false) {
+                var html = this._isHtml(component) ? component : template[name.toUpperCase()].replace('{0}', component);
 
-            component = this._isHtml(component) ? component : template[name.toUpperCase()].replace('{0}', component);
+                $element = $(template.COMPONENT.replace(/\{0\}/g, name).replace(/\{1\}/g, html));
+            }
 
-            return template.COMPONENT.replace(/\{0\}/g, name).replace(/\{1\}/g, component);
+            return $element;
         },
 
         _isHtml: function(input) {
@@ -283,10 +290,10 @@
              */
             else if (this.iOSVersion >= 8) {
                 var bodyTopPadding = parseInt(
-                        getComputedStyle(document.body).paddingTop
+                    getComputedStyle(document.body).paddingTop
                 );
                 var bodyBottomPadding = parseInt(
-                        getComputedStyle(document.body).paddingBottom
+                    getComputedStyle(document.body).paddingBottom
                 );
                 var bodyTotalPadding = bodyTopPadding + bodyBottomPadding;
 
