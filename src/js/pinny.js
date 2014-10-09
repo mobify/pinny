@@ -213,6 +213,8 @@
                 this.$element.appendTo(this.$pinny);
             }
 
+            this._addAccessibility();
+
             if (this.options.shade) {
                 this.$shade = this.$pinny.shade($.extend(true, {}, {
                     click: function() {
@@ -358,7 +360,7 @@
         /**
          * Accessibility Considerations
          */
-        _initA11y: function() {
+        _addAccessibility: function() {
             var headerID = this.id + '__header';
             var $header = this.$pinny.find('h1, .' + classes.TITLE).first();
             var $wrapper = this.$pinny.find('.' + classes.WRAPPER);
