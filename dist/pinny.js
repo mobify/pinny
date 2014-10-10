@@ -14,7 +14,7 @@
     var $doc = $(document);
     var $html = $('html');
     var scrollPosition;
-    var initialFocus;
+    var originalActiveElement;
     var isChrome = /chrome/i.test( navigator.userAgent );
 
     var initError = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
@@ -388,7 +388,7 @@
         },
 
         _focus: function() {
-            initialFocus = document.activeElement;
+            originalActiveElement = document.activeElement;
 
             this._disableInputs();
 
@@ -406,7 +406,7 @@
 
             this.$pinny.attr('aria-hidden', 'true');
 
-            initialFocus.focus();
+            originalActiveElement.focus();
         },
 
         /**
