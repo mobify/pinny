@@ -262,7 +262,7 @@ $('#myPinny').pinny({
 });
 ```
 
-#### cssClass
+##### cssClass
 
 default: `''`
 
@@ -435,6 +435,12 @@ Close the selected pinny item by element reference
 
 ```js
 $pinny.pinny('close');
+```
+
+> Pinny will automatically trigger `close` on elements decorated with the class name `pinny__close`.
+
+```html
+<button class="pinny__close">Close</button>
 ```
 
 ## Browser Compatibility
