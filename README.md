@@ -116,6 +116,14 @@ $('#myPinny').pinny({
 });
 ```
 
+You can also initialize the Pinny through the use of a data attribute. The attribute takes a value equal to the effect you want to use.
+
+```html
+<div id="myPinny" data-pinny="sheet-bottom">
+```
+
+_You *must* pass Pinny an effect for it to work._
+
 ### pinny(options)
 
 Initialize with options.

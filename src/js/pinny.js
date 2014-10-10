@@ -349,7 +349,18 @@
         }
     });
 
-    $('[data-pinny]').pinny();
+    $('[data-pinny]').each(function() {
+        var $pinny = $(this);
+        var effect = $(this).data('pinny');
+
+        if (!effect.length) {
+            throw "Pinny requires a declared effect to open"
+        }
+
+        $pinny.pinny({
+            effect: effect
+        });
+    });
 
     return $;
 }));
