@@ -17,6 +17,8 @@
     var initialFocus;
     var isChrome = /chrome/i.test( navigator.userAgent );
 
+    var initError = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
+
     /**
      * Function.prototype.bind polyfill required for < iOS6
      */
@@ -58,8 +60,12 @@
 
     Pinny.DEFAULTS = {
         effect: {
-            open: $.noop,
-            close: $.noop
+            open: function() {
+                throw initError;
+            },
+            close: function() {
+                throw initError;
+            }
         },
         structure: {
             header: '',
@@ -150,9 +156,9 @@
         open: function() {
             this._trigger('open');
 
-            this.options.shade && this.$shade.shade('open');
-
             this.effect.open.call(this);
+
+            this.options.shade && this.$shade.shade('open');
 
             this.$pinny.addClass(classes.OPENED);
 
@@ -162,9 +168,9 @@
         close: function() {
             this._trigger('close');
 
-            this.options.shade && this.$shade.shade('close');
-
             this.$pinny.removeClass(classes.OPENED);
+
+            this.options.shade && this.$shade.shade('close');
 
             this.effect.close.call(this);
 
@@ -454,7 +460,18 @@
         })()
     });
 
-    $('[data-pinny]').pinny();
+    $('[data-pinny]').each(function() {
+        var $pinny = $(this);
+        var effect = $(this).data('pinny');
+
+        if (!effect.length) {
+            throw initError;
+        }
+
+        $pinny.pinny({
+            effect: effect
+        });
+    });
 
     return $;
 }));
