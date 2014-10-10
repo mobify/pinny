@@ -149,9 +149,9 @@
         open: function() {
             this._trigger('open');
 
-            this.options.shade && this.$shade.shade('open');
-
             this.effect.open.call(this);
+
+            this.options.shade && this.$shade.shade('open');
 
             this.$pinny.addClass(classes.OPENED);
 
@@ -161,9 +161,9 @@
         close: function() {
             this._trigger('close');
 
-            this.options.shade && this.$shade.shade('close');
-
             this.$pinny.removeClass(classes.OPENED);
+
+            this.options.shade && this.$shade.shade('close');
 
             this.effect.close.call(this);
 
