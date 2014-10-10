@@ -108,7 +108,7 @@
         _init: function(element) {
             var plugin = this;
 
-            this.id = 'pinny-' + this._uuid();
+            this.id = 'pinny-' + $.uniqueId();
 
             this.iOSVersion = this._iOSVersion();
             this.iOSVersion = (this.iOSVersion && this.iOSVersion[0]) || false;
@@ -448,16 +448,7 @@
 
                 $el.removeAttr('data-pinny-tabindex');
             });
-        },
-
-        _uuid: (function() {
-            var uuid = 0;
-
-            return function() {
-                uuid += 1;
-                return uuid;
-            };
-        })()
+        }
     });
 
     $('[data-pinny]').each(function() {
