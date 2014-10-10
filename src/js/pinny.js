@@ -16,6 +16,8 @@
     var scrollPosition;
     var isChrome = /chrome/i.test(navigator.userAgent);
 
+    var initError = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
+
     /**
      * Function.prototype.bind polyfill required for < iOS6
      */
@@ -57,8 +59,12 @@
 
     Pinny.DEFAULTS = {
         effect: {
-            open: $.noop,
-            close: $.noop
+            open: function() {
+                throw initError;
+            },
+            close: function() {
+                throw initError;
+            }
         },
         structure: {
             header: '',
@@ -177,13 +183,13 @@
          Builds Pinny using the following structure:
 
          <section class="pinny">
-         <div class="pinny__wrapper">
-         <header class="pinny__header">{header content}</header>
-         <div class="pinny__content">
-         {content}
-         </div>
-         </div>
-         <footer class="pinny__footer"></footer>
+             <div class="pinny__wrapper">
+                 <header class="pinny__header">{header content}</header>
+                 <div class="pinny__content">
+                     {content}
+                 </div>
+                 <footer class="pinny__footer">{footer content}</footer>
+             </div>
          </section>
          */
         _build: function() {
@@ -354,7 +360,7 @@
         var effect = $(this).data('pinny');
 
         if (!effect.length) {
-            throw "Pinny requires a declared effect to open"
+            throw initError;
         }
 
         $pinny.pinny({
