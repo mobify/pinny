@@ -184,7 +184,7 @@ Defines the structure to use for pinny. Specifically, pinny tries to build its o
 
 Please see below for available sub-options for `header` and `footer`.
 
-##### header
+###### header
 
 default: `''`
 
@@ -217,7 +217,7 @@ $('#myPinny').pinny({
 });
 ```
 
-##### footer
+###### footer
 
 default: `false`
 
