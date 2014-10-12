@@ -17,7 +17,7 @@
     var originalActiveElement;
     var isChrome = /chrome/i.test( navigator.userAgent );
 
-    var initError = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
+    var EFFECT_NOT_PRESENT = 'Pinny requires an effect option to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
 
     /**
      * Function.prototype.bind polyfill required for < iOS6
@@ -61,10 +61,10 @@
     Pinny.DEFAULTS = {
         effect: {
             open: function() {
-                throw initError;
+                throw EFFECT_NOT_PRESENT;
             },
             close: function() {
-                throw initError;
+                throw EFFECT_NOT_PRESENT;
             }
         },
         structure: {
@@ -108,20 +108,19 @@
         _init: function(element) {
             var plugin = this;
 
-            this.id = 'pinny-' + this._uuid();
+            this.id = 'pinny-' + $.uniqueId();
 
             this.iOSVersion = this._iOSVersion();
-            this.iOSVersion = (this.iOSVersion && this.iOSVersion[0]) || false;
 
             this.$element = $(element);
             this.$body = $('body');
 
-            if (!$('.' + classes.BODYWRAPPER).length) {
-                this.$bodyWrapper = $('<div>').addClass(classes.BODYWRAPPER);
-                this.$body.wrapInner(this.$bodyWrapper);
-            } else {
-                this.$bodyWrapper = this.$body.find('.' + classes.BODYWRAPPER);
-            }
+//            if (!$('.' + classes.BODYWRAPPER).length) {
+//                this.$bodyWrapper = $('<div>').addClass(classes.BODYWRAPPER);
+//                this.$body.wrapInner(this.$bodyWrapper);
+//            } else {
+//                this.$bodyWrapper = this.$body.find('.' + classes.BODYWRAPPER);
+//            }
 
             this.$pinny = $('<section />')
                 .appendTo(this.$body)
@@ -280,6 +279,11 @@
          * explanation.
          */
         _enableScrollFix: function() {
+            var plugin = this;
+            var getCssProperty = function(name) {
+                return parseInt(plugin.$body.css(name));
+            };
+
             scrollPosition = document.body.scrollTop;
 
             /**
@@ -297,19 +301,11 @@
              * around when they're focused.
              */
             else if (this.iOSVersion >= 8) {
-                var bodyTopPadding = parseInt(
-                    getComputedStyle(document.body).paddingTop
-                );
-                var bodyBottomPadding = parseInt(
-                    getComputedStyle(document.body).paddingBottom
-                );
-                var bodyTotalPadding = bodyTopPadding + bodyBottomPadding;
+                var bodyTotalPadding = getCssProperty('padding-top') + getCssProperty('padding-bottom');
 
                 this.$body
                     .css('margin-top', 0)
-                    .css('margin-bottom', 0);
-
-                this.$bodyWrapper
+                    .css('margin-bottom', 0)
                     .height(window.innerHeight)
                     .css('overflow', 'hidden')
                     .scrollTop(scrollPosition - bodyTotalPadding);
@@ -340,9 +336,7 @@
                 window.scrollTo(0, scrollPosition);
             } else if (this.iOSVersion >= 8) {
                 this.$body
-                    .css('margin', '');
-
-                this.$bodyWrapper
+                    .css('margin', '')
                     .css('overflow', '')
                     .css('height', '');
 
@@ -359,8 +353,12 @@
             if (/ip(hone|od|ad)/i.test(navigator.platform)) {
                 // supports iOS 2.0 and later: <http://bit.ly/TJjs1V>
                 var v = (navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/);
-                return [parseInt(v[1], 10), parseInt(v[2], 10), parseInt(v[3] || 0, 10)];
+                v = [parseInt(v[1], 10), parseInt(v[2], 10), parseInt(v[3] || 0, 10)];
+
+                return v && v[0] || 0;
             }
+
+            return 0;
         },
 
         /**
@@ -371,8 +369,8 @@
             var $header = this.$pinny.find('h1, .' + classes.TITLE).first();
             var $wrapper = this.$pinny.find('.' + classes.WRAPPER);
 
-            this.$bodyWrapper
-                .attr('aria-hidden', 'false');
+//            this.$bodyWrapper
+//                .attr('aria-hidden', 'false');
 
             this.$pinny
                 .attr('role', 'dialog')
@@ -396,13 +394,13 @@
 
             this.$pinny.focus();
 
-            this.$bodyWrapper.attr('aria-hidden', 'true');
+//            this.$bodyWrapper.attr('aria-hidden', 'true');
         },
 
         _resetFocus: function() {
             this._enableInputs();
 
-            this.$bodyWrapper.attr('aria-hidden', 'false');
+//            this.$bodyWrapper.attr('aria-hidden', 'false');
 
             this.$pinny.attr('aria-hidden', 'true');
 
@@ -448,16 +446,7 @@
 
                 $el.removeAttr('data-pinny-tabindex');
             });
-        },
-
-        _uuid: (function() {
-            var uuid = 0;
-
-            return function() {
-                uuid += 1;
-                return uuid;
-            };
-        })()
+        }
     });
 
     $('[data-pinny]').each(function() {
@@ -465,7 +454,7 @@
         var effect = $(this).data('pinny');
 
         if (!effect.length) {
-            throw initError;
+            throw EFFECT_NOT_PRESENT;
         }
 
         $pinny.pinny({
