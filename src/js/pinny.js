@@ -80,7 +80,8 @@
         open: $.noop,
         opened: $.noop,
         close: $.noop,
-        closed: $.noop
+        closed: $.noop,
+        appendTo: 'body'
     };
 
     Plugin.create('pinny', Pinny, {
@@ -123,7 +124,7 @@
 //            }
 
             this.$pinny = $('<section />')
-                .appendTo(this.$body)
+                .appendTo(this.options.appendTo)
                 .addClass(classes.PINNY)
                 .addClass(this.options.cssClass)
                 .css({
@@ -155,6 +156,8 @@
         open: function() {
             this._trigger('open');
 
+            bouncefix.add('pinny__content');
+
             this.effect.open.call(this);
 
             this.options.shade && this.$shade.shade('open');
@@ -166,6 +169,8 @@
 
         close: function() {
             this._trigger('close');
+
+            bouncefix.remove('pinny__content');
 
             this.$pinny.removeClass(classes.OPENED);
 

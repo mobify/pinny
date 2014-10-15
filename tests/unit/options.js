@@ -71,6 +71,12 @@ define([
                 assert.isFunction(pinny.options.close);
                 assert.isFunction(pinny.options.closed);
             });
+
+            it('correctly defines appendTo', function() {
+                var pinny = new Pinny(element);
+
+                assert.isDefined(pinny.options.appendTo);
+            });
         });
 
         describe('creates custom options when options parameter used', function() {
@@ -171,6 +177,17 @@ define([
 
                 assert.equal(pinny.options.closed, closed);
                 assert.isFunction(pinny.options.closed);
+            });
+
+            it('correctly defines the appendTo element', function() {
+                var pinny = new Pinny(element, { appendTo: '#pinny-container' });
+
+                assert.equal(pinny.options.appendTo, '#pinny-container');
+            });
+
+            it('correctly adds pinny to the appendTo element', function() {
+                var pinny = new Pinny(element, { appendTo: '#pinny-container' });
+                assert.equal(element.closest('#pinny-container').length, 1);
             });
         });
     });
