@@ -39,7 +39,8 @@
         TITLE: 'pinny__title',
         CLOSE: 'pinny__close',
         CONTENT: 'pinny__content',
-        OPENED: 'pinny--is-open'
+        OPENED: 'pinny--is-open',
+        INPUTS: 'input, select, textarea'
     };
 
     /**
@@ -138,6 +139,8 @@
             this.effect = this.options.effect;
 
             this.$element.removeAttr('hidden');
+
+            this.$pinny.find(classes.INPUTS).attr('disabled', 'disabled');
 
             this._bindEvents();
         },
@@ -312,13 +315,17 @@
              * position. Looks like crap but it works.
              */
             else if (this.iOSVersion <= 7) {
-                this.$pinny.find('input, select, textarea')
+                this.$pinny.find(classes.INPUTS)
                     .bind('focus', function() {
                         setTimeout(function() {
                             window.scrollTo(0, scrollPosition);
                         }, 0);
                     });
             }
+
+            this.$bodyWrapper.addClass(classes.OPENED);
+            this.$bodyWrapper.find(classes.INPUTS).attr('disabled', 'disabled');
+            this.$pinny.find(classes.INPUTS).removeAttr('disabled');
         },
 
         /**
@@ -339,8 +346,12 @@
 
                 window.scrollTo(0, scrollPosition);
             } else if (this.iOSVersion <= 7) {
-                this.$pinny.find('input, select, textarea').unbind('focus');
+                this.$pinny.find(classes.INPUTS).unbind('focus');
             }
+
+            this.$bodyWrapper.removeClass(classes.OPENED);
+            this.$bodyWrapper.find(classes.INPUTS).removeAttr('disabled');
+            this.$pinny.find(classes.INPUTS).attr('disabled', 'disabled');
         },
 
         /**
