@@ -16,8 +16,10 @@ define([
         });
 
         afterEach(function() {
-            element.remove();
-            element = null;
+            if (element) {
+                element.remove();
+                element = null;
+            }
         });
 
         it('opens correctly using modal-center', function() {

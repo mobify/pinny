@@ -15,8 +15,11 @@ define([
         });
 
         afterEach(function() {
-            element.remove();
-            element = null;
+            if (element) {
+                element.remove();
+                element = null;
+            }
+
             $('.pinny__container').removeClass('pinny__container');
         });
 
