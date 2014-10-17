@@ -16,7 +16,7 @@
     var scrollPosition;
     var isChrome = /chrome/i.test(navigator.userAgent);
 
-    var initError = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
+    var EFFECT_REQUIRED = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
 
     /**
      * Function.prototype.bind polyfill required for < iOS6
@@ -32,9 +32,20 @@
     }
     /* jshint ignore:end */
 
+    $.extend($.fn, {
+        renameAttr: function(oldName, newName) {
+            return this.each(function() {
+                var $el = $(this);
+                $el
+                    .attr(newName, $el.attr(oldName))
+                    .removeAttr(oldName);
+            });
+        }
+    });
+
     var classes = {
         PINNY: 'pinny',
-        BODYWRAPPER: 'pinny__body-wrapper',
+        BODY_WRAPPER: 'pinny__body-wrapper',
         WRAPPER: 'pinny__wrapper',
         TITLE: 'pinny__title',
         CLOSE: 'pinny__close',
@@ -60,10 +71,10 @@
     Pinny.DEFAULTS = {
         effect: {
             open: function() {
-                throw initError;
+                throw EFFECT_REQUIRED;
             },
             close: function() {
-                throw initError;
+                throw EFFECT_REQUIRED;
             }
         },
         structure: {
@@ -101,35 +112,11 @@
         },
 
         _init: function(element) {
-            var plugin = this;
-
             this.iOSVersion = this._iOSVersion();
             this.iOSVersion = (this.iOSVersion && this.iOSVersion[0]) || false;
 
             this.$element = $(element);
             this.$body = $('body');
-
-            if (!$('.' + classes.BODYWRAPPER).length) {
-                this.$bodyWrapper = $('<div>').addClass(classes.BODYWRAPPER);
-                this.$body.wrapInner(this.$bodyWrapper);
-            } else {
-                this.$bodyWrapper = this.$body.find('.' + classes.BODYWRAPPER);
-            }
-
-            this.$pinny = $('<section />')
-                .appendTo(this.$body)
-                .addClass(classes.PINNY)
-                .addClass(this.options.cssClass)
-                .css({
-                    position: 'fixed',
-                    zIndex: this.options.zIndex,
-                    width: this.options.coverage,
-                    height: this.options.coverage
-                })
-                .on('click', '.' + classes.CLOSE, function(e) {
-                    e.preventDefault();
-                    plugin.close();
-                });
 
             this._build();
 
@@ -183,17 +170,34 @@
          Builds Pinny using the following structure:
 
          <section class="pinny">
-             <div class="pinny__wrapper">
-                 <header class="pinny__header">{header content}</header>
-                 <div class="pinny__content">
-                     {content}
-                 </div>
-                 <footer class="pinny__footer">{footer content}</footer>
-             </div>
+         <div class="pinny__wrapper">
+         <header class="pinny__header">{header content}</header>
+         <div class="pinny__content">
+         {content}
+         </div>
+         <footer class="pinny__footer">{footer content}</footer>
+         </div>
          </section>
          */
         _build: function() {
             var plugin = this;
+
+            this._buildWrapper();
+
+            this.$pinny = $('<section />')
+                .appendTo(this.$bodyWrapper)
+                .addClass(classes.PINNY)
+                .addClass(this.options.cssClass)
+                .css({
+                    position: 'fixed',
+                    zIndex: this.options.zIndex,
+                    width: this.options.coverage,
+                    height: this.options.coverage
+                })
+                .on('click', '.' + classes.CLOSE, function(e) {
+                    e.preventDefault();
+                    plugin.close();
+                });
 
             if (this.options.structure) {
                 var $wrapper = $('<div />')
@@ -237,6 +241,26 @@
             }
 
             return $element;
+        },
+
+        /**
+         * The body content needs to be wrapped in a containing element
+         * in order to facilitate scroll blocking.
+         */
+        _buildWrapper: function() {
+            this.$bodyWrapper = this.$body.find('.' + classes.BODY_WRAPPER);
+
+            if (!this.$bodyWrapper.length) {
+                // scripts must be disabled to avoid re-executing them
+                var $scripts = this.$body.find('script')
+                    .renameAttr('src', 'x-src')
+                    .attr('type', 'text/pinny-script');
+
+                this.$bodyWrapper = $('<div>').addClass(classes.BODY_WRAPPER);
+                this.$body.wrapInner(this.$bodyWrapper);
+
+                $scripts.renameAttr('x-src', 'src').attr('type', 'text/javascript');
+            }
         },
 
         _isHtml: function(input) {
@@ -360,7 +384,7 @@
         var effect = $(this).data('pinny');
 
         if (!effect.length) {
-            throw initError;
+            throw EFFECT_REQUIRED;
         }
 
         $pinny.pinny({
