@@ -80,7 +80,7 @@ define([
                 pinny = new Pinny(element, { effect: modalCenter });
 
                 assert.deepEqual(pinny.options.effect, modalCenter);
-                assert.isObject(pinny.options.effect);
+                assert.isFunction(pinny.options.effect);
             });
 
             it('correctly defines custom header', function() {

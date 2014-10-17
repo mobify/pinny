@@ -125,7 +125,7 @@
                 throw EFFECT_REQUIRED;
             }
 
-            this.effect = this.options.effect;
+            this.effect = this.options.effect.call(this);
 
             this.$element.removeAttr('hidden');
 
