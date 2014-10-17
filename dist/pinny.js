@@ -13,11 +13,10 @@
 }(function($, bouncefix, Plugin) {
     var $doc = $(document);
     var $html = $('html');
-    var scrollPosition;
-    var originalActiveElement;
     var isChrome = /chrome/i.test( navigator.userAgent );
 
-    var EFFECT_NOT_PRESENT = 'Pinny requires an effect option to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
+    var EFFECT_REQUIRED = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
+    var CONTAINER_EXISTS = 'An container option was specified, but a previous Pinny has already created a container. All Pinny\'s must use the same container';
 
     /**
      * Function.prototype.bind polyfill required for < iOS6
@@ -33,9 +32,20 @@
     }
     /* jshint ignore:end */
 
+    $.extend($.fn, {
+        renameAttr: function(oldName, newName) {
+            return this.each(function() {
+                var $el = $(this);
+                $el
+                    .attr(newName, $el.attr(oldName))
+                    .removeAttr(oldName);
+            });
+        }
+    });
+
     var classes = {
         PINNY: 'pinny',
-        BODYWRAPPER: 'pinny__body-wrapper',
+        CONTAINER: 'pinny__container',
         WRAPPER: 'pinny__wrapper',
         TITLE: 'pinny__title',
         CLOSE: 'pinny__close',
@@ -59,14 +69,7 @@
     Pinny.VERSION = '0.2.0';
 
     Pinny.DEFAULTS = {
-        effect: {
-            open: function() {
-                throw EFFECT_NOT_PRESENT;
-            },
-            close: function() {
-                throw EFFECT_NOT_PRESENT;
-            }
-        },
+        effect: null,
         structure: {
             header: '',
             footer: false
@@ -81,7 +84,7 @@
         opened: $.noop,
         close: $.noop,
         closed: $.noop,
-        appendTo: 'body'
+        container: null
     };
 
     Plugin.create('pinny', Pinny, {
@@ -107,8 +110,6 @@
         },
 
         _init: function(element) {
-            var plugin = this;
-
             this.id = 'pinny-' + $.uniqueId();
 
             this.iOSVersion = this._iOSVersion();
@@ -116,31 +117,13 @@
             this.$element = $(element);
             this.$body = $('body');
 
-//            if (!$('.' + classes.BODYWRAPPER).length) {
-//                this.$bodyWrapper = $('<div>').addClass(classes.BODYWRAPPER);
-//                this.$body.wrapInner(this.$bodyWrapper);
-//            } else {
-//                this.$bodyWrapper = this.$body.find('.' + classes.BODYWRAPPER);
-//            }
-
-            this.$pinny = $('<section />')
-                .appendTo(this.options.appendTo)
-                .addClass(classes.PINNY)
-                .addClass(this.options.cssClass)
-                .css({
-                    position: 'fixed',
-                    zIndex: this.options.zIndex,
-                    width: this.options.coverage,
-                    height: this.options.coverage
-                })
-                .on('click', '.' + classes.CLOSE, function(e) {
-                    e.preventDefault();
-                    plugin.close();
-                });
-
             this._build();
 
             bouncefix.add(classes.CONTENT);
+
+            if (!this.options.effect) {
+                throw EFFECT_REQUIRED;
+            }
 
             this.effect = this.options.effect;
 
@@ -194,17 +177,34 @@
          Builds Pinny using the following structure:
 
          <section class="pinny">
-             <div class="pinny__wrapper">
+         <div class="pinny__wrapper">
                 <header class="pinny__header">{header content}</header>
                 <div class="pinny__content">
                     {content}
                 </div>
                 <footer class="pinny__footer">{footer content}</footer>
-             </div>
+         </div>
          </section>
          */
         _build: function() {
             var plugin = this;
+
+            this.$container = this._buildContainer();
+
+            this.$pinny = $('<section />')
+                .appendTo(this.$container)
+                .addClass(classes.PINNY)
+                .addClass(this.options.cssClass)
+                .css({
+                    position: 'fixed',
+                    zIndex: this.options.zIndex,
+                    width: this.options.coverage,
+                    height: this.options.coverage
+                })
+                .on('click', '.' + classes.CLOSE, function(e) {
+                    e.preventDefault();
+                    plugin.close();
+                });
 
             if (this.options.structure) {
                 var $wrapper = $('<div />')
@@ -252,6 +252,43 @@
             return $element;
         },
 
+        /**
+         * The body content needs to be wrapped in a containing
+         * element in order to facilitate scroll blocking. One can
+         * either be supplied in the options, or we'll create one
+         * automatically, and append all body content to it.
+         */
+        _buildContainer: function() {
+            var $container = $('.' + classes.CONTAINER);
+
+            if (this.options.container) {
+                if (!$container.length) {
+                    $container = $(this.options.container).addClass(classes.CONTAINER);
+                }
+            } else {
+                if (!$container.length) {
+                    $container = this._createContainer();
+                }
+            }
+
+            return $container;
+        },
+
+        _createContainer: function() {
+            // scripts must be disabled to avoid re-executing them
+            var $scripts = this.$body.find('script')
+                .renameAttr('src', 'x-src')
+                .attr('type', 'text/pinny-script');
+
+            var $container = $('<div />').addClass(classes.CONTAINER);
+
+            this.$body.wrapInner($container);
+
+            $scripts.renameAttr('x-src', 'src').attr('type', 'text/javascript');
+
+            return $container;
+        },
+
         _isHtml: function(input) {
             return /<[a-z][\s\S]*>/i.test(input);
         },
@@ -289,7 +326,7 @@
                 return parseInt(plugin.$body.css(name));
             };
 
-            scrollPosition = document.body.scrollTop;
+            this.scrollPosition = document.body.scrollTop;
 
             /**
              * On Chrome, we can get away with fixing the position of the html
@@ -298,7 +335,7 @@
              */
             if (isChrome) {
                 $html.css('position', 'fixed');
-                $html.css('top', scrollPosition * -1);
+                $html.css('top', this.scrollPosition * -1);
             }
             /**
              * On iOS8, we lock the height of Pinny's body wrapping div as well
@@ -313,7 +350,7 @@
                     .css('margin-bottom', 0)
                     .height(window.innerHeight)
                     .css('overflow', 'hidden')
-                    .scrollTop(scrollPosition - bodyTotalPadding);
+                    .scrollTop(this.scrollPosition - bodyTotalPadding);
             }
             /**
              * On iOS7 and under, the browser can't handle what we're doing
@@ -323,9 +360,9 @@
              */
             else if (this.iOSVersion <= 7) {
                 this.$pinny.find('input, select, textarea')
-                    .bind('focus', function() {
+                    .on('focus', function() {
                         setTimeout(function() {
-                            window.scrollTo(0, scrollPosition);
+                            window.scrollTo(0, plugin.scrollPosition);
                         }, 0);
                     });
             }
@@ -338,16 +375,16 @@
             if (isChrome) {
                 $html.css('position', '');
                 $html.css('top', '');
-                window.scrollTo(0, scrollPosition);
+                window.scrollTo(0, this.scrollPosition);
             } else if (this.iOSVersion >= 8) {
                 this.$body
                     .css('margin', '')
                     .css('overflow', '')
                     .css('height', '');
 
-                window.scrollTo(0, scrollPosition);
+                window.scrollTo(0, this.scrollPosition);
             } else if (this.iOSVersion <= 7) {
-                this.$pinny.find('input, select, textarea').unbind('focus');
+                this.$pinny.find('input, select, textarea').off('focus');
             }
         },
 
@@ -374,8 +411,8 @@
             var $header = this.$pinny.find('h1, .' + classes.TITLE).first();
             var $wrapper = this.$pinny.find('.' + classes.WRAPPER);
 
-//            this.$bodyWrapper
-//                .attr('aria-hidden', 'false');
+            this.$container
+                .attr('aria-hidden', 'false');
 
             this.$pinny
                 .attr('role', 'dialog')
@@ -391,7 +428,7 @@
         },
 
         _focus: function() {
-            originalActiveElement = document.activeElement;
+            this.originalActiveElement = document.activeElement;
 
             this._disableInputs();
 
@@ -399,17 +436,17 @@
 
             this.$pinny.focus();
 
-//            this.$bodyWrapper.attr('aria-hidden', 'true');
+            this.$container.attr('aria-hidden', 'true');
         },
 
         _resetFocus: function() {
             this._enableInputs();
 
-//            this.$bodyWrapper.attr('aria-hidden', 'false');
+            this.$container.attr('aria-hidden', 'false');
 
             this.$pinny.attr('aria-hidden', 'true');
 
-            originalActiveElement.focus();
+            this.originalActiveElement.focus();
         },
 
         /**
@@ -422,16 +459,12 @@
                 return $(this).closest('.pinny').length;
             });
 
-            $focusableElements.each(function(idx, el) {
+            $focusableElements.each(function(_, el) {
                 var $el = $(el);
-                var currentTabIndex = $el.attr('tabindex');
-
-                if (!currentTabIndex) {
-                    currentTabIndex = '';
-                }
+                var currentTabIndex = $el.attr('tabindex') || 0;
 
                 $el
-                    .attr('data-pinny-tabindex', currentTabIndex)
+                    .data('tabindex', currentTabIndex)
                     .attr('tabindex', '-1');
             });
         },
@@ -439,9 +472,9 @@
         _enableInputs: function() {
             var $disabledInputs = $('[data-pinny-tabindex]');
 
-            $disabledInputs.each(function(idx, el) {
+            $disabledInputs.each(function(_, el) {
                 var $el = $(el);
-                var oldTabIndex = $el.attr('data-pinny-tabindex');
+                var oldTabIndex = $el.data('tabindex');
 
                 if (oldTabIndex) {
                     $el.attr('tabindex', oldTabIndex);
@@ -449,7 +482,7 @@
                     $el.removeAttr('tabindex');
                 }
 
-                $el.removeAttr('data-pinny-tabindex');
+                $el.removeData('tabindex');
             });
         }
     });
@@ -459,7 +492,7 @@
         var effect = $(this).data('pinny');
 
         if (!effect.length) {
-            throw EFFECT_NOT_PRESENT;
+            throw EFFECT_REQUIRED;
         }
 
         $pinny.pinny({

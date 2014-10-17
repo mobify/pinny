@@ -1,8 +1,9 @@
 define([
     'text!fixtures/pinny.html',
     '$',
+    'modal-center',
     'pinny'
-], function(fixture, $) {
+], function(fixture, $, modalCenter) {
     var Pinny;
     var element;
 
@@ -13,7 +14,9 @@ define([
         });
 
         it('creates a pinny instance', function() {
-            var pinny = new Pinny(element);
+            var pinny = new Pinny(element, {
+                effect: modalCenter
+            });
 
             assert.isDefined(pinny);
         });
