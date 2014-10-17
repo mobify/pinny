@@ -131,7 +131,7 @@ Initialize with options.
 ```js
 $('#myPinny').pinny({
     effect: sheetBottom,
-    appendTo: '#container',
+    container: '#container',
     structure: {
         header: 'My Pinny Title',
         footer: false
@@ -174,7 +174,7 @@ $('#myPinny').pinny({
 });
 ```
 
-#### appendTo
+#### container
 
 default: `body`
 
@@ -182,7 +182,7 @@ Specify the container the pinny will be created within
 
 ```js
 $('#myPinny').pinny({
-    appendTo: $('#mainForm') // or appendTo: '#mainForm'
+    container: $('#mainForm') // or container: '#mainForm'
 });
 ```
 
@@ -194,7 +194,7 @@ Specify the container the pinny will be created within
 
 ```js
 $('#myPinny').pinny({
-    appendTo: $('#mainForm') // or appendTo: '#mainForm'
+    container: $('#mainForm') // or container: '#mainForm'
 });
 ```
 
