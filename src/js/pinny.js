@@ -50,7 +50,8 @@
         TITLE: 'pinny__title',
         CLOSE: 'pinny__close',
         CONTENT: 'pinny__content',
-        OPENED: 'pinny--is-open'
+        OPENED: 'pinny--is-open',
+        SCROLLABLE: 'pinny--is-scrollable'
     };
 
     /**
@@ -139,7 +140,7 @@
         open: function() {
             this._trigger('open');
 
-            bouncefix.add('pinny__content');
+            bouncefix.add(classes.SCROLLABLE);
 
             this.effect.open.call(this);
 
@@ -153,7 +154,7 @@
         close: function() {
             this._trigger('close');
 
-            bouncefix.remove('pinny__content');
+            bouncefix.remove(classes.SCROLLABLE);
 
             this.$pinny.removeClass(classes.OPENED);
 
@@ -215,6 +216,7 @@
 
                 $('<div />')
                     .addClass(classes.CONTENT)
+                    .addClass(classes.SCROLLABLE)
                     .append(this.$element)
                     .appendTo($wrapper);
 
