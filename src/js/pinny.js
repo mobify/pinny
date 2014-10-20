@@ -151,7 +151,7 @@
         open: function() {
             this._trigger('open');
 
-            bouncefix.add('pinny__content');
+            bouncefix.add('pinny--is-scrollable');
 
             this.options.shade && this.$shade.shade('open');
 
@@ -163,7 +163,7 @@
         close: function() {
             this._trigger('close');
 
-            bouncefix.remove('pinny__content');
+            bouncefix.remove('pinny--is-scrollable');
 
             this.options.shade && this.$shade.shade('close');
 
@@ -202,7 +202,7 @@
             $(this._buildComponent('header')).prependTo($wrapper);
 
             $('<div />')
-                .addClass('pinny__content')
+                .addClass('pinny__content pinny--is-scrollable')
                 .append(this.$element)
                 .appendTo($wrapper);
 
