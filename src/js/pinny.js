@@ -158,6 +158,10 @@
 
             this.$pinny.addClass(classes.OPENED);
 
+            if (isOldAndroidBrowser) {
+                this.$container.addClass('pinny--disable-taps');
+            }
+
             this._enableScrollFix();
 
             this._supportLegacyFlex();
@@ -169,6 +173,10 @@
             bouncefix.remove(classes.SCROLLABLE);
 
             this.$pinny.removeClass(classes.OPENED);
+
+            if (isOldAndroidBrowser) {
+                this.$container.removeClass('pinny--disable-taps');
+            }
 
             this.options.shade && this.$shade.shade('close');
 

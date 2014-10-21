@@ -47,14 +47,6 @@
         }
     });
 
-    /**
-     * Detect legacy flex box support for androids
-     */
-
-    if (isLegacyFlexSupport) {
-        $('html').addClass('no-flex-pinny');
-    }
-
     var classes = {
         PINNY: 'pinny',
         CONTAINER: 'pinny__container',
@@ -134,6 +126,10 @@
 
             this._build();
 
+            if (isLegacyFlexSupport) {
+                this.$pinny.find('.' + classes.WRAPPER).addClass('no-flex-pinny');
+            }
+
             bouncefix.add(classes.CONTENT);
 
             if (!this.options.effect) {
@@ -162,6 +158,10 @@
 
             this.$pinny.addClass(classes.OPENED);
 
+            if (isOldAndroidBrowser) {
+                this.$container.addClass('pinny--disable-taps');
+            }
+
             this._enableScrollFix();
 
             this._supportLegacyFlex();
@@ -173,6 +173,10 @@
             bouncefix.remove(classes.SCROLLABLE);
 
             this.$pinny.removeClass(classes.OPENED);
+
+            if (isOldAndroidBrowser) {
+                this.$container.removeClass('pinny--disable-taps');
+            }
 
             this.options.shade && this.$shade.shade('close');
 
@@ -191,15 +195,10 @@
 
             if (isLegacyFlexSupport) {
                 // on orientation/resize
-                var orientationEvent = 'orientationchange resize';
-
-                if (window.addEventListener) {
-                    window.addEventListener(orientationEvent, this._supportLegacyFlex, false);
-                } else if (window.attachEvent) {
-                    window.attachEvent(orientationEvent, this._supportLegacyFlex);
-                } else {
-                    window[orientationEvent] = this._supportLegacyFlex;
-                }
+                var $this = this;
+                $(window).on('orientationchange resize', function (e) {
+                    $this._supportLegacyFlex();
+                });
             }
         },
 
@@ -519,9 +518,14 @@
 
         _supportLegacyFlex: function() {
             if (isLegacyFlexSupport) {
-                var $pinnyContent = this.$pinny.find(classes.CONTENT);
-                $pinnyContent.css('margin-top', this.$pinny.find(classes.HEADER).height() + 'px');
-                $pinnyContent.css('margin-bottom', this.$pinny.find(classes.FOOTER).height() + 'px');
+                var $pinnyContent = this.$pinny.find('.' + classes.CONTENT);
+                var $pinnyHeader = this.$pinny.find('.' + classes.HEADER);
+                var $pinnyFooter = this.$pinny.find('.' + classes.FOOTER);
+
+                setTimeout(function () {
+                    $pinnyContent.css('margin-top', $pinnyHeader.height() + 'px');
+                    $pinnyContent.css('margin-bottom', $pinnyFooter.height() + 'px');
+                }, 50);
             }
         }
 

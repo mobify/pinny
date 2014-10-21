@@ -41,3 +41,8 @@
 
 [hidden] {
   display: none !important; }
+
+.pinny__container.pinny--disable-taps {
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent; }
