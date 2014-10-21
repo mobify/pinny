@@ -14,6 +14,10 @@
     var $doc = $(document);
     var $html = $('html');
     var isChrome = /chrome/i.test( navigator.userAgent );
+    var isAndroid = /android/i.test( navigator.userAgent );
+    var webkitVer = parseInt((/WebKit\/([0-9]+)/.exec(navigator.appVersion) || 0)[1],10) || void 0;
+    var isOldAndroidBrowser = isAndroid && webkitVer < 537;
+    var isLegacyFlexSupport = isOldAndroidBrowser && !isChrome;
 
     var EFFECT_REQUIRED = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
     var CONTAINER_EXISTS = 'An container option was specified, but a previous Pinny has already created a container. All Pinny\'s must use the same container';
@@ -50,6 +54,8 @@
         TITLE: 'pinny__title',
         CLOSE: 'pinny__close',
         CONTENT: 'pinny__content',
+        HEADER: 'pinny__header',
+        FOOTER: 'pinny__footer',
         OPENED: 'pinny--is-open',
         SCROLLABLE: 'pinny--is-scrollable'
     };
@@ -120,6 +126,10 @@
 
             this._build();
 
+            if (isLegacyFlexSupport) {
+                this.$pinny.find('.' + classes.WRAPPER).addClass('no-flex-pinny');
+            }
+
             bouncefix.add(classes.CONTENT);
 
             if (!this.options.effect) {
@@ -149,6 +159,8 @@
             this.$pinny.addClass(classes.OPENED);
 
             this._enableScrollFix();
+
+            this._supportLegacyFlex();
         },
 
         close: function() {
@@ -172,6 +184,14 @@
                     e.preventDefault();
                 }
             });
+
+            if (isLegacyFlexSupport) {
+                // on orientation/resize
+                var $this = this;
+                $(window).on('orientationchange resize', function (e) {
+                    $this._supportLegacyFlex();
+                });
+            }
         },
 
         /**
@@ -486,7 +506,21 @@
 
                 $el.removeData('tabindex');
             });
+        },
+
+        _supportLegacyFlex: function() {
+            if (isLegacyFlexSupport) {
+                var $pinnyContent = this.$pinny.find('.' + classes.CONTENT);
+                var $pinnyHeader = this.$pinny.find('.' + classes.HEADER);
+                var $pinnyFooter = this.$pinny.find('.' + classes.FOOTER);
+
+                setTimeout(function () {
+                    $pinnyContent.css('margin-top', $pinnyHeader.height() + 'px');
+                    $pinnyContent.css('margin-bottom', $pinnyFooter.height() + 'px');
+                }, 50);
+            }
         }
+
     });
 
     $('[data-pinny]').each(function() {

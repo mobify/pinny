@@ -14,6 +14,10 @@
     var $doc = $(document);
     var $html = $('html');
     var isChrome = /chrome/i.test( navigator.userAgent );
+    var isAndroid = /android/i.test( navigator.userAgent );
+    var webkitVer = parseInt((/WebKit\/([0-9]+)/.exec(navigator.appVersion) || 0)[1],10) || void 0;
+    var isOldAndroidBrowser = isAndroid && webkitVer < 537;
+    var isLegacyFlexSupport = isOldAndroidBrowser && !isChrome;
 
     var EFFECT_REQUIRED = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
     var CONTAINER_EXISTS = 'An container option was specified, but a previous Pinny has already created a container. All Pinny\'s must use the same container';
@@ -43,6 +47,14 @@
         }
     });
 
+    /**
+     * Detect legacy flex box support for androids
+     */
+
+    if (isLegacyFlexSupport) {
+        $('html').addClass('no-flex-pinny');
+    }
+
     var classes = {
         PINNY: 'pinny',
         CONTAINER: 'pinny__container',
@@ -50,6 +62,8 @@
         TITLE: 'pinny__title',
         CLOSE: 'pinny__close',
         CONTENT: 'pinny__content',
+        HEADER: 'pinny__header',
+        FOOTER: 'pinny__footer',
         OPENED: 'pinny--is-open',
         SCROLLABLE: 'pinny--is-scrollable'
     };
@@ -149,6 +163,8 @@
             this.$pinny.addClass(classes.OPENED);
 
             this._enableScrollFix();
+
+            this._supportLegacyFlex();
         },
 
         close: function() {
@@ -172,6 +188,19 @@
                     e.preventDefault();
                 }
             });
+
+            if (isLegacyFlexSupport) {
+                // on orientation/resize
+                var orientationEvent = 'orientationchange resize';
+
+                if (window.addEventListener) {
+                    window.addEventListener(orientationEvent, this._supportLegacyFlex, false);
+                } else if (window.attachEvent) {
+                    window.attachEvent(orientationEvent, this._supportLegacyFlex);
+                } else {
+                    window[orientationEvent] = this._supportLegacyFlex;
+                }
+            }
         },
 
         /**
@@ -486,7 +515,16 @@
 
                 $el.removeData('tabindex');
             });
+        },
+
+        _supportLegacyFlex: function() {
+            if (isLegacyFlexSupport) {
+                var $pinnyContent = this.$pinny.find(classes.CONTENT);
+                $pinnyContent.css('margin-top', this.$pinny.find(classes.HEADER).height() + 'px');
+                $pinnyContent.css('margin-bottom', this.$pinny.find(classes.FOOTER).height() + 'px');
+            }
         }
+
     });
 
     $('[data-pinny]').each(function() {

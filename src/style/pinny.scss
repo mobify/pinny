@@ -68,6 +68,15 @@
 .pinny__header,
 .pinny__footer {
     flex-shrink: 0; // 1, 2
+    
+    .no-flex-pinny & {
+        position: absolute;
+        width: 100%;
+    }
+}
+
+.no-flex-pinny .pinny__footer {
+    bottom: 0;
 }
 
 

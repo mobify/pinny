@@ -23,6 +23,13 @@
   -webkit-flex-shrink: 0;
       -ms-flex-negative: 0;
           flex-shrink: 0; }
+  .no-flex-pinny .pinny__header, .no-flex-pinny
+  .pinny__footer {
+    position: absolute;
+    width: 100%; }
+
+.no-flex-pinny .pinny__footer {
+  bottom: 0; }
 
 .pinny__content {
   overflow: auto;
