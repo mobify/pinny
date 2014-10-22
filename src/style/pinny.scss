@@ -8,7 +8,9 @@
 //    Pinny. The positioning can be configured by using Pinny's `coverage` API,
 //    which is explained [here](https://github.com/mobify/pinny#coverage)
 // 2. The display is automatically set to "block" by Pinny on open.
-// 3. Pinny shows a tap highlight when tapped for an unknown reason. This
+// 3. Avoid content bleed through.
+// 4. Hide the outline when Pinny is focused for screen readers
+// 5. Pinny shows a tap highlight when tapped for an unknown reason. This
 //    removes that.
 
 .pinny {
@@ -16,11 +18,11 @@
 
     display: none; // 2
 
-    background: white;
+    background: white; // 3
+    outline: none; // 4
 
-    -webkit-tap-highlight-color: rgba(black, 0); // 3
+    -webkit-tap-highlight-color: rgba(black, 0); // 5
 }
-
 
 // Pinny: Wrapper
 // --------------

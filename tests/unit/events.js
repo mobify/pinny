@@ -12,8 +12,10 @@ define([
         });
 
         afterEach(function() {
-            element.remove();
-            element = null;
+            if (element) {
+                element.remove();
+                element = null;
+            }
         });
 
         it('fires the open event when pinny is opened', function(done) {

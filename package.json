@@ -4,7 +4,7 @@
     "type" : "git",
     "url" : "https://github.com/mobify/pinny.git"
   },
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "A mobile first content fly-in UI plugin",
   "devDependencies": {
     "chai": "~1.9.0",
@@ -18,12 +18,12 @@
     "grunt-contrib-uglify": "~0.1.1",
     "grunt-contrib-watch": "~0.5.1",
     "grunt-css": "~0.5.4",
-    "grunt-jscs-checker": "0.4.1",
+    "grunt-jscs": "0.7.1",
     "grunt-mocha-phantomjs": "~0.3.2",
     "grunt-shell": "~0.2.1",
     "grunt-version": "^0.3.0",
     "jshint": "2.5.0",
-    "mobify-code-style": "0.0.3",
+    "mobify-code-style": "1.0.0",
     "mocha": "~1.14.0"
   },
   "license": "MIT"

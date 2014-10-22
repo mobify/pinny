@@ -13,8 +13,12 @@ define([
         });
 
         afterEach(function() {
-            element.remove();
-            element = null;
+            if (element) {
+                $('.shade').remove();
+                element.remove();
+                element = null;
+            }
+            $('.lockup__container').removeClass('lockup__container');
         });
 
         describe('binding to Zepto\'s fn', function() {
@@ -33,13 +37,17 @@ define([
 
         describe('invoking pinny', function() {
             it('creates pinny instance on element', function() {
-                element.pinny();
+                element.pinny({
+                    effect: modalCenter
+                });
 
                 assert.isDefined(element.data('pinny'));
             });
 
             it('stores element inside instance', function() {
-                element.pinny();
+                element.pinny({
+                    effect: modalCenter
+                });
 
                 assert.isDefined(element.data('pinny').$pinny);
             });
@@ -83,6 +91,7 @@ define([
                 element.pinny({
                     effect: modalCenter,
                     opened: function() {
+
                         element.closest('.pinny').find('.pinny__close').trigger('click');
                     },
                     closed: function() {
@@ -95,21 +104,52 @@ define([
             });
 
             it('throws for method calls that don\'t exist', function() {
-                assert.throws(function() { element.pinny().pinny('noMethod'); });
+                assert.throws(function() {
+                    element
+                        .pinny({
+                            effect: modalCenter
+                        })
+                        .pinny('noMethod');
+                });
             });
 
             it('throws when attempting to invoke private methods', function() {
-                assert.throws(function() { element.pinny().pinny('_init'); });
+                assert.throws(function() {
+                    element
+                        .pinny({
+                            effect: modalCenter
+                        })
+                        .pinny('_init');
+                });
             });
 
             it('throws when attempting to invoke methods that aren\'t functions', function() {
-                assert.throws(function() { element.pinny().pinny('singleItemOpen'); });
+                assert.throws(function() {
+                    element
+                        .pinny({
+                            effect: modalCenter
+                        })
+                        .pinny('singleItemOpen');
+                });
+            });
+        });
+
+        describe('creates a pinny with correct container', function() {
+            it('creates pinny with the default container', function() {
+                var $pinny = $(element).pinny({ effect: modalCenter });
+                assert.equal($pinny.closest('.lockup__container').length, 1);
+            });
+
+            it('creates pinny in the container element', function() {
+                var $pinny = $(element).pinny({ effect: modalCenter, container: '#pinny-container' });
+                assert.equal($pinny.closest('#pinny-container').length, 1);
             });
         });
 
         describe('creates a pinny with correct header', function() {
             it('creates the structure with header = false', function() {
                 var $pinny = $(fullFixture).pinny({
+                    effect: modalCenter,
                     structure: {
                         header: false
                     }
@@ -122,6 +162,7 @@ define([
             it('creates the correct structure with header = "Something"', function() {
                 var $pinny = $(fixture)
                     .pinny({
+                        effect: modalCenter,
                         structure: {
                             header: 'Something'
                         }
@@ -136,6 +177,7 @@ define([
             it('creates the correct structure with an HTML header', function() {
                 var $pinny = $(fixture)
                     .pinny({
+                        effect: modalCenter,
                         structure: {
                             header: '<span class="pinny__header--custom">Custom header</span><button class="pinny__close"></button>'
                         }
@@ -151,6 +193,7 @@ define([
         describe('creates a pinny with correct footer', function() {
             it('creates the structure with footer = false', function() {
                 var $pinny = $(fullFixture).pinny({
+                    effect: modalCenter,
                     structure: {
                         header: false,
                         footer: false
@@ -165,6 +208,7 @@ define([
             it('creates the correct structure with footer = "Footer"', function() {
                 var $pinny = $(fixture)
                     .pinny({
+                        effect: modalCenter,
                         structure: {
                             footer: 'Footer'
                         }
@@ -180,6 +224,7 @@ define([
             it('creates the correct structure with an HTML footer', function() {
                 var $pinny = $(fixture)
                     .pinny({
+                        effect: modalCenter,
                         structure: {
                             footer: '<span class="pinny__footer--custom">Custom footer</span>'
                         }

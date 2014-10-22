@@ -2,21 +2,18 @@
     if (typeof define === 'function' && define.amd) {
         define([
             '$',
-            'bouncefix',
             'plugin',
+            'bouncefix',
+            'lockup',
             'shade'
         ], factory);
     } else {
         var framework = window.Zepto || window.jQuery;
-        factory(framework, window.bouncefix, window.Plugin);
+        factory(framework, window.Plugin, window.bouncefix);
     }
-}(function($, bouncefix, Plugin) {
-    var $doc = $(document);
-    var $html = $('html');
-    var scrollPosition;
-    var isChrome = /chrome/i.test(navigator.userAgent);
-
-    var initError = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
+}(function($, Plugin, bouncefix) {
+    var EFFECT_REQUIRED = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
+    var FOCUSABLE_ELEMENTS = 'a[href], area[href], input, select, textarea, button, iframe, object, embed, [tabindex], [contenteditable]';
 
     /**
      * Function.prototype.bind polyfill required for < iOS6
@@ -34,12 +31,12 @@
 
     var classes = {
         PINNY: 'pinny',
-        BODYWRAPPER: 'pinny__body-wrapper',
         WRAPPER: 'pinny__wrapper',
         TITLE: 'pinny__title',
         CLOSE: 'pinny__close',
         CONTENT: 'pinny__content',
-        OPENED: 'pinny--is-open'
+        OPENED: 'pinny--is-open',
+        SCROLLABLE: 'pinny--is-scrollable'
     };
 
     /**
@@ -55,17 +52,11 @@
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
     }
 
-    Pinny.VERSION = '0.1.1';
+    Pinny.VERSION = '1.0.0';
 
     Pinny.DEFAULTS = {
-        effect: {
-            open: function() {
-                throw initError;
-            },
-            close: function() {
-                throw initError;
-            }
-        },
+        effect: null,
+        container: null,
         structure: {
             header: '',
             footer: false
@@ -88,54 +79,36 @@
          */
         animation: {
             beginClose: function() {
-                $doc.on('touchmove', this._blockScroll);
+
             },
             openComplete: function() {
                 this._trigger('opened');
-                $doc.off('touchmove', this._blockScroll);
+
+                this._focus();
+                this.$pinny.lockup('lock');
             },
             closeComplete: function() {
                 this._trigger('closed');
-                $doc.off('touchmove', this._blockScroll);
+
+                this._resetFocus();
+                this.$pinny.lockup('unlock');
             }
         },
 
         _init: function(element) {
-            var plugin = this;
-
-            this.iOSVersion = this._iOSVersion();
-            this.iOSVersion = (this.iOSVersion && this.iOSVersion[0]) || false;
+            this.id = 'pinny-' + $.uniqueId();
 
             this.$element = $(element);
+            this.$doc = $(document);
             this.$body = $('body');
-
-            if (!$('.' + classes.BODYWRAPPER).length) {
-                this.$bodyWrapper = $('<div>').addClass(classes.BODYWRAPPER);
-                this.$body.wrapInner(this.$bodyWrapper);
-            } else {
-                this.$bodyWrapper = this.$body.find('.' + classes.BODYWRAPPER);
-            }
-
-            this.$pinny = $('<section />')
-                .appendTo(this.$body)
-                .addClass(classes.PINNY)
-                .addClass(this.options.cssClass)
-                .css({
-                    position: 'fixed',
-                    zIndex: this.options.zIndex,
-                    width: this.options.coverage,
-                    height: this.options.coverage
-                })
-                .on('click', '.' + classes.CLOSE, function(e) {
-                    e.preventDefault();
-                    plugin.close();
-                });
 
             this._build();
 
-            bouncefix.add(classes.CONTENT);
+            if (!this.options.effect) {
+                throw EFFECT_REQUIRED;
+            }
 
-            this.effect = this.options.effect;
+            this.effect = this.options.effect.call(this);
 
             this.$element.removeAttr('hidden');
 
@@ -149,25 +122,25 @@
         open: function() {
             this._trigger('open');
 
+            bouncefix.add(classes.SCROLLABLE);
+
             this.effect.open.call(this);
 
             this.options.shade && this.$shade.shade('open');
 
             this.$pinny.addClass(classes.OPENED);
-
-            this._enableScrollFix();
         },
 
         close: function() {
             this._trigger('close');
+
+            bouncefix.remove(classes.SCROLLABLE);
 
             this.$pinny.removeClass(classes.OPENED);
 
             this.options.shade && this.$shade.shade('close');
 
             this.effect.close.call(this);
-
-            this._disableScrollFix();
         },
 
         _bindEvents: function() {
@@ -186,7 +159,7 @@
              <div class="pinny__wrapper">
                  <header class="pinny__header">{header content}</header>
                  <div class="pinny__content">
-                     {content}
+                 {content}
                  </div>
                  <footer class="pinny__footer">{footer content}</footer>
              </div>
@@ -194,6 +167,25 @@
          */
         _build: function() {
             var plugin = this;
+
+            this.$pinny = $('<section />')
+                .lockup({
+                    container: this.options.container
+                })
+                .addClass(classes.PINNY)
+                .addClass(this.options.cssClass)
+                .css({
+                    position: 'fixed',
+                    zIndex: this.options.zIndex,
+                    width: this.options.coverage,
+                    height: this.options.coverage
+                })
+                .on('click', '.' + classes.CLOSE, function(e) {
+                    e.preventDefault();
+                    plugin.close();
+                });
+
+            this.$container = this.$pinny.lockup('container');
 
             if (this.options.structure) {
                 var $wrapper = $('<div />')
@@ -204,6 +196,7 @@
 
                 $('<div />')
                     .addClass(classes.CONTENT)
+                    .addClass(classes.SCROLLABLE)
                     .append(this.$element)
                     .appendTo($wrapper);
 
@@ -211,6 +204,8 @@
             } else {
                 this.$element.appendTo(this.$pinny);
             }
+
+            this._addAccessibility();
 
             if (this.options.shade) {
                 this.$shade = this.$pinny.shade($.extend(true, {}, {
@@ -243,10 +238,6 @@
             return /<[a-z][\s\S]*>/i.test(input);
         },
 
-        _blockScroll: function(e) {
-            e.preventDefault();
-        },
-
         /**
          * Takes the coverage option and turns it into a effect value
          */
@@ -266,92 +257,84 @@
         },
 
         /**
-         * This function contains several methods for fixing scrolling issues
-         * across different browsers. See each if statement for an in depth
-         * explanation.
+         * Accessibility Considerations
          */
-        _enableScrollFix: function() {
-            scrollPosition = document.body.scrollTop;
+        _addAccessibility: function() {
+            var headerID = this.id + '__header';
+            var $header = this.$pinny.find('h1, .' + classes.TITLE).first();
+            var $wrapper = this.$pinny.find('.' + classes.WRAPPER);
 
-            /**
-             * On Chrome, we can get away with fixing the position of the html
-             * and moving it up to the equivalent of the scroll position
-             * to lock scrolling.
-             */
-            if (isChrome) {
-                $html.css('position', 'fixed');
-                $html.css('top', scrollPosition * -1);
-            }
-            /**
-             * On iOS8, we lock the height of Pinny's body wrapping div as well
-             * as do some scrolling magic to make sure forms don't jump the page
-             * around when they're focused.
-             */
-            else if (this.iOSVersion >= 8) {
-                var bodyTopPadding = parseInt(
-                    getComputedStyle(document.body).paddingTop
-                );
-                var bodyBottomPadding = parseInt(
-                    getComputedStyle(document.body).paddingBottom
-                );
-                var bodyTotalPadding = bodyTopPadding + bodyBottomPadding;
+            this.$container
+                .attr('aria-hidden', 'false');
 
-                this.$body
-                    .css('margin-top', 0)
-                    .css('margin-bottom', 0);
+            this.$pinny
+                .attr('role', 'dialog')
+                .attr('aria-labelledby', headerID)
+                .attr('aria-hidden', 'true')
+                .attr('tabindex', '-1');
 
-                this.$bodyWrapper
-                    .height(window.innerHeight)
-                    .css('overflow', 'hidden')
-                    .scrollTop(scrollPosition - bodyTotalPadding);
-            }
-            /**
-             * On iOS7 and under, the browser can't handle what we're doing
-             * above so we need to do the less sexy version. Wait for the
-             * focus to trigger and then jump scroll back to the initial
-             * position. Looks like crap but it works.
-             */
-            else if (this.iOSVersion <= 7) {
-                this.$pinny.find('input, select, textarea')
-                    .bind('focus', function() {
-                        setTimeout(function() {
-                            window.scrollTo(0, scrollPosition);
-                        }, 0);
-                    });
-            }
+            $wrapper
+                .attr('role', 'document');
+
+            $header
+                .attr('id', headerID);
+        },
+
+        _focus: function() {
+            this.originalActiveElement = document.activeElement;
+
+            this._disableInputs();
+
+            this.$pinny.attr('aria-hidden', 'false');
+
+//            this.$pinny.focus();
+
+            this.$container.attr('aria-hidden', 'true');
+        },
+
+        _resetFocus: function() {
+            this._enableInputs();
+
+            this.$container.attr('aria-hidden', 'false');
+
+            this.$pinny.attr('aria-hidden', 'true');
+
+            this.originalActiveElement.focus();
         },
 
         /**
-         * Undo all the things above
+         * Trap any tabbing within the visible Pinny window
          */
-        _disableScrollFix: function() {
-            if (isChrome) {
-                $html.css('position', '');
-                $html.css('top', '');
-                window.scrollTo(0, scrollPosition);
-            } else if (this.iOSVersion >= 8) {
-                this.$body
-                    .css('margin', '');
+        _disableInputs: function() {
+            var $focusableElements = $(FOCUSABLE_ELEMENTS).not(function() {
+                return $(this).closest('.pinny').length;
+            });
 
-                this.$bodyWrapper
-                    .css('overflow', '')
-                    .css('height', '');
+            $focusableElements.each(function(_, el) {
+                var $el = $(el);
+                var currentTabIndex = $el.attr('tabindex') || 0;
 
-                window.scrollTo(0, scrollPosition);
-            } else if (this.iOSVersion <= 7) {
-                this.$pinny.find('input, select, textarea').unbind('focus');
-            }
+                $el
+                    .data('tabindex', currentTabIndex)
+                    .attr('tabindex', '-1');
+            });
         },
 
-        /**
-         * Returns the current iOS Version Number
-         */
-        _iOSVersion: function() {
-            if (/ip(hone|od|ad)/i.test(navigator.platform)) {
-                // supports iOS 2.0 and later: <http://bit.ly/TJjs1V>
-                var v = (navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/);
-                return [parseInt(v[1], 10), parseInt(v[2], 10), parseInt(v[3] || 0, 10)];
-            }
+        _enableInputs: function() {
+            var $disabledInputs = $('[data-pinny-tabindex]');
+
+            $disabledInputs.each(function(_, el) {
+                var $el = $(el);
+                var oldTabIndex = $el.data('tabindex');
+
+                if (oldTabIndex) {
+                    $el.attr('tabindex', oldTabIndex);
+                } else {
+                    $el.removeAttr('tabindex');
+                }
+
+                $el.removeData('tabindex');
+            });
         }
     });
 
@@ -360,7 +343,7 @@
         var effect = $(this).data('pinny');
 
         if (!effect.length) {
-            throw initError;
+            throw EFFECT_REQUIRED;
         }
 
         $pinny.pinny({

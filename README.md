@@ -131,6 +131,7 @@ Initialize with options.
 ```js
 $('#myPinny').pinny({
     effect: sheetBottom,
+    container: '#container',
     structure: {
         header: 'My Pinny Title',
         footer: false
@@ -173,7 +174,30 @@ $('#myPinny').pinny({
 });
 ```
 
+#### container
+
+default: `body`
+
+Specify the container the pinny will be created within
+
+```js
+$('#myPinny').pinny({
+    container: $('#mainForm') // or container: '#mainForm'
+});
+```
+
 ##### structure
+
+default: `body`
+
+Specify the container the pinny will be created within
+
+```js
+$('#myPinny').pinny({
+    container: $('#mainForm') // or container: '#mainForm'
+});
+```
+
 
 default: `{
             header: '',
@@ -411,12 +435,6 @@ $('#myPinny').pinny({
         // ui.item contains the item that closed
     }
 });
-```
-
-### Storing pinny object for future use
-
-```js
-$('#myPinny').pinny();
 ```
 
 ## Methods
