@@ -2,8 +2,7 @@ module.exports = function(grunt) {
     return {
         dist: {
             options: {
-                style: 'nested',
-                sourcemap: 'none'
+                style: 'nested'
             },
             files: [{
                 expand: true,
