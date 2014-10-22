@@ -465,7 +465,7 @@ $pinny.pinny('close');
 
 | Browser           | Version | Support                      |
 |-------------------|---------|------------------------------|
-| Mobile Safari     | 5.0+    | Degraded. Form inputs cause scroll issues while typing. |
+| Mobile Safari     | 5.1.x   | Degraded. Form inputs cause scroll issues while typing. |
 | Mobile Safari     | 6.0+    | Supported.                   |
 | Chrome (Android)  | 1.0+    | Supported.                   |
 | Android Browser   | 4.0+    | Degraded. No scroll locking. |
