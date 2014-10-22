@@ -84,14 +84,14 @@
             openComplete: function() {
                 this._trigger('opened');
 
-                this.$pinny.lockup('lock');
                 this._focus();
+                this.$pinny.lockup('lock');
             },
             closeComplete: function() {
                 this._trigger('closed');
 
-                this.$pinny.lockup('unlock');
                 this._resetFocus();
+                this.$pinny.lockup('unlock');
             }
         },
 
