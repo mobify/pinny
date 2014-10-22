@@ -14,10 +14,11 @@ define([
 
         afterEach(function() {
             if (element) {
+                $('.shade').remove();
                 element.remove();
                 element = null;
             }
-            $('.pinny__container').removeClass('pinny__container');
+            $('.lockup__container').removeClass('lockup__container');
         });
 
         describe('binding to Zepto\'s fn', function() {
@@ -136,7 +137,7 @@ define([
         describe('creates a pinny with correct container', function() {
             it('creates pinny with the default container', function() {
                 var $pinny = $(element).pinny({ effect: modalCenter });
-                assert.equal($pinny.closest('.pinny__container').length, 1);
+                assert.equal($pinny.closest('.lockup__container').length, 1);
             });
 
             it('creates pinny in the container element', function() {

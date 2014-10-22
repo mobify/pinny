@@ -18,7 +18,7 @@ require(['config'], function() {
     ) {
         var $modalCenter = $('#modalCenterPinny').pinny({
             effect: modalCenter,
-            coverage: '90%'
+            coverage: '80%'
         });
 
         $('#modalCenter').on('click', function() {
