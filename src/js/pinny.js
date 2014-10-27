@@ -85,13 +85,11 @@
                 this._trigger('opened');
 
                 this._focus();
-                this.$pinny.lockup('lock');
             },
             closeComplete: function() {
                 this._trigger('closed');
 
                 this._resetFocus();
-                this.$pinny.lockup('unlock');
             }
         },
 
@@ -129,6 +127,8 @@
             this.options.shade && this.$shade.shade('open');
 
             this.$pinny.addClass(classes.OPENED);
+
+            this.$pinny.lockup('lock');
         },
 
         close: function() {
@@ -141,6 +141,8 @@
             this.options.shade && this.$shade.shade('close');
 
             this.effect.close.call(this);
+
+            this.$pinny.lockup('unlock');
         },
 
         _bindEvents: function() {
@@ -287,7 +289,7 @@
 
             this.$pinny.attr('aria-hidden', 'false');
 
-            this.$pinny.focus();
+            this.$pinny.children().first().focus();
 
             this.$container.attr('aria-hidden', 'true');
         },
