@@ -4,13 +4,14 @@
             '$',
             'bouncefix',
             'plugin',
+            'velocity',
             'shade'
         ], factory);
     } else {
         var framework = window.Zepto || window.jQuery;
         factory(framework, window.bouncefix, window.Plugin);
     }
-}(function($, bouncefix, Plugin) {
+}(function($, bouncefix, Plugin, Velocity) {
     var $doc = $(document);
     var $html = $('html');
     var isChrome = /chrome/i.test( navigator.userAgent );
@@ -393,7 +394,22 @@
                     .on('focus', function() {
                         setTimeout(function() {
                             window.scrollTo(0, plugin.scrollPosition);
+
+                            if (!plugin.$pinny.find('.pinny__input-space').length) {
+                                plugin.$pinny.find('.pinny__content').append($('<div class="pinny__input-space" style="height: 300px">'));
+                            }
+
+                            Velocity.animate($(document.activeElement), 'scroll', {
+                                container: plugin.$pinny.find('.' + classes.CONTENT)[0],
+                                offset: -1 * plugin.$pinny.find('.' + classes.HEADER).height() - 15,
+                                duration: 50
+                            });
                         }, 0);
+                    })
+                    .on('blur', function () {
+                        if (!/(input|select|textarea)/i.test(document.activeElement.nodeName)) {
+                            plugin.$pinny.find('.pinny__input-space').remove();
+                        }
                     });
             }
         },
