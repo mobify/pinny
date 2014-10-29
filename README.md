@@ -203,17 +203,6 @@ $('#myPinny').pinny({
 
 ##### structure
 
-default: `body`
-
-Specify the container the pinny will be created within
-
-```js
-$('#myPinny').pinny({
-    container: $('#mainForm') // or container: '#mainForm'
-});
-```
-
-
 default: `{
             header: '',
             footer: false
