@@ -49,7 +49,6 @@ We highly recommend using Require.js with Pinny. To use Require, you have to ref
         'sheet-left': 'bower_components/pinny/dist/effect/sheet-left',
         'sheet-right': 'bower_components/pinny/dist/effect/sheet-right',
         'sheet-top': 'bower_components/pinny/dist/effect/sheet-top',
-        'plugin': 'bower_components/plugin/dist/plugin.min',
         'shade': 'bower_components/shade/dist/shade.min',
         'lockup': 'bower_components/lockup/dist/lockup.min',
         'deckard': 'bower_components/deckard/dist/deckard.min',
