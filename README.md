@@ -3,7 +3,7 @@
 A mobile-first content fly-in UI plugin.
 
 [![Bower version](https://badge.fury.io/bo/pinny.svg)](http://badge.fury.io/bo/pinny)
-[![Circle CI](https://circleci.com/gh/mobify/pinny.png?style=badge&circle-token=7f052e50aabb80c939303cc2f5118aa92ca502fa)](https://circleci.com/gh/mobify/pinny)
+[![Circle CI](https://circleci.com/gh/mobify/pinny.png?style=shield&circle-token=7f052e50aabb80c939303cc2f5118aa92ca502fa)](https://circleci.com/gh/mobify/pinny)
 
 ![Pinny in action](https://raw.githubusercontent.com/mobify/pinny/master/examples/assets/i/pinny.gif "Pinny in action")
 
