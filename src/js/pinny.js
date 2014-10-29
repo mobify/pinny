@@ -289,7 +289,7 @@
 
             this.$pinny.attr('aria-hidden', 'false');
 
-            //this.$pinny.focus();
+            this.$pinny.children().first().focus();
 
             this.$container.attr('aria-hidden', 'true');
         },
