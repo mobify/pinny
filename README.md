@@ -2,6 +2,8 @@
 
 A mobile-first content fly-in UI plugin.
 
+[![Bower version](https://badge.fury.io/bo/pinny.svg)](http://badge.fury.io/bo/pinny)
+
 ![Pinny in action](https://raw.githubusercontent.com/mobify/pinny/master/examples/assets/i/pinny.gif "Pinny in action")
 
 ## Requirements
