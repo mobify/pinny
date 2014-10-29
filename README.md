@@ -2,6 +2,10 @@
 
 A mobile-first content fly-in UI plugin.
 
+[![Bower version](https://badge.fury.io/bo/pinny.svg)](http://badge.fury.io/bo/pinny)
+[![Dependency Status](https://www.versioneye.com/user/projects/54512dcb9fc4d548ec000380/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54512dcb9fc4d548ec000380)
+[![Circle CI](https://circleci.com/gh/mobify/pinny.png?style=shield&circle-token=7f052e50aabb80c939303cc2f5118aa92ca502fa)](https://circleci.com/gh/mobify/pinny)
+
 ![Pinny in action](https://raw.githubusercontent.com/mobify/pinny/master/examples/assets/i/pinny.gif "Pinny in action")
 
 ## Dependencies
@@ -499,7 +503,7 @@ Currently, form inputs and selects inside of Pinny have issues on iOS7 and under
 ### Steps
 1. `npm install`
 1. `bower install`
-1. `grunt build-dist`
+1. `grunt build`
 
 The `dist` directory will be populated with minified versions of the css and javascript files for distribution and use with whatever build system you might use. The `src` directory has our raw unminified Sass and Javascript files if you prefer to work with those.
 
