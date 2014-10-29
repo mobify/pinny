@@ -13,6 +13,7 @@ require.config({
         'plugin': 'bower_components/plugin/dist/plugin.min',
         'shade': 'bower_components/shade/dist/shade.min',
         'lockup': 'bower_components/lockup/dist/lockup.min',
+        'deckard': 'bower_components/deckard/dist/deckard.min',
         'pinny': 'dist/pinny'
     },
     'shim': {
