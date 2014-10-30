@@ -8,10 +8,15 @@ A mobile-first content fly-in UI plugin.
 
 ![Pinny in action](https://raw.githubusercontent.com/mobify/pinny/master/examples/assets/i/pinny.gif "Pinny in action")
 
-## Requirements
+## Dependencies
 
 * [Zepto](http://zeptojs.com/)
 * [Mobify's fork of Velocity.js](http://github.com/mobify/velocity)
+* [Plugin](http://github.com/mobify/plugin)
+* [Shade](http://github.com/mobify/shade)
+* [Lockup](http://github.com/mobify/lockup)
+* [Deckard](http://github.com/mobify/deckard)
+* [Bouncefix](https://github.com/jaridmargolin/bouncefix.js)
 
 ### Velocity
 
@@ -20,7 +25,6 @@ If you are using Zepto, you need to load `bower_components/mobify-velocity/veloc
 ### jQuery Support
 
 Pinny supports jQuery but is not actively developed for it. You should be able to use Pinny directly with jQuery 2.0. While we don't actively support jQuery for Pinny, we welcome any and all issues and PRs to help us make it work.
-
 
 ## Installation
 
@@ -32,7 +36,7 @@ bower install https://github.com/mobify/pinny.git#pinny-1.0
 
 ## Usage with Require.js
 
-To use with require.js, after installing through bower you merely have to reference Pinny, Pinny's effect modules, and Pinny's dependencies (velocity, shade, and bouncefix) inside your require config file:
+We highly recommend using Require.js with Pinny. To use Require, you have to reference Pinny, Pinny's effect modules, and Pinny's dependencies inside your require config file:
 
 ```config.js
 
@@ -46,14 +50,15 @@ To use with require.js, after installing through bower you merely have to refere
         'sheet-right': 'bower_components/pinny/dist/effect/sheet-right',
         'sheet-top': 'bower_components/pinny/dist/effect/sheet-top',
         'shade': 'bower_components/shade/dist/shade.min',
-        'velocity': 'bower_components/mobify-velocity/velocity',
+        'lockup': 'bower_components/lockup/dist/lockup.min',
+        'deckard': 'bower_components/deckard/dist/deckard.min',
         'bouncefix': 'bower_components/bouncefix.js/dist/bouncefix.min'
     }
 }
 
 ```
 
-And then require pinny in as needed:
+And then require Pinny in as needed:
 
 ```
 define([
@@ -76,7 +81,7 @@ Pinny requires very minimal markup. All Pinny needs is a div with your content a
 
 > To avoid any unwanted FOUT, decorate the content you will be passing to Pinny with the `hidden` attribute. We will remove that attribute when Pinny is initialized.
 
-For accessibility and functional purposes, Pinny will wrap all of your body content in a wrapping container. This could conflict with other plugins that alter your page's markup. If you're seeing issues, try initializing Pinny after your other plugins. If you want to specify your own wrapping container, add a class of `pinny__body-wrapper` to the element. This element should be a root level element to be effective.
+For accessibility and functional purposes, Pinny will wrap all of your body content in a wrapping container. This could conflict with other plugins that alter your page's markup. If you're seeing issues, try initializing Pinny after your other plugins. If you want to specify your own wrapping container, add a class of `lockup__container` to the element. This element should be a root level element to be effective. You can also [pass Pinny a `container` parameter](https://github.com/mobify/pinny/tree/1.0-alpha#container).
 
 ```html
 <!-- Include the CSS -->
@@ -98,6 +103,11 @@ For accessibility and functional purposes, Pinny will wrap all of your body cont
 <!-- Include dependencies -->
 <script src="zepto.min.js"></script>
 <script src="velocity.min.js"></script>
+<script src="plugin.min.js"></script>
+<script src="shade.min.js"></script>
+<script src="lockup.min.js"></script>
+<script src="deckard.min.js"></script>
+<script src="bouncefix.min.js"></script>
 
 <!-- Include the effect module you want to use -->
 <script src="effect/modal-center.js"></script>
@@ -191,17 +201,6 @@ $('#myPinny').pinny({
 ```
 
 ##### structure
-
-default: `body`
-
-Specify the container the pinny will be created within
-
-```js
-$('#myPinny').pinny({
-    container: $('#mainForm') // or container: '#mainForm'
-});
-```
-
 
 default: `{
             header: '',
