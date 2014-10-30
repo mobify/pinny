@@ -12,7 +12,8 @@ require.config({
         'sheet-top': 'dist/effect/sheet-top',
         'plugin': 'bower_components/plugin/dist/plugin.min',
         'shade': 'bower_components/shade/dist/shade.min',
-        'lockup': 'bower_components/lockup/dist/lockup.min',
+        'deckard': 'bower_components/deckard/dist/deckard',
+        'lockup': 'bower_components/lockup/dist/lockup',
         'pinny': 'dist/pinny'
     },
     'shim': {

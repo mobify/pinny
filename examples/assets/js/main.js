@@ -66,5 +66,9 @@ require(['config'], function() {
 
         // Enable active states
         $(document).on('touchstart', function() {});
+
+        $(window).on('resize', function() {
+            $.__orientation.call($);
+        });
     });
 });
