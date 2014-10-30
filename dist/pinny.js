@@ -399,7 +399,16 @@
                                 plugin.$pinny.find('.pinny__content').append($('<div class="pinny__input-space" style="height: 300px">'));
                             }
 
-                            Velocity.animate($(document.activeElement), 'scroll', {
+                            var activeElement = document.activeElement;
+                            var $activeElement = $(activeElement);
+
+                            // Tempory fix - when the parent of the select have position relative
+                            // the position of the select will return the wrong value
+                            if (activeElement.nodeName === 'SELECT' && $activeElement.position().top === 0) {
+                                $activeElement = $activeElement.parent();
+                            }
+
+                            Velocity.animate($activeElement, 'scroll', {
                                 container: plugin.$pinny.find('.' + classes.CONTENT)[0],
                                 offset: -1 * plugin.$pinny.find('.' + classes.HEADER).height() - 15,
                                 duration: 50
