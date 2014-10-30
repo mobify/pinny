@@ -407,9 +407,11 @@
                         }, 0);
                     })
                     .on('blur', function () {
-                        if (!/(input|select|textarea)/i.test(document.activeElement.nodeName)) {
-                            plugin.$pinny.find('.pinny__input-space').remove();
-                        }
+                        setTimeout(function() {
+                            if (!/(input|select|textarea)/i.test(document.activeElement.nodeName)) {
+                                plugin.$pinny.find('.pinny__input-space').remove();
+                            }
+                        }, 0);
                     });
             }
         },
