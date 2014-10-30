@@ -31,7 +31,7 @@ Pinny supports jQuery but is not actively developed for it. You should be able t
 Pinny can be installed using bower:
 
 ```
-bower install https://github.com/mobify/pinny.git#pinny-1.0
+bower install pinny
 ```
 
 ## Usage with Require.js
