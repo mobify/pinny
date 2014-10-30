@@ -8,10 +8,15 @@ A mobile-first content fly-in UI plugin.
 
 ![Pinny in action](https://raw.githubusercontent.com/mobify/pinny/master/examples/assets/i/pinny.gif "Pinny in action")
 
-## Requirements
+## Dependencies
 
 * [Zepto](http://zeptojs.com/)
-* [Velocity.js](http://velocityjs.org)
+* [Mobify's fork of Velocity.js](http://github.com/mobify/velocity)
+* [Plugin](http://github.com/mobify/plugin)
+* [Shade](http://github.com/mobify/shade)
+* [Lockup](http://github.com/mobify/lockup)
+* [Deckard](http://github.com/mobify/deckard)
+* [Bouncefix](https://github.com/jaridmargolin/bouncefix.js)
 
 ### Velocity
 
@@ -20,7 +25,6 @@ If you are using Zepto, you need to load `bower_components/mobify-velocity/veloc
 ### jQuery Support
 
 Pinny supports jQuery but is not actively developed for it. You should be able to use Pinny directly with jQuery 2.0. While we don't actively support jQuery for Pinny, we welcome any and all issues and PRs to help us make it work.
-
 
 ## Installation
 
@@ -32,7 +36,7 @@ bower install https://github.com/mobify/pinny.git#pinny-1.0
 
 ## Usage with Require.js
 
-To use with require.js, after installing through bower you merely have to reference pinny, pinny's effect modules, and pinny's dependencies (velocity, shade, and bouncefix) inside your require config file:
+We highly recommend using Require.js with Pinny. To use Require, you have to reference Pinny, Pinny's effect modules, and Pinny's dependencies inside your require config file:
 
 ```config.js
 
@@ -46,14 +50,15 @@ To use with require.js, after installing through bower you merely have to refere
         'sheet-right': 'bower_components/pinny/dist/effect/sheet-right',
         'sheet-top': 'bower_components/pinny/dist/effect/sheet-top',
         'shade': 'bower_components/shade/dist/shade.min',
-        'velocity': 'bower_components/mobify-velocity/velocity',
+        'lockup': 'bower_components/lockup/dist/lockup.min',
+        'deckard': 'bower_components/deckard/dist/deckard.min',
         'bouncefix': 'bower_components/bouncefix.js/dist/bouncefix.min'
     }
 }
 
 ```
 
-And then require pinny in as needed:
+And then require Pinny in as needed:
 
 ```
 define([
@@ -76,12 +81,19 @@ Pinny requires very minimal markup. All Pinny needs is a div with your content a
 
 > To avoid any unwanted FOUT, decorate the content you will be passing to Pinny with the `hidden` attribute. We will remove that attribute when Pinny is initialized.
 
+For accessibility and functional purposes, Pinny will wrap all of your body content in a wrapping container. This could conflict with other plugins that alter your page's markup. If you're seeing issues, try initializing Pinny after your other plugins. If you want to specify your own wrapping container, add a class of `lockup__container` to the element. This element should be a root level element to be effective. You can also [pass Pinny a `container` parameter](https://github.com/mobify/pinny/tree/1.0-alpha#container).
+
 ```html
 <!-- Include the CSS -->
 <link rel="stylesheet" href="pinny.min.css">
 
 <!-- Optionally include the Theme file -->
 <link rel="stylesheet" href="pinny-style.min.css">
+
+<!-- Optionally include a wrapping container -->
+<div id="bodyContent" class="pinny__body-wrapper">
+    Your specified body content
+</div>
 
 <!-- Include the markup -->
 <div id="yourPinny" hidden>
@@ -91,6 +103,11 @@ Pinny requires very minimal markup. All Pinny needs is a div with your content a
 <!-- Include dependencies -->
 <script src="zepto.min.js"></script>
 <script src="velocity.min.js"></script>
+<script src="plugin.min.js"></script>
+<script src="shade.min.js"></script>
+<script src="lockup.min.js"></script>
+<script src="deckard.min.js"></script>
+<script src="bouncefix.min.js"></script>
 
 <!-- Include the effect module you want to use -->
 <script src="effect/modal-center.js"></script>
@@ -113,6 +130,14 @@ $('#myPinny').pinny({
 });
 ```
 
+You can also initialize the Pinny through the use of a data attribute. The attribute takes a value equal to the effect you want to use.
+
+```html
+<div id="myPinny" data-pinny="sheet-bottom">
+```
+
+_You *must* pass Pinny an effect for it to work._
+
 ### pinny(options)
 
 Initialize with options.
@@ -120,9 +145,11 @@ Initialize with options.
 ```js
 $('#myPinny').pinny({
     effect: sheetBottom,
-    appendTo: '#container',
-    header: 'My Pinny Title',
-    footer: false,
+    container: '#container',
+    structure: {
+        header: 'My Pinny Title',
+        footer: false
+    },
     zIndex: 2,
     cssClass: 'my-pinny-class',
     coverage: '100%',
@@ -142,7 +169,7 @@ $('#myPinny').pinny({
 
 ##### effect
 
-default: ` {
+default: `{
         open: noop,
         close: noop
     },`
@@ -161,7 +188,7 @@ $('#myPinny').pinny({
 });
 ```
 
-#### appendTo
+#### container
 
 default: `body`
 
@@ -169,19 +196,30 @@ Specify the container the pinny will be created within
 
 ```js
 $('#myPinny').pinny({
-    appendTo: $('#mainForm') // or appendTo: '#mainForm'
+    container: $('#mainForm') // or container: '#mainForm'
 });
 ```
 
-##### header
+##### structure
 
-default `''`
+default: `{
+            header: '',
+            footer: false
+        }`
+
+Defines the structure to use for pinny. Specifically, pinny tries to build its own HTML structure if passed the default options. Setting the `structure` option to false will allow the developer to supply their own HTML structure.
+
+Please see below for available sub-options for `header` and `footer`.
+
+###### header
+
+default: `''`
 
 Sets the header that pinny should use in its header bar. Valid values are:
 
-`boolean` - specifies no default header generated. If chosen, the user is required to specify the header markup themselves, including the appropriate class, `pinny__header`. It will be expected that this will be a part of the element that is used to invoke pinny.
-`string` - specifies the title text used in the header. The header structure will be generated automatically.
-`html|element` - specifies the HTML to be used for the header.
+- `boolean` - specifies no default header generated. If chosen, the user is required to specify the header markup themselves, including the appropriate class, `pinny__header`. It will be expected that this will be a part of the element that is used to invoke pinny.
+- `string` - specifies the title text used in the header. The header structure will be generated automatically.
+- `html|element` - specifies the HTML to be used for the header.
 
 ```js
 // generates no header
@@ -206,15 +244,15 @@ $('#myPinny').pinny({
 });
 ```
 
-##### footer
+###### footer
 
-default `false`
+default: `false`
 
 Sets the footer that pinny should use in its footer. Valid values are:
 
-`boolean` - specifies no default footer generated. If chosen, the user is required to specify the footer markup themselves, including the appropriate class, `pinny__footer`.
-`string` - specifies the title text used in the footer. The footer structure will be generated automatically.
-`html|element` - specifies the HTML to be used for the footer.
+- `boolean` - specifies no default footer generated. If chosen, the user is required to specify the footer markup themselves, including the appropriate class, `pinny__footer`.
+- `string` - specifies the title text used in the footer. The footer structure will be generated automatically.
+- `html|element` - specifies the HTML to be used for the footer.
 
 ```js
 // generates no footer
@@ -241,7 +279,7 @@ $('#myPinny').pinny({
 
 ##### zIndex
 
-default `2`
+default: `2`
 
 Sets the z-index value for Pinny. Use this value if you need to specify a specific stacking order.
 
@@ -251,9 +289,9 @@ $('#myPinny').pinny({
 });
 ```
 
-#### cssClass
+##### cssClass
 
-default `''`
+default: `''`
 
 Sets a class to apply to the main Pinny parent element for ease of styling.
 
@@ -265,7 +303,7 @@ Sets a class to apply to the main Pinny parent element for ease of styling.
 
 ##### coverage
 
-default `80%`
+default: `80%`
 
 Sets the coverage value. This will allow you to specify that the pinny covers only a portion of the screen.
 
@@ -298,7 +336,7 @@ Specifies whether pinny should use the shade overlay. You can pass options throu
 ```js
 $('#myPinny').pinny({
     shade: {
-        duration: 400
+        color: '#333333'
     }
 });
 ```
@@ -420,17 +458,26 @@ Close the selected pinny item by element reference
 $pinny.pinny('close');
 ```
 
+> Pinny will automatically trigger `close` on elements decorated with the class name `pinny__close`.
+
+```html
+<button class="pinny__close">Close</button>
+```
+
 ## Browser Compatibility
 
 | Browser           | Version | Support                      |
 |-------------------|---------|------------------------------|
+| Mobile Safari     | 5.1.x   | Degraded. Form inputs cause scroll issues while typing. |
 | Mobile Safari     | 6.0+    | Supported.                   |
 | Chrome (Android)  | 1.0+    | Supported.                   |
 | Android Browser   | 4.0+    | Degraded. No scroll locking. |
-| Android Browser   | 2.3.x   | Degraded. No transitions.    |
 | IE for Win Phone  | 8.0+    | Degraded. No scroll locking. |
-| Firefox (Android) | 23.0+     | Supported. (Support may exist for earlier versions but has not been tested) |
+| Firefox (Android) | 23.0+   | Supported. (Support may exist for earlier versions but has not been tested) |
 
+## Known Issues
+
+Currently, form inputs and selects inside of Pinny have issues on iOS7 and under. This is due to not being able to lock scrolling without causing rendering issues as well as iOS attempting to scroll the page when the keyboard opens. Forms work but will cause some visual jumping.
 
 ## Building a distribution
 
@@ -444,7 +491,7 @@ $pinny.pinny('close');
 ### Steps
 1. `npm install`
 1. `bower install`
-1. `grunt build-dist`
+1. `grunt build`
 
 The `dist` directory will be populated with minified versions of the css and javascript files for distribution and use with whatever build system you might use. The `src` directory has our raw unminified Sass and Javascript files if you prefer to work with those.
 

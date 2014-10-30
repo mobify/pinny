@@ -2,28 +2,27 @@
     if (typeof define === 'function' && define.amd) {
         define([
             '$',
-            'bouncefix',
             'plugin',
+            'bouncefix',
+            'lockup',
             'shade'
         ], factory);
     } else {
         var framework = window.Zepto || window.jQuery;
-        factory(framework, window.bouncefix, window.Plugin);
+        factory(framework, window.Plugin, window.bouncefix);
     }
-}(function($, bouncefix, Plugin) {
-    var $doc = $(document);
-    var $html = $('html');
-    var scrollPosition;
-    var isChrome = /chrome/i.test( navigator.userAgent );
+}(function($, Plugin, bouncefix) {
+    var EFFECT_REQUIRED = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
+    var FOCUSABLE_ELEMENTS = 'a[href], area[href], input, select, textarea, button, iframe, object, embed, [tabindex], [contenteditable]';
 
     /**
      * Function.prototype.bind polyfill required for < iOS6
      */
     /* jshint ignore:start */
     if (!Function.prototype.bind) {
-        Function.prototype.bind = function (scope) {
+        Function.prototype.bind = function(scope) {
             var fn = this;
-            return function () {
+            return function() {
                 return fn.apply(scope);
             };
         };
@@ -31,15 +30,21 @@
     /* jshint ignore:end */
 
     var classes = {
-        OPENED: 'pinny--is-open'
+        PINNY: 'pinny',
+        WRAPPER: 'pinny__wrapper',
+        TITLE: 'pinny__title',
+        CLOSE: 'pinny__close',
+        CONTENT: 'pinny__content',
+        OPENED: 'pinny--is-open',
+        SCROLLABLE: 'pinny--is-scrollable'
     };
 
     /**
      * Template constants required for building the default HTML structure
      */
     var template = {
-        COMPONENT: '<{0} class="pinny__{0}">{1}</{0}>',
-        HEADER: '<h1 class="pinny__title">{0}</h1><button class="pinny__close">Close</button>',
+        COMPONENT: '<{0} class="' + classes.PINNY + '__{0}">{1}</{0}>',
+        HEADER: '<h1 class="' + classes.TITLE + '">{0}</h1><button class="' + classes.CLOSE + '">Close</button>',
         FOOTER: '{0}'
     };
 
@@ -47,15 +52,15 @@
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
     }
 
-    Pinny.VERSION = '0.2.0';
+    Pinny.VERSION = '1.0.0';
 
     Pinny.DEFAULTS = {
-        effect: {
-            open: $.noop,
-            close: $.noop
+        effect: null,
+        container: null,
+        structure: {
+            header: '',
+            footer: false
         },
-        header: '',
-        footer: false,
         zIndex: 2,
         cssClass: '',
         coverage: '100%',
@@ -65,8 +70,7 @@
         open: $.noop,
         opened: $.noop,
         close: $.noop,
-        closed: $.noop,
-        appendTo: 'body'
+        closed: $.noop
     };
 
     Plugin.create('pinny', Pinny, {
@@ -75,69 +79,34 @@
          */
         animation: {
             beginClose: function() {
-                $doc.on('touchmove', this._blockScroll);
+
             },
             openComplete: function() {
-                if (isChrome) {
-                    scrollPosition = document.body.scrollTop;
-                    $html.css('position', 'fixed');
-                    $html.css('top', scrollPosition * -1);
-                }
                 this._trigger('opened');
-                $doc.off('touchmove', this._blockScroll);
+
+                this._focus();
             },
             closeComplete: function() {
-                if (isChrome) {
-                    $html.css('position', '');
-                    $html.css('top', '');
-                    window.scrollTo(0, scrollPosition);
-                }
                 this._trigger('closed');
-                $doc.off('touchmove', this._blockScroll);
+
+                this._resetFocus();
             }
         },
 
         _init: function(element) {
-            var plugin = this;
+            this.id = 'pinny-' + $.uniqueId();
 
             this.$element = $(element);
+            this.$doc = $(document);
+            this.$body = $('body');
 
-            this.$pinny = $('<section />')
-                .appendTo(this.options.appendTo)
-                .addClass('pinny')
-                .addClass(this.options.cssClass)
-                .css({
-                    position: 'fixed',
-                    zIndex: this.options.zIndex,
-                    width: this.options.coverage,
-                    height: this.options.coverage
-                })
-                .on('click', '.pinny__close', function(e) {
-                    e.preventDefault();
-                    plugin.close();
-                });
+            this._build();
 
-            if (this.options.header !== false) {
-                this._build();
-            } else {
-                this.$element.appendTo(this.$pinny);
+            if (!this.options.effect) {
+                throw EFFECT_REQUIRED;
             }
 
-            if (this.options.shade) {
-                this.$shade = this.$pinny.shade($.extend(true, {}, {
-                    click: function() {
-                        plugin.close();
-                    }
-                }, $.extend(
-                    this.options.shade,
-                    {
-                        duration: this.options.duration
-                    }
-                )));
-            }
-
-
-            this.effect = this.options.effect;
+            this.effect = this.options.effect.call(this);
 
             this.$element.removeAttr('hidden');
 
@@ -151,31 +120,35 @@
         open: function() {
             this._trigger('open');
 
-            bouncefix.add('pinny--is-scrollable');
-
-            this.options.shade && this.$shade.shade('open');
+            bouncefix.add(classes.SCROLLABLE);
 
             this.effect.open.call(this);
 
+            this.options.shade && this.$shade.shade('open');
+
             this.$pinny.addClass(classes.OPENED);
+
+            this.$pinny.lockup('lock');
         },
 
         close: function() {
             this._trigger('close');
 
-            bouncefix.remove('pinny--is-scrollable');
-
-            this.options.shade && this.$shade.shade('close');
+            bouncefix.remove(classes.SCROLLABLE);
 
             this.$pinny.removeClass(classes.OPENED);
 
+            this.options.shade && this.$shade.shade('close');
+
             this.effect.close.call(this);
+
+            this.$pinny.lockup('unlock');
         },
 
         _bindEvents: function() {
             // Block scrolling on anything but pinny content
             this.$pinny.on('touchmove', function(e) {
-                if (!$(e.target).parents().hasClass('pinny__content')) {
+                if (!$(e.target).parents().hasClass(classes.CONTENT)) {
                     e.preventDefault();
                 }
             });
@@ -186,45 +159,85 @@
 
          <section class="pinny">
              <div class="pinny__wrapper">
-                <header class="pinny__header">{header content}</header>
-                <div class="pinny__content">
-                    {content}
-                </div>
+                 <header class="pinny__header">{header content}</header>
+                 <div class="pinny__content">
+                 {content}
+                 </div>
+                 <footer class="pinny__footer">{footer content}</footer>
              </div>
-             <footer class="pinny__footer"></footer>
          </section>
          */
         _build: function() {
-            var $wrapper = $('<div />')
-                .addClass('pinny__wrapper')
-                .appendTo(this.$pinny);
+            var plugin = this;
 
-            $(this._buildComponent('header')).prependTo($wrapper);
+            this.$pinny = $('<section />')
+                .lockup({
+                    container: this.options.container
+                })
+                .addClass(classes.PINNY)
+                .addClass(this.options.cssClass)
+                .css({
+                    position: 'fixed',
+                    zIndex: this.options.zIndex,
+                    width: this.options.coverage,
+                    height: this.options.coverage
+                })
+                .on('click', '.' + classes.CLOSE, function(e) {
+                    e.preventDefault();
+                    plugin.close();
+                });
 
-            $('<div />')
-                .addClass('pinny__content pinny--is-scrollable')
-                .append(this.$element)
-                .appendTo($wrapper);
+            this.$container = this.$pinny.lockup('container');
 
-            this.options.footer && $(this._buildComponent('footer')).appendTo($wrapper);
+            if (this.options.structure) {
+                var $wrapper = $('<div />')
+                    .addClass(classes.WRAPPER)
+                    .appendTo(this.$pinny);
+
+                this._buildComponent('header').appendTo($wrapper);
+
+                $('<div />')
+                    .addClass(classes.CONTENT)
+                    .addClass(classes.SCROLLABLE)
+                    .append(this.$element)
+                    .appendTo($wrapper);
+
+                this._buildComponent('footer').appendTo($wrapper);
+            } else {
+                this.$element.appendTo(this.$pinny);
+            }
+
+            this._addAccessibility();
+
+            if (this.options.shade) {
+                this.$shade = this.$pinny.shade($.extend(true, {}, {
+                    click: function() {
+                        plugin.close();
+                    }
+                }, $.extend(
+                    this.options.shade,
+                    {
+                        duration: this.options.duration
+                    }
+                )));
+            }
         },
 
         _buildComponent: function(name) {
-            var component = this.options[name];
+            var component = this.options.structure[name];
+            var $element = $([]);
 
-            if (component === false) return $([]);
+            if (component !== false) {
+                var html = this._isHtml(component) ? component : template[name.toUpperCase()].replace('{0}', component);
 
-            component = this._isHtml(component) ? component : template[name.toUpperCase()].replace('{0}', component);
+                $element = $(template.COMPONENT.replace(/\{0\}/g, name).replace(/\{1\}/g, html));
+            }
 
-            return template.COMPONENT.replace(/\{0\}/g, name).replace(/\{1\}/g, component);
+            return $element;
         },
 
         _isHtml: function(input) {
             return /<[a-z][\s\S]*>/i.test(input);
-        },
-
-        _blockScroll: function(e) {
-            e.preventDefault();
         },
 
         /**
@@ -243,10 +256,102 @@
             }
 
             return percent ? coverage + '%' : this.options.coverage;
+        },
+
+        /**
+         * Accessibility Considerations
+         */
+        _addAccessibility: function() {
+            var headerID = this.id + '__header';
+            var $header = this.$pinny.find('h1, .' + classes.TITLE).first();
+            var $wrapper = this.$pinny.find('.' + classes.WRAPPER);
+
+            this.$container
+                .attr('aria-hidden', 'false');
+
+            this.$pinny
+                .attr('role', 'dialog')
+                .attr('aria-labelledby', headerID)
+                .attr('aria-hidden', 'true')
+                .attr('tabindex', '-1');
+
+            $wrapper
+                .attr('role', 'document');
+
+            $header
+                .attr('id', headerID);
+        },
+
+        _focus: function() {
+            this.originalActiveElement = document.activeElement;
+
+            this._disableInputs();
+
+            this.$pinny.attr('aria-hidden', 'false');
+
+            this.$pinny.children().first().focus();
+
+            this.$container.attr('aria-hidden', 'true');
+        },
+
+        _resetFocus: function() {
+            this._enableInputs();
+
+            this.$container.attr('aria-hidden', 'false');
+
+            this.$pinny.attr('aria-hidden', 'true');
+
+            this.originalActiveElement.focus();
+        },
+
+        /**
+         * Trap any tabbing within the visible Pinny window
+         */
+        _disableInputs: function() {
+            var $focusableElements = $(FOCUSABLE_ELEMENTS).not(function() {
+                return $(this).closest('.pinny').length;
+            });
+
+            $focusableElements.each(function(_, el) {
+                var $el = $(el);
+                var currentTabIndex = $el.attr('tabindex') || 0;
+
+                $el
+                    .data('tabindex', currentTabIndex)
+                    .attr('tabindex', '-1');
+            });
+        },
+
+        _enableInputs: function() {
+            var $disabledInputs = $('[data-pinny-tabindex]');
+
+            $disabledInputs.each(function(_, el) {
+                var $el = $(el);
+                var oldTabIndex = $el.data('tabindex');
+
+                if (oldTabIndex) {
+                    $el.attr('tabindex', oldTabIndex);
+                } else {
+                    $el.removeAttr('tabindex');
+                }
+
+                $el.removeData('tabindex');
+            });
         }
     });
 
-    $('[data-pinny]').pinny();
+    $('[data-pinny]').each(function() {
+        var $pinny = $(this);
+        var effect = $(this).data('pinny');
+
+        if (!effect.length) {
+            throw EFFECT_REQUIRED;
+        }
+
+        $pinny.pinny({
+            effect: effect
+        });
+    });
 
     return $;
 }));

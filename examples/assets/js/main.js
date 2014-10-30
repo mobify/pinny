@@ -18,7 +18,7 @@ require(['config'], function() {
     ) {
         var $modalCenter = $('#modalCenterPinny').pinny({
             effect: modalCenter,
-            coverage: '90%'
+            coverage: '80%'
         });
 
         $('#modalCenter').on('click', function() {
@@ -57,7 +57,7 @@ require(['config'], function() {
 
         var $sheetBottom = $('#sheetBottomPinny').pinny({
             effect: sheetBottom,
-            coverage: '80%'
+            coverage: '100%'
         });
 
         $('#sheetBottom').on('click', function() {
@@ -66,5 +66,9 @@ require(['config'], function() {
 
         // Enable active states
         $(document).on('touchstart', function() {});
+
+        $(window).on('resize', function() {
+            $.__orientation.call($);
+        });
     });
 });

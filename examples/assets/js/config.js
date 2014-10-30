@@ -2,7 +2,7 @@ require.config({
     baseUrl: '../',
     paths: {
         'text': 'bower_components/requirejs-text/text',
-        '$': 'bower_components/jquery/dist/jquery',
+        '$': 'lib/zeptojs/dist/zepto',
         'bouncefix': 'bower_components/bouncefix.js/dist/bouncefix.min',
         'velocity': 'bower_components/mobify-velocity/velocity',
         'modal-center': 'dist/effect/modal-center',
@@ -12,6 +12,8 @@ require.config({
         'sheet-top': 'dist/effect/sheet-top',
         'plugin': 'bower_components/plugin/dist/plugin.min',
         'shade': 'bower_components/shade/dist/shade.min',
+        'lockup': 'bower_components/lockup/dist/lockup.min',
+        'deckard': 'bower_components/deckard/dist/deckard.min',
         'pinny': 'dist/pinny'
     },
     'shim': {
