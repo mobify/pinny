@@ -1,2 +1,4 @@
+1.0.1
+    - Update `lockup` to latest version to fix issue with jQuery
 1.0.0
     - Release of Pinny 1.0
