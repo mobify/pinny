@@ -68,7 +68,7 @@ require(['config'], function() {
         $(document).on('touchstart', function() {});
 
         $(window).on('resize', function() {
-            $.__orientation.call($);
+            $.__deckard.orientation.call($);
         });
     });
 });
