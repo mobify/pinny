@@ -521,7 +521,7 @@
                 var currentTabIndex = $el.attr('tabindex') || 0;
 
                 $el
-                    .data('tabindex', currentTabIndex)
+                    .attr('data-pinny-tabindex', currentTabIndex)
                     .attr('tabindex', '-1');
             });
         },
@@ -531,7 +531,7 @@
 
             $disabledInputs.each(function(_, el) {
                 var $el = $(el);
-                var oldTabIndex = $el.data('tabindex');
+                var oldTabIndex = $el.attr('data-pinny-tabindex');
 
                 if (oldTabIndex) {
                     $el.attr('tabindex', oldTabIndex);
@@ -539,7 +539,7 @@
                     $el.removeAttr('tabindex');
                 }
 
-                $el.removeData('tabindex');
+                $el.removeAttr('data-pinny-tabindex');
             });
         },
 
