@@ -236,5 +236,36 @@ define([
                 assert.include($pinny.find('.pinny__footer--custom').text(), 'Custom footer');
             });
         });
+
+        describe('correctly sets the tabindex of focusable elements that are outside of pinny', function() {
+            it('sets tabindex of focusable elements that are outside of pinny to -1 when pinny is open', function() {
+                element.pinny({
+                    effect: modalCenter,
+                    opened: function() {
+                        assert.equal($('#outside-input1').attr('tabindex'), -1);
+                        assert.equal($('#outside-input2').attr('tabindex'), -1);
+                        assert.equal($('#outside-select').attr('tabindex'), -1);
+                    }
+                });
+
+                element.pinny('open');
+            });
+
+            it('restores tabindex of focusable elements that are outside of pinny to its original value when pinny is closed', function() {
+                element.pinny({
+                    effect: modalCenter,
+                    opened: function() {
+                        element.closest('.pinny').find('.pinny__close').trigger('click');
+                    },
+                    closed: function() {
+                        assert.equal($('#outside-input1').attr('tabindex'), null);
+                        assert.equal($('#outside-input2').attr('tabindex'), 10);
+                        assert.equal($('#outside-select').attr('tabindex'), null);
+                    }
+                });
+
+                element.pinny('open');
+            });
+        });
     });
 });
