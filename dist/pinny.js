@@ -52,7 +52,7 @@
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
     }
 
-    Pinny.VERSION = '1.0.2';
+    Pinny.VERSION = '1.0.3';
 
     Pinny.DEFAULTS = {
         effect: null,
@@ -323,7 +323,9 @@
         },
 
         _enableInputs: function() {
-            var $disabledInputs = $('[data-pinny-tabindex]');
+            var $disabledInputs = $(FOCUSABLE_ELEMENTS).not(function() {
+                return typeof $(this).data().tabindex === 'undefined';
+            });
 
             $disabledInputs.each(function(_, el) {
                 var $el = $(el);

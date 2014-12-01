@@ -323,7 +323,9 @@
         },
 
         _enableInputs: function() {
-            var $disabledInputs = $('[data-pinny-tabindex]');
+            var $disabledInputs = $(FOCUSABLE_ELEMENTS).not(function() {
+                return typeof $(this).data().tabindex === 'undefined';
+            });
 
             $disabledInputs.each(function(_, el) {
                 var $el = $(el);
