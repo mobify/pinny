@@ -190,7 +190,7 @@ $('#myPinny').pinny({
 
 #### container
 
-default: `body`
+default: `$container` (lockup's container)
 
 Specify the container the pinny will be created within
 
@@ -200,6 +200,22 @@ $('#myPinny').pinny({
 });
 ```
 
+
+#### appendTo
+
+default: null
+
+Specify the element the pinny will be appended to. By default Pinny will be appended
+to the lockup container. If you want it to be appended outside the lockup container,
+specify that element here.
+
+```js
+$('#myPinny').pinny({
+    appendTo: 'body'
+});
+```
+
+
 ##### structure
 
 default: `{
@@ -207,11 +223,13 @@ default: `{
             footer: false
         }`
 
-Defines the structure to use for pinny. Specifically, pinny tries to build its own HTML structure if passed the default options. Setting the `structure` option to false will allow the developer to supply their own HTML structure.
+Defines the structure to use for pinny. Specifically, pinny tries to build its own HTML structure if passed the default options. 
+
+**If you want to have full control over the HTML of your Pinny, including the header, footer, and content section, set the `structure` option to `false`**. Setting `structure` to `false` will still allow the `close` event to be bound to any element that has the `pinny__close` class, allowing you to specify the element that should trigger closing your Pinny.
 
 Please see below for available sub-options for `header` and `footer`.
 
-###### header
+###### structure.header
 
 default: `''`
 
@@ -224,7 +242,9 @@ Sets the header that pinny should use in its header bar. Valid values are:
 ```js
 // generates no header
 $('#myPinny').pinny({
-	header: false
+	structure: {
+		header: false
+	}
 });
 ```
 or
@@ -232,19 +252,23 @@ or
 ```js
 // generates a default header with the title "My Pinny"
 $('#myPinny').pinny({
-	header: 'My Pinny'
-});
+		structure: {
+			header: 'My Pinny'
+		}
+	});
 ```
 
 or
 
 ```js
 $('#myPinny').pinny({
-	header: '<header class="pinny__header">My Pinny<button class="pinny__close">Close</button></header>'
+	structure: {
+		header: '<header class="pinny__header">My Pinny<button class="pinny__close">Close</button></header>'
+	}
 });
 ```
 
-###### footer
+###### structure.footer
 
 default: `false`
 
@@ -257,7 +281,9 @@ Sets the footer that pinny should use in its footer. Valid values are:
 ```js
 // generates no footer
 $('#myPinny').pinny({
-	footer: false
+	structure: {
+		footer: false
+	}
 });
 ```
 or
@@ -265,7 +291,9 @@ or
 ```js
 // generates a default footer with the contents "My Footer"
 $('#myPinny').pinny({
-	footer: 'My Footer'
+	structure: {
+		footer: 'My Footer'
+	}
 });
 ```
 
@@ -273,7 +301,9 @@ or
 
 ```js
 $('#myPinny').pinny({
-	footer: '<footer class="pinny__footer">My Footer</footer>'
+	structure: {
+		footer: '<footer class="pinny__footer">My Footer</footer>'
+	}
 });
 ```
 
