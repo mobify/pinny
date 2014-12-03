@@ -57,6 +57,7 @@
     Pinny.DEFAULTS = {
         effect: null,
         container: null,
+        appendTo: null,
         structure: {
             header: '',
             footer: false
@@ -188,6 +189,8 @@
                 });
 
             this.$container = this.$pinny.lockup('container');
+
+            this.$pinny.appendTo($(this.options.appendTo) || this.$container);
 
             if (this.options.structure) {
                 var $wrapper = $('<div />')

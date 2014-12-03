@@ -52,11 +52,12 @@
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
     }
 
-    Pinny.VERSION = '1.0.2';
+    Pinny.VERSION = '1.1.2';
 
     Pinny.DEFAULTS = {
         effect: null,
         container: null,
+        appendTo: null,
         structure: {
             header: '',
             footer: false
@@ -188,6 +189,8 @@
                 });
 
             this.$container = this.$pinny.lockup('container');
+
+            this.$pinny.appendTo($(this.options.appendTo) || this.$container);
 
             if (this.options.structure) {
                 var $wrapper = $('<div />')

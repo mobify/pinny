@@ -4,12 +4,12 @@
     "type" : "git",
     "url" : "https://github.com/mobify/pinny.git"
   },
-  "version": "1.0.2",
+  "version": "1.1.2",
   "description": "A mobile first content fly-in UI plugin",
   "devDependencies": {
     "chai": "~1.9.0",
     "grunt": "~0.4.x",
-    "grunt-autoprefixer": "~1.0.1",
+    "grunt-autoprefixer": "~2.0.0",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-connect": "~0.3.0",
     "grunt-contrib-copy": "~0.4.1",
