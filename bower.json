@@ -25,6 +25,9 @@
     "requirejs": "~2.1.14",
     "bouncefix.js": "~0.3.0",
     "shade": "~1.0.5",
-    "lockup": "~0.0.5"
+    "lockup": "https://github.com/mobify/lockup.git#append-to"
+  },
+  "resolutions": {
+    "deckard": "~1.0.0"
   }
 }
