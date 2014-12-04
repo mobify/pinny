@@ -122,7 +122,9 @@
 
             this.options.shade && this.$shade.shade('open');
 
-            this.$pinny.lockup('lock');
+            // only run lockup if another pinny isn't
+            // open and locked the viewport up already
+            !$('.pinny--is-open').length && this.$pinny.lockup('lock');
 
             this.$pinny.addClass(classes.OPENED);
 
@@ -136,9 +138,11 @@
 
             this.options.shade && this.$shade.shade('close');
 
-            this.$pinny.lockup('unlock');
-
             this.$pinny.removeClass(classes.OPENED);
+
+            // only unlock if there isn't another pinny
+            // that requires the viewport to be locked
+            !$('.pinny--is-open').length && this.$pinny.lockup('unlock');
 
             this.effect.close.call(this);
         },
@@ -308,7 +312,7 @@
          * Trap any tabbing within the visible Pinny window
          */
         _disableInputs: function() {
-            // If lockup is already locked
+            // If lockup is already locked don't try to disable inputs again
             if (this.$pinny.lockup('isLocked')) {
                 return;
             }
