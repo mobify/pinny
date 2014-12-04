@@ -52,11 +52,12 @@
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
     }
 
-    Pinny.VERSION = '1.0.2';
+    Pinny.VERSION = '1.1.0';
 
     Pinny.DEFAULTS = {
         effect: null,
         container: null,
+        appendTo: null,
         structure: {
             header: '',
             footer: false
@@ -171,9 +172,6 @@
             var plugin = this;
 
             this.$pinny = $('<section />')
-                .lockup({
-                    container: this.options.container
-                })
                 .addClass(classes.PINNY)
                 .addClass(this.options.cssClass)
                 .css({
@@ -185,9 +183,14 @@
                 .on('click', '.' + classes.CLOSE, function(e) {
                     e.preventDefault();
                     plugin.close();
+                })
+                .lockup({
+                    container: this.options.container
                 });
 
-            this.$container = this.$pinny.lockup('container');
+            this.$container = this.$pinny.data('lockup').$container;
+
+            this.$pinny.appendTo(this.options.appendTo ? $(this.options.appendTo) : this.$container);
 
             if (this.options.structure) {
                 var $wrapper = $('<div />')
