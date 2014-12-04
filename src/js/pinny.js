@@ -124,7 +124,7 @@
 
             // only run lockup if another pinny isn't
             // open and locked the viewport up already
-            !$('.pinny--is-open').length && this.$pinny.lockup('lock');
+            !this._activePinnies() && this.$pinny.lockup('lock');
 
             this.$pinny.addClass(classes.OPENED);
 
@@ -142,7 +142,7 @@
 
             // only unlock if there isn't another pinny
             // that requires the viewport to be locked
-            !$('.pinny--is-open').length && this.$pinny.lockup('unlock');
+            !this._activePinnies() && this.$pinny.lockup('unlock');
 
             this.effect.close.call(this);
         },
@@ -244,6 +244,10 @@
             return /<[a-z][\s\S]*>/i.test(input);
         },
 
+        _activePinnies: function() {
+            return !!$('.pinny--is-open').length;
+        },
+
         /**
          * Takes the coverage option and turns it into a effect value
          */
@@ -335,7 +339,7 @@
             // At this point, this pinny has been closed and lockup has unlocked.
             // If there are any other pinny's open, we don't want to re-enable the
             // inputs as they still require them to be disabled.
-            if ($('.pinny--is-open').length) {
+            if (this._activePinnies()) {
                 return;
             }
 
