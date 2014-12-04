@@ -78,9 +78,6 @@
          * Common animation callbacks used in the effect objects
          */
         animation: {
-            beginClose: function() {
-
-            },
             openComplete: function() {
                 this._trigger('opened');
 
@@ -122,13 +119,13 @@
 
             bouncefix.add(classes.SCROLLABLE);
 
-            this.effect.open.call(this);
-
             this.options.shade && this.$shade.shade('open');
+
+            this.$pinny.lockup('lock');
 
             this.$pinny.addClass(classes.OPENED);
 
-            this.$pinny.lockup('lock');
+            this.effect.open.call(this);
         },
 
         close: function() {
@@ -136,13 +133,13 @@
 
             bouncefix.remove(classes.SCROLLABLE);
 
-            this.$pinny.removeClass(classes.OPENED);
-
             this.options.shade && this.$shade.shade('close');
 
-            this.effect.close.call(this);
-
             this.$pinny.lockup('unlock');
+
+            this.$pinny.removeClass(classes.OPENED);
+
+            this.effect.close.call(this);
         },
 
         _bindEvents: function() {
@@ -158,13 +155,13 @@
          Builds Pinny using the following structure:
 
          <section class="pinny">
-             <div class="pinny__wrapper">
-                 <header class="pinny__header">{header content}</header>
-                 <div class="pinny__content">
-                 {content}
-                 </div>
-                 <footer class="pinny__footer">{footer content}</footer>
-             </div>
+         <div class="pinny__wrapper">
+         <header class="pinny__header">{header content}</header>
+         <div class="pinny__content">
+         {content}
+         </div>
+         <footer class="pinny__footer">{footer content}</footer>
+         </div>
          </section>
          */
         _build: function() {
@@ -308,6 +305,11 @@
          * Trap any tabbing within the visible Pinny window
          */
         _disableInputs: function() {
+            // If lockup is already locked
+            if (this.$pinny.lockup('isLocked')) {
+                return;
+            }
+
             var $focusableElements = $(FOCUSABLE_ELEMENTS).not(function() {
                 return $(this).closest('.pinny').length;
             });
@@ -317,17 +319,22 @@
                 var currentTabIndex = $el.attr('tabindex') || 0;
 
                 $el
-                    .data('tabindex', currentTabIndex)
+                    .attr('data-orig-tabindex', currentTabIndex)
                     .attr('tabindex', '-1');
             });
         },
 
         _enableInputs: function() {
-            var $disabledInputs = $('[data-pinny-tabindex]');
+            // At this point, this pinny has been closed and lockup has unlocked.
+            // If there are any other pinny's open, we don't want to re-enable the
+            // inputs as they still require them to be disabled.
+            if ($('.pinny--is-open').length) {
+                return;
+            }
 
-            $disabledInputs.each(function(_, el) {
+            $('[data-orig-tabindex]').each(function(_, el) {
                 var $el = $(el);
-                var oldTabIndex = $el.data('tabindex');
+                var oldTabIndex = $el.attr('data-orig-tabindex');
 
                 if (oldTabIndex) {
                     $el.attr('tabindex', oldTabIndex);
@@ -335,7 +342,7 @@
                     $el.removeAttr('tabindex');
                 }
 
-                $el.removeData('tabindex');
+                $el.removeAttr('data-orig-tabindex');
             });
         }
     });

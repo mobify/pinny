@@ -81,18 +81,10 @@
             openComplete: function() {
                 this._trigger('opened');
 
-                this.$pinny.addClass(classes.OPENED);
-
                 this._focus();
-
-                this.$pinny.lockup('lock');
             },
             closeComplete: function() {
                 this._trigger('closed');
-
-                this.$pinny.removeClass(classes.OPENED);
-
-                this.$pinny.lockup('unlock');
 
                 this._resetFocus();
             }
@@ -127,9 +119,13 @@
 
             bouncefix.add(classes.SCROLLABLE);
 
-            this.effect.open.call(this);
-
             this.options.shade && this.$shade.shade('open');
+
+            this.$pinny.lockup('lock');
+
+            this.$pinny.addClass(classes.OPENED);
+
+            this.effect.open.call(this);
         },
 
         close: function() {
@@ -137,9 +133,13 @@
 
             bouncefix.remove(classes.SCROLLABLE);
 
-            this.effect.close.call(this);
-
             this.options.shade && this.$shade.shade('close');
+
+            this.$pinny.lockup('unlock');
+
+            this.$pinny.removeClass(classes.OPENED);
+
+            this.effect.close.call(this);
         },
 
         _bindEvents: function() {
