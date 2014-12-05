@@ -119,6 +119,10 @@
         },
 
         open: function() {
+            if (this.$pinny.hasClass(classes.OPENED)) {
+                return;
+            }
+
             this._trigger('open');
 
             bouncefix.add(classes.SCROLLABLE);
