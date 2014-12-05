@@ -81,5 +81,32 @@ define([
 
             element.pinny('open');
         });
+
+        it('does not fire the close event when pinny is already closed', function(done) {
+            var closeCount = 0;
+
+            this.timeout(5000);
+
+            element.pinny({
+                effect: modalCenter,
+                opened: function() {
+                    element.pinny('close');
+
+                    setTimeout(function() {
+                        element.pinny('close');
+
+                        assert.equal(closeCount, 1);
+
+                        done();
+                    }, 1000);
+
+                },
+                close: function() {
+                    closeCount++;
+                }
+            });
+
+            element.pinny('open');
+        });
     });
 });

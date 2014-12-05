@@ -119,7 +119,7 @@
         },
 
         open: function() {
-            if (this.$pinny.hasClass(classes.OPENED)) {
+            if (this._isOpen()) {
                 return;
             }
 
@@ -137,6 +137,10 @@
         },
 
         close: function() {
+            if (!this._isOpen()) {
+                return;
+            }
+
             this._trigger('close');
 
             bouncefix.remove(classes.SCROLLABLE);
@@ -148,6 +152,10 @@
             this.effect.close.call(this);
 
             this.$pinny.lockup('unlock');
+        },
+
+        _isOpen: function() {
+            return this.$pinny.hasClass(classes.OPENED);
         },
 
         _bindEvents: function() {
