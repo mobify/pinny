@@ -1,3 +1,5 @@
+1.1.1
+    - Fixed issue where calling open/close multiple times would fire their events multiple times.
 1.1.0
     - Added new config option for `appendTo`, allowing you to specify an alternate container that Pinny is appended to
 1.0.2
