@@ -36,8 +36,22 @@ define([
                     done();
                 }
             });
+            element.pinny('open');
+        });
+
+        it('does not fire the open event when pinny is already open', function() {
+            var openCount = 0;
+            element.pinny({
+                effect: modalCenter,
+                open: function() {
+                    openCount++;
+                }
+            });
 
             element.pinny('open');
+            element.pinny('open');
+
+            assert.equal(openCount, 1);
         });
 
         it('fires the close event when pinny is closed', function(done) {
