@@ -18,7 +18,7 @@ define([
                 element.remove();
                 element = null;
             }
-            $('.lockup__container').removeClass('lockup__container');
+            $('.lockup__container').removeClass('lockup__container').children().unwrap();
         });
 
         describe('binding to Zepto\'s fn', function() {

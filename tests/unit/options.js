@@ -20,7 +20,7 @@ define([
                 element = null;
             }
 
-            $('.pinny__container').removeClass('pinny__container');
+            $('.lockup__container').removeClass('lockup__container').children().unwrap();
         });
 
         describe('creates default options when no options parameter not used', function() {

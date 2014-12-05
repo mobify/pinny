@@ -20,6 +20,8 @@ define([
                 element.remove();
                 element = null;
             }
+
+            $('.lockup__container').removeClass('lockup__container').children().unwrap();
         });
 
         it('opens correctly using modal-center', function() {

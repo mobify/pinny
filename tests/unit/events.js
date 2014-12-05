@@ -16,6 +16,8 @@ define([
                 element.remove();
                 element = null;
             }
+
+            $('.lockup__container').removeClass('lockup__container').children().unwrap();
         });
 
         it('fires the open event when pinny is opened', function(done) {
