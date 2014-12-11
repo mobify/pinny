@@ -114,6 +114,14 @@
             this._bindEvents();
         },
 
+        destroy: function() {
+            this.$element.appendTo(document.body);
+
+            this.$pinny.shade('destroy');
+
+            this.$pinny.remove();
+        },
+
         toggle: function() {
             this[this.$pinny.hasClass(classes.OPENED) ? 'close' : 'open']();
         },
