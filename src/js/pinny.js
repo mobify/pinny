@@ -118,6 +118,7 @@
             this.$element.appendTo(document.body);
 
             this.$pinny.shade('destroy');
+            this.$pinny.lockup('destroy');
 
             this.$pinny.remove();
         },
