@@ -4,6 +4,7 @@
             '$',
             'plugin',
             'bouncefix',
+            'velocity',
             'lockup',
             'shade'
         ], factory);
@@ -11,7 +12,7 @@
         var framework = window.Zepto || window.jQuery;
         factory(framework, window.Plugin, window.bouncefix);
     }
-}(function($, Plugin, bouncefix) {
+}(function($, Plugin, bouncefix, Velocity) {
     var EFFECT_REQUIRED = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
     var FOCUSABLE_ELEMENTS = 'a[href], area[href], input, select, textarea, button, iframe, object, embed, [tabindex], [contenteditable]';
 
@@ -52,7 +53,7 @@
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
     }
 
-    Pinny.VERSION = '1.1.1';
+    Pinny.VERSION = '1.1.2';
 
     Pinny.DEFAULTS = {
         effect: null,
@@ -134,6 +135,8 @@
             this.$pinny.addClass(classes.OPENED);
 
             this.$pinny.lockup('lock');
+
+            this._enableInputScrollFix();
         },
 
         close: function() {
@@ -152,6 +155,8 @@
             this.effect.close.call(this);
 
             this.$pinny.lockup('unlock');
+
+            this._disableInputScrollFix();
         },
 
         _isOpen: function() {
@@ -352,7 +357,51 @@
 
                 $el.removeData('tabindex');
             });
+        },
+
+        _enableInputScrollFix: function() {
+            if ($.os.major <= 7) {
+                var $this = this.$pinny;
+
+                $this.find('input, select, textarea')
+                    .on('focus', function() {
+                        setTimeout(function() {
+                            if (!$this.find('.pinny__input-space').length) {
+                                $this.find('.pinny__content').append($('<div class="pinny__input-space" style="height: 300px">'));
+                            }
+
+                            var $positionElement = $(document.activeElement);
+
+                            // When the parent of the element have position relative
+                            // the position of the select will return the wrong value
+                            // Therefore, define a parent element in data so we can use the correct position
+                            if (typeof $positionElement.data('positionParent') !== 'undefined') {
+                                $positionElement = $positionElement.data('positionParent');
+                            }
+
+                            Velocity.animate($positionElement, 'scroll', {
+                                container: $this.find('.' + classes.CONTENT)[0],
+                                offset: -1 * $this.find('.' + classes.HEADER).height() - 15,
+                                duration: 50
+                            });
+                        }, 0);
+                    })
+                    .on('blur', function () {
+                        setTimeout(function() {
+                            if (!/(input|select|textarea)/i.test(document.activeElement.nodeName)) {
+                                $this.find('.pinny__input-space').remove();
+                            }
+                        }, 0);
+                    });
+            }
+        },
+
+        _disableInputScrollFix: function() {
+            if ($.os.major <= 7) {
+                this.$pinny.find('input, select, textarea').off('focus blur');
+            }
         }
+
     });
 
     $('[data-pinny]').each(function() {
