@@ -15,6 +15,7 @@
 }(function($, Plugin, bouncefix, Velocity) {
     var EFFECT_REQUIRED = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
     var FOCUSABLE_ELEMENTS = 'a[href], area[href], input, select, textarea, button, iframe, object, embed, [tabindex], [contenteditable]';
+    var KEYBOARD_ELEMENTS = 'input, select, textarea';
 
     /**
      * Function.prototype.bind polyfill required for < iOS6
@@ -54,8 +55,6 @@
         focus: 'focus.pinny',
         blur: 'blur.pinny'
     };
-
-    var keyboardElements = 'input, select, textarea';
 
     function Pinny(element, options) {
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
@@ -389,7 +388,7 @@
             var plugin = this;
 
             if ($.os.ios && $.os.major <= 7) {
-                this.$pinny.find(keyboardElements)
+                this.$pinny.find(KEYBOARD_ELEMENTS)
                     .on(events.focus, function () {
                         plugin._inputFocus.call(plugin);
                     })
@@ -401,7 +400,7 @@
 
         _disableInputScrollFix: function() {
             if ($.os.ios && $.os.major <= 7) {
-                this.$pinny.find(keyboardElements)
+                this.$pinny.find(KEYBOARD_ELEMENTS)
                     .off(events.focus)
                     .off(events.blur);
             }
@@ -434,7 +433,7 @@
         _inputBlur: function () {
             var plugin = this;
             setTimeout(function() {
-                if (plugin._activeElement().is('input, select, textarea')) {
+                if (plugin._activeElement().is(KEYBOARD_ELEMENTS)) {
                     plugin.$spacer.attr('hidden', '');
                 }
             }, 0);
