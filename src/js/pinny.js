@@ -53,7 +53,7 @@
     var events = {
         focus: 'focus.pinny',
         blur: 'blur.pinny'
-    }
+    };
 
     var keyboardElements = 'input, select, textarea';
 
@@ -85,7 +85,7 @@
 
     Plugin.create('pinny', Pinny, {
         /**
-         * The duration for scrolling to inputs within pinny__content 
+         * The duration for scrolling to inputs within pinny__content
          */
         scrollDuration: 50,
 
