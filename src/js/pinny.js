@@ -32,6 +32,7 @@
 
     var classes = {
         PINNY: 'pinny',
+        HEADER: 'pinny__header',
         WRAPPER: 'pinny__wrapper',
         TITLE: 'pinny__title',
         CLOSE: 'pinny__close',
@@ -48,6 +49,13 @@
         HEADER: '<h1 class="' + classes.TITLE + '">{0}</h1><button class="' + classes.CLOSE + '">Close</button>',
         FOOTER: '{0}'
     };
+
+    var events = {
+        focus: 'focus.pinny',
+        blur: 'blur.pinny'
+    }
+
+    var keyboardElements = 'input, select, textarea';
 
     function Pinny(element, options) {
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
@@ -77,6 +85,18 @@
 
     Plugin.create('pinny', Pinny, {
         /**
+         * The duration for scrolling to inputs within pinny__content 
+         */
+        scrollDuration: 50,
+
+        /**
+         * Returns the currently focused element
+         */
+        _activeElement: function () {
+            return $(document.activeElement);
+        },
+
+        /**
          * Common animation callbacks used in the effect objects
          */
         animation: {
@@ -101,6 +121,7 @@
             this.$element = $(element);
             this.$doc = $(document);
             this.$body = $('body');
+            this.$spacer = $('<div class="pinny__input-space" style="height: 300px" hidden>');
 
             this._build();
 
@@ -135,8 +156,6 @@
             this.$pinny.addClass(classes.OPENED);
 
             this.$pinny.lockup('lock');
-
-            this._enableInputScrollFix();
         },
 
         close: function() {
@@ -155,8 +174,6 @@
             this.effect.close.call(this);
 
             this.$pinny.lockup('unlock');
-
-            this._disableInputScrollFix();
         },
 
         _isOpen: function() {
@@ -202,7 +219,13 @@
                     plugin.close();
                 })
                 .lockup({
-                    container: this.options.container
+                    container: this.options.container,
+                    locked: function () {
+                        plugin._enableInputScrollFix();
+                    },
+                    unlocked: function () {
+                        plugin._disableInputScrollFix();
+                    }
                 });
 
             this.$container = this.$pinny.data('lockup').$container;
@@ -214,17 +237,20 @@
                     .addClass(classes.WRAPPER)
                     .appendTo(this.$pinny);
 
-                this._buildComponent('header').appendTo($wrapper);
+                this.$pinnyHeader = this._buildComponent('header').appendTo($wrapper);
 
-                $('<div />')
+                this.$pinnyContent = $('<div />')
                     .addClass(classes.CONTENT)
                     .addClass(classes.SCROLLABLE)
                     .append(this.$element)
+                    .append(this.$spacer)
                     .appendTo($wrapper);
 
                 this._buildComponent('footer').appendTo($wrapper);
             } else {
                 this.$element.appendTo(this.$pinny);
+                this.$pinnyHeader = this.$element.find('.' + classes.HEADER);
+                this.$pinnyContent = this.$element.find('.' + classes.CONTENT);
             }
 
             this._addAccessibility();
@@ -360,46 +386,58 @@
         },
 
         _enableInputScrollFix: function() {
-            if ($.os.major <= 7) {
-                var $this = this.$pinny;
+            var plugin = this;
 
-                $this.find('input, select, textarea')
-                    .on('focus', function() {
-                        setTimeout(function() {
-                            if (!$this.find('.pinny__input-space').length) {
-                                $this.find('.pinny__content').append($('<div class="pinny__input-space" style="height: 300px">'));
-                            }
-
-                            var $positionElement = $(document.activeElement);
-
-                            // When the parent of the element have position relative
-                            // the position of the select will return the wrong value
-                            // Therefore, define a parent element in data so we can use the correct position
-                            if (typeof $positionElement.data('positionParent') !== 'undefined') {
-                                $positionElement = $positionElement.data('positionParent');
-                            }
-
-                            Velocity.animate($positionElement, 'scroll', {
-                                container: $this.find('.' + classes.CONTENT)[0],
-                                offset: -1 * $this.find('.' + classes.HEADER).height() - 15,
-                                duration: 50
-                            });
-                        }, 0);
+            if ($.os.ios && $.os.major <= 7) {
+                this.$pinny.find(keyboardElements)
+                    .on(events.focus, function () {
+                        plugin._inputFocus.call(plugin);
                     })
-                    .on('blur', function () {
-                        setTimeout(function() {
-                            if (!/(input|select|textarea)/i.test(document.activeElement.nodeName)) {
-                                $this.find('.pinny__input-space').remove();
-                            }
-                        }, 0);
+                    .on(events.blur, function () {
+                        plugin._inputBlur.call(plugin);
                     });
             }
         },
 
         _disableInputScrollFix: function() {
-            if ($.os.major <= 7) {
-                this.$pinny.find('input, select, textarea').off('focus blur');
+            if ($.os.ios && $.os.major <= 7) {
+                this.$pinny.find(keyboardElements)
+                    .off(events.focus)
+                    .off(events.blur);
             }
+        },
+
+        _inputFocus: function () {
+            var plugin = this;
+            var $pinny = plugin.$pinny;
+
+            setTimeout(function() {
+                plugin.$spacer.removeAttr('hidden');
+
+                var $scrollTarget = plugin._activeElement();
+
+                // When the parent of the element have position relative
+                // the position of the element will return the wrong value
+                // Therefore, define a parent element in data so we can use the correct position
+                if (typeof $scrollTarget.data('scrollTarget') !== 'undefined') {
+                    $scrollTarget = $scrollTarget.data('scrollTarget');
+                }
+
+                Velocity.animate($scrollTarget, 'scroll', {
+                    container: plugin.$pinnyContent[0],
+                    offset: -1 * (plugin.$pinnyHeader.height() + parseInt(plugin.$pinnyContent.css('padding-top'))),
+                    duration: plugin.scrollDuration
+                });
+            }, 0);
+        },
+
+        _inputBlur: function () {
+            var plugin = this;
+            setTimeout(function() {
+                if (plugin._activeElement().is('input, select, textarea')) {
+                    plugin.$spacer.attr('hidden', '');
+                }
+            }, 0);
         }
 
     });
