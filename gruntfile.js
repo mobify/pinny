@@ -38,7 +38,8 @@ module.exports = function(grunt) {
         'grunt-autoprefixer',
         'grunt-contrib-sass',
         'grunt-mocha-phantomjs',
-        'grunt-version'
+        'grunt-version',
+        'grunt-contrib-requirejs'
     ];
 
     npmTasks.forEach(function(taskName) {
