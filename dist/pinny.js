@@ -15,6 +15,7 @@
 }(function($, Plugin, bouncefix, Velocity) {
     var EFFECT_REQUIRED = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
     var FOCUSABLE_ELEMENTS = 'a[href], area[href], input, select, textarea, button, iframe, object, embed, [tabindex], [contenteditable]';
+    var FOCUSABLE_INPUT_ELEMENTS = 'input, select, textarea';
 
     /**
      * Function.prototype.bind polyfill required for < iOS6
@@ -34,6 +35,7 @@
         PINNY: 'pinny',
         HEADER: 'pinny__header',
         WRAPPER: 'pinny__wrapper',
+        SPACER: 'pinny__spacer',
         TITLE: 'pinny__title',
         CLOSE: 'pinny__close',
         CONTENT: 'pinny__content',
@@ -54,8 +56,6 @@
         focus: 'focus.pinny',
         blur: 'blur.pinny'
     };
-
-    var keyboardElements = 'input, select, textarea';
 
     function Pinny(element, options) {
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
@@ -90,6 +90,20 @@
         scrollDuration: 50,
 
         /**
+         * The height of pinny__spacer to account for the soft keyboard that will
+         * appear when an entry-able input is focused
+         */
+        spacerHeight: 300,
+
+        /**
+         * Named spaced events
+         */
+        events: {
+            focus: 'focus.pinny',
+            blur: 'blur.pinny'
+        },
+
+        /**
          * Returns the currently focused element
          */
         _activeElement: function () {
@@ -121,7 +135,6 @@
             this.$element = $(element);
             this.$doc = $(document);
             this.$body = $('body');
-            this.$spacer = $('<div class="pinny__input-space" style="height: 300px" hidden>');
 
             this._build();
 
@@ -221,10 +234,10 @@
                 .lockup({
                     container: this.options.container,
                     locked: function () {
-                        plugin._enableInputScrollFix();
+                        plugin._handleKeyboardShown();
                     },
                     unlocked: function () {
-                        plugin._disableInputScrollFix();
+                        plugin._handleKeyboardHidden();
                     }
                 });
 
@@ -237,9 +250,9 @@
                     .addClass(classes.WRAPPER)
                     .appendTo(this.$pinny);
 
-                this.$pinnyHeader = this._buildComponent('header').appendTo($wrapper);
+                this._buildComponent('header').appendTo($wrapper);
 
-                this.$pinnyContent = $('<div />')
+                $('<div />')
                     .addClass(classes.CONTENT)
                     .addClass(classes.SCROLLABLE)
                     .append(this.$element)
@@ -249,9 +262,16 @@
                 this._buildComponent('footer').appendTo($wrapper);
             } else {
                 this.$element.appendTo(this.$pinny);
-                this.$pinnyHeader = this.$element.find('.' + classes.HEADER);
-                this.$pinnyContent = this.$element.find('.' + classes.CONTENT);
             }
+
+            this.$header = this.$pinny.find('.' + classes.HEADER);
+            this.$content = this.$pinny.find('.' + classes.CONTENT);
+
+            this.$spacer = $('<div />')
+                .addClass(classes.SPACER)
+                .height(this.spacerHeight)
+                .attr('hidden', 'hidden')
+                .appendTo(this.$content);
 
             this._addAccessibility();
 
@@ -385,59 +405,52 @@
             });
         },
 
-        _enableInputScrollFix: function() {
+        _handleKeyboardShown: function() {
             var plugin = this;
 
             if ($.os.ios && $.os.major <= 7) {
-                this.$pinny.find(keyboardElements)
-                    .on(events.focus, function () {
+                this.$pinny.find(FOCUSABLE_INPUT_ELEMENTS)
+                    .on(this.events.focus, function () {
                         plugin._inputFocus.call(plugin);
                     })
-                    .on(events.blur, function () {
+                    .on(this.events.blur, function () {
                         plugin._inputBlur.call(plugin);
                     });
             }
         },
 
-        _disableInputScrollFix: function() {
+        _handleKeyboardHidden: function() {
             if ($.os.ios && $.os.major <= 7) {
-                this.$pinny.find(keyboardElements)
-                    .off(events.focus)
-                    .off(events.blur);
+                this.$pinny.find(FOCUSABLE_INPUT_ELEMENTS)
+                    .off(this.events.focus)
+                    .off(this.events.blur);
             }
         },
 
         _inputFocus: function () {
             var plugin = this;
-            var $pinny = plugin.$pinny;
 
-            setTimeout(function() {
-                plugin.$spacer.removeAttr('hidden');
+            plugin.$spacer.removeAttr('hidden');
 
-                var $scrollTarget = plugin._activeElement();
+            var $scrollTarget = plugin._activeElement();
 
-                // When the parent of the element have position relative
-                // the position of the element will return the wrong value
-                // Therefore, define a parent element in data so we can use the correct position
-                if (typeof $scrollTarget.data('scrollTarget') !== 'undefined') {
-                    $scrollTarget = $scrollTarget.data('scrollTarget');
-                }
+            // When the parent of the element have position relative
+            // the position of the element will return the wrong value
+            // Therefore, define a parent element in data so we can use the correct position
+            if (typeof $scrollTarget.data('scrollTarget') !== 'undefined') {
+                $scrollTarget = $scrollTarget.data('scrollTarget');
+            }
 
-                Velocity.animate($scrollTarget, 'scroll', {
-                    container: plugin.$pinnyContent[0],
-                    offset: -1 * (plugin.$pinnyHeader.height() + parseInt(plugin.$pinnyContent.css('padding-top'))),
-                    duration: plugin.scrollDuration
-                });
-            }, 0);
+            Velocity.animate($scrollTarget, 'scroll', {
+                container: plugin.$content[0],
+                offset: -1 * (plugin.$header.height() + parseInt(plugin.$content.css('padding-top'))),
+                duration: plugin.scrollDuration
+            });
         },
 
         _inputBlur: function () {
             var plugin = this;
-            setTimeout(function() {
-                if (plugin._activeElement().is('input, select, textarea')) {
-                    plugin.$spacer.attr('hidden', '');
-                }
-            }, 0);
+            plugin._activeElement().is(FOCUSABLE_INPUT_ELEMENTS) && plugin.$spacer.attr('hidden', '');
         }
 
     });
