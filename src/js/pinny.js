@@ -31,6 +31,8 @@
     }
     /* jshint ignore:end */
 
+    var iOS7orBelow = $.os.ios && $.os.major <= 7;
+
     var classes = {
         PINNY: 'pinny',
         HEADER: 'pinny__header',
@@ -80,32 +82,13 @@
         open: $.noop,
         opened: $.noop,
         close: $.noop,
-        closed: $.noop
+        closed: $.noop,
+        scrollDuration: 50,
+        spacerHeight: 300
     };
 
     Plugin.create('pinny', Pinny, {
-        /**
-         * The duration for scrolling to inputs within pinny__content
-         */
-        scrollDuration: 50,
 
-        /**
-         * The height of pinny__spacer to account for the soft keyboard that will
-         * appear when an entry-able input is focused
-         */
-        spacerHeight: 300,
-
-        /**
-         * Named spaced events
-         */
-        events: {
-            focus: 'focus.pinny',
-            blur: 'blur.pinny'
-        },
-
-        /**
-         * Returns the currently focused element
-         */
         _activeElement: function () {
             return $(document.activeElement);
         },
@@ -269,7 +252,7 @@
 
             this.$spacer = $('<div />')
                 .addClass(classes.SPACER)
-                .height(this.spacerHeight)
+                .height(this.options.spacerHeight)
                 .attr('hidden', 'hidden')
                 .appendTo(this.$content);
 
@@ -408,22 +391,22 @@
         _handleKeyboardShown: function() {
             var plugin = this;
 
-            if ($.os.ios && $.os.major <= 7) {
+            if (iOS7orBelow) {
                 this.$pinny.find(FOCUSABLE_INPUT_ELEMENTS)
-                    .on(this.events.focus, function () {
+                    .on(events.focus, function () {
                         plugin._inputFocus.call(plugin);
                     })
-                    .on(this.events.blur, function () {
+                    .on(events.blur, function () {
                         plugin._inputBlur.call(plugin);
                     });
             }
         },
 
         _handleKeyboardHidden: function() {
-            if ($.os.ios && $.os.major <= 7) {
+            if (iOS7orBelow) {
                 this.$pinny.find(FOCUSABLE_INPUT_ELEMENTS)
-                    .off(this.events.focus)
-                    .off(this.events.blur);
+                    .off(events.focus)
+                    .off(events.blur);
             }
         },
 
@@ -436,15 +419,17 @@
 
             // When the parent of the element have position relative
             // the position of the element will return the wrong value
-            // Therefore, define a parent element in data so we can use the correct position
-            if (typeof $scrollTarget.data('scrollTarget') !== 'undefined') {
-                $scrollTarget = $scrollTarget.data('scrollTarget');
+            // Therefore, we will find a parent element that doesn't have a relative position
+            // and will not go beyond the pinny__content element
+            var $activeElementParent = $scrollTarget.parent();
+            while ($activeElementParent.css('position') === 'relative' && !$activeElementParent.hasClass(classes.CONTENT)) {
+                $activeElementParent = $scrollTarget = $scrollTarget.parent();
             }
 
             Velocity.animate($scrollTarget, 'scroll', {
                 container: plugin.$content[0],
                 offset: -1 * (plugin.$header.height() + parseInt(plugin.$content.css('padding-top'))),
-                duration: plugin.scrollDuration
+                duration: this.options.scrollDuration
             });
         },
 
