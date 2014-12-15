@@ -423,7 +423,8 @@
             // and will not go beyond the pinny__content element
             var $activeElementParent = $scrollTarget.parent();
             while ($activeElementParent.css('position') === 'relative' && !$activeElementParent.hasClass(classes.CONTENT)) {
-                $activeElementParent = $scrollTarget = $scrollTarget.parent();
+                $scrollTarget = $activeElementParent;
+                $activeElementParent = $scrollTarget.parent();
             }
 
             Velocity.animate($scrollTarget, 'scroll', {
