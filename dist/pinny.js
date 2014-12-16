@@ -55,6 +55,7 @@
     };
 
     var events = {
+        click: 'click.pinny',
         focus: 'focus.pinny',
         blur: 'blur.pinny'
     };
@@ -210,7 +211,7 @@
                     width: this.options.coverage,
                     height: this.options.coverage
                 })
-                .on('click', '.' + classes.CLOSE, function(e) {
+                .on(events.click, '.' + classes.CLOSE, function(e) {
                     e.preventDefault();
                     plugin.close();
                 })
