@@ -389,16 +389,10 @@
         },
 
         _handleKeyboardShown: function() {
-            var plugin = this;
-
             if (iOS7orBelow) {
                 this.$pinny.find(FOCUSABLE_INPUT_ELEMENTS)
-                    .on(events.focus, function () {
-                        plugin._inputFocus.call(plugin);
-                    })
-                    .on(events.blur, function () {
-                        plugin._inputBlur.call(plugin);
-                    });
+                    .on(events.focus, this._inputFocus.bind(this))
+                    .on(events.blur, this._inputBlur.bind(this));
             }
         },
 
