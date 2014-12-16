@@ -94,6 +94,22 @@
             return $(document.activeElement);
         },
 
+        _scrollTarget: function () {
+            var $scrollTarget = this._activeElement();
+
+            // When the parent of the element have position relative
+            // the position of the element will return the wrong value
+            // Therefore, we will find a parent element that doesn't have a relative position
+            // and will not go beyond the pinny__content element
+            var $activeElementParent = $scrollTarget.parent();
+            while ($activeElementParent.css('position') === 'relative' && !$activeElementParent.hasClass(classes.CONTENT)) {
+                $scrollTarget = $activeElementParent;
+                $activeElementParent = $scrollTarget.parent();
+            }
+
+            return $scrollTarget;
+        },
+
         /**
          * Common animation callbacks used in the effect objects
          */
@@ -410,28 +426,16 @@
 
             plugin.$spacer.removeAttr('hidden');
 
-            var $scrollTarget = plugin._activeElement();
-
-            // When the parent of the element have position relative
-            // the position of the element will return the wrong value
-            // Therefore, we will find a parent element that doesn't have a relative position
-            // and will not go beyond the pinny__content element
-            var $activeElementParent = $scrollTarget.parent();
-            while ($activeElementParent.css('position') === 'relative' && !$activeElementParent.hasClass(classes.CONTENT)) {
-                $scrollTarget = $activeElementParent;
-                $activeElementParent = $scrollTarget.parent();
-            }
-
-            Velocity.animate($scrollTarget, 'scroll', {
+            Velocity.animate(plugin._scrollTarget(), 'scroll', {
                 container: plugin.$content[0],
                 offset: -1 * (plugin.$header.height() + parseInt(plugin.$content.css('padding-top'))),
-                duration: this.options.scrollDuration
+                duration: plugin.options.scrollDuration
             });
         },
 
         _inputBlur: function () {
             var plugin = this;
-            plugin._activeElement().is(FOCUSABLE_INPUT_ELEMENTS) && plugin.$spacer.attr('hidden', '');
+            !plugin._activeElement().is(FOCUSABLE_INPUT_ELEMENTS) && plugin.$spacer.attr('hidden', '');
         }
 
     });
