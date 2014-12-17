@@ -6,7 +6,8 @@
             'bouncefix',
             'velocity',
             'lockup',
-            'shade'
+            'shade',
+            'deckard'
         ], factory);
     } else {
         var framework = window.Zepto || window.jQuery;
