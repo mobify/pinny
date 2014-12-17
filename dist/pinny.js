@@ -89,27 +89,6 @@
     };
 
     Plugin.create('pinny', Pinny, {
-
-        _activeElement: function () {
-            return $(document.activeElement);
-        },
-
-        _scrollTarget: function () {
-            var $scrollTarget = this._activeElement();
-
-            // When the parent of the element have position relative
-            // the position of the element will return the wrong value
-            // Therefore, we will find a parent element that doesn't have a relative position
-            // and will not go beyond the pinny__content element
-            var $activeElementParent = $scrollTarget.parent();
-            while ($activeElementParent.css('position') === 'relative' && !$activeElementParent.hasClass(classes.CONTENT)) {
-                $scrollTarget = $activeElementParent;
-                $activeElementParent = $scrollTarget.parent();
-            }
-
-            return $scrollTarget;
-        },
-
         /**
          * Common animation callbacks used in the effect objects
          */
@@ -371,7 +350,9 @@
         },
 
         /**
-         * Trap any tabbing within the visible Pinny window
+         * Traps any tabbing within the visible Pinny window
+         * by disabling tabbing into all inputs outside of
+         * pinny using a negative tabindex.
          */
         _disableInputs: function() {
             var $focusableElements = $(FOCUSABLE_ELEMENTS).not(function() {
@@ -388,6 +369,9 @@
             });
         },
 
+        /**
+         * Reverses the above!!
+         */
         _enableInputs: function() {
             var $disabledInputs = $('[data-pinny-tabindex]');
 
@@ -405,6 +389,11 @@
             });
         },
 
+        /**
+         * In iOS7 or below, when elements are focussed inside pinny
+         * the keyboard obscures the input. We need to scroll back to
+         * the element to keep it in view.
+         */
         _handleKeyboardShown: function() {
             if (iOS7orBelow) {
                 this.$pinny.find(FOCUSABLE_INPUT_ELEMENTS)
@@ -421,23 +410,46 @@
             }
         },
 
+        /**
+         * In iOS7 or below, when inputs are focussed inside pinny, we show a
+         * spacer element at the bottom of pinny content so that it creates space
+         * in the viewport to facilitate scrolling back to the element.
+         */
         _inputFocus: function () {
-            var plugin = this;
+            this.$spacer.removeAttr('hidden');
 
-            plugin.$spacer.removeAttr('hidden');
-
-            Velocity.animate(plugin._scrollTarget(), 'scroll', {
-                container: plugin.$content[0],
-                offset: -1 * (plugin.$header.height() + parseInt(plugin.$content.css('padding-top'))),
-                duration: plugin.options.scrollDuration
+            Velocity.animate(this._scrollTarget(), 'scroll', {
+                container: this.$content[0],
+                offset: -1 * (this.$header.height() + parseInt(this.$content.css('padding-top'))),
+                duration: this.options.scrollDuration
             });
         },
 
         _inputBlur: function () {
-            var plugin = this;
-            !plugin._activeElement().is(FOCUSABLE_INPUT_ELEMENTS) && plugin.$spacer.attr('hidden', '');
-        }
+            !this._activeElement().is(FOCUSABLE_INPUT_ELEMENTS) && this.$spacer.attr('hidden', '');
+        },
 
+        _activeElement: function () {
+            return $(document.activeElement);
+        },
+
+        /**
+         * Returns the closest parent element that doesn't have relative positioning
+         * (within the pinny__content container). Relative positioning messes with
+         * Velocity's scroll, which prevents us from correctly scrolling back to active
+         * inputs in pinny__content.
+         */
+        _scrollTarget: function () {
+            var $scrollTarget = this._activeElement();
+            var $activeElementParent = $scrollTarget.parent();
+
+            while ($activeElementParent.css('position') === 'relative' && !$activeElementParent.hasClass(classes.CONTENT)) {
+                $scrollTarget = $activeElementParent;
+                $activeElementParent = $scrollTarget.parent();
+            }
+
+            return $scrollTarget;
+        }
     });
 
     $('[data-pinny]').each(function() {
