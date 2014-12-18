@@ -1,5 +1,7 @@
 1.2.0
     - Added `destroy` function
+1.1.2
+    - Fixes issue in iOS7 or below where form inputs are obscured by the soft keyboard on focus
 1.1.1
     - Fixed issue where calling open/close multiple times would fire their events multiple times
 1.1.0
