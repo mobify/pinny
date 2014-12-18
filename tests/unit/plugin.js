@@ -5,16 +5,11 @@ define([
     'modal-center',
     'pinny'
 ], function(fixture, fullFixture, $, modalCenter) {
-    var element;
+    var $element;
 
     describe('Pinny plugin', function() {
         beforeEach(function() {
-            element = $(fixture);
-        });
-
-        afterEach(function() {
-            $('.shade').remove();
-            $('.lockup__container').removeClass('lockup__container');
+            $element = $(fixture);
         });
 
         describe('binding to Zepto\'s fn', function() {
@@ -32,81 +27,87 @@ define([
         });
 
         describe('invoking pinny', function() {
-            it('creates pinny instance on element', function() {
-                element.pinny({
+            it('creates pinny instance on $element', function() {
+                $element.pinny({
                     effect: modalCenter
                 });
 
-                assert.isDefined(element.data('pinny'));
-                element.pinny('destroy');
+                assert.isDefined($element.data('pinny'));
+                $element.pinny('destroy');
             });
 
-            it('stores element inside instance', function() {
-                element.pinny({
+            it('stores $element inside instance', function() {
+                $element.pinny({
                     effect: modalCenter
                 });
 
-                assert.isDefined(element.data('pinny').$pinny);
-                element.pinny('destroy');
+                assert.isDefined($element.data('pinny').$pinny);
+                $element.pinny('destroy');
             });
         });
 
         describe('invoking pinny methods before plugin is initialized', function() {
             it('throws when not initialized', function() {
-                assert.throws(function() { element.pinny('open'); });
+                assert.throws(function() { $element.pinny('open'); });
             });
         });
 
         describe('invoking pinny methods using the plugin interface', function() {
             it('opens a pinny using the open method', function(done) {
-                element.pinny({
+                $element.pinny({
                     effect: modalCenter,
                     opened: function() {
-                        assert.isTrue(element.closest('.pinny').hasClass('pinny--is-open'));
-                        element.pinny('destroy');
+                        assert.isTrue($element.closest('.pinny').hasClass('pinny--is-open'));
+                        $element.pinny('destroy');
                         done();
                     }
                 });
 
-                element.pinny('open');
+                $element.pinny('open');
             });
 
             it('closes a pinny item using the close method', function(done) {
-                element.pinny({
+                $element.pinny({
                     effect: modalCenter,
                     opened: function() {
-                        element.pinny('close');
+                        $element.pinny('close');
                     },
                     closed: function() {
-                        assert.isFalse(element.closest('.pinny').hasClass('pinny--is-open'));
-                        element.pinny('destroy');
+                        assert.isFalse($element.closest('.pinny').hasClass('pinny--is-open'));
+                        $element.pinny('destroy');
                         done();
                     }
                 });
 
-                element.pinny('open');
+                $element.pinny('open');
             });
 
             it('closes a pinny item using the close button', function(done) {
-                element.pinny({
+                $element.pinny({
                     effect: modalCenter,
                     opened: function() {
 
-                        element.closest('.pinny').find('.pinny__close').trigger('click');
+                        $element.closest('.pinny').find('.pinny__close').trigger('click');
                     },
                     closed: function() {
-                        assert.isFalse(element.closest('.pinny').hasClass('pinny--is-open'));
-                        element.pinny('destroy');
+                        assert.isFalse($element.closest('.pinny').hasClass('pinny--is-open'));
+                        $element.pinny('destroy');
                         done();
                     }
                 });
 
-                element.pinny('open');
+                $element.pinny('open');
+            });
+        });
+
+        describe('invoking plugin methods on uninitialized plugin', function() {
+            afterEach(function() {
+                $element.pinny('destroy');
             });
 
             it('throws for method calls that don\'t exist', function() {
                 assert.throws(function() {
-                    element
+                    $element
                         .pinny({
                             effect: modalCenter
                         })
@@ -116,7 +117,7 @@ define([
 
             it('throws when attempting to invoke private methods', function() {
                 assert.throws(function() {
-                    element
+                    $element
                         .pinny({
                             effect: modalCenter
                         })
@@ -126,7 +127,7 @@ define([
 
             it('throws when attempting to invoke methods that aren\'t functions', function() {
                 assert.throws(function() {
-                    element
+                    $element
                         .pinny({
                             effect: modalCenter
                         })
@@ -137,15 +138,15 @@ define([
 
         describe('creates a pinny with correct container', function() {
             it('creates pinny with the default container', function() {
-                var $pinny = $(element).pinny({ effect: modalCenter });
+                var $pinny = $element.pinny({ effect: modalCenter });
 
                 assert.equal($pinny.closest('.lockup__container').length, 1);
 
                 $pinny.pinny('destroy');
             });
 
-            it('creates pinny in the container element', function() {
-                var $pinny = $(element).pinny({ effect: modalCenter, container: '#pinny-container' });
+            it('creates pinny in the container $element', function() {
+                var $pinny = $element.pinny({ effect: modalCenter, container: '#pinny-container' });
 
                 assert.equal($pinny.closest('#pinny-container').length, 1);
 
@@ -263,14 +264,14 @@ define([
 
         describe('destroy', function() {
             it('removes all pinny structure', function() {
-                var $pinny = element
+                var $pinny = $element
                     .pinny({
                         effect: modalCenter
                     });
 
                 $pinny.pinny('destroy');
 
-                assert.equal(element.parent()[0], document.body);
+                assert.equal($element.parent()[0], document.body);
             });
 
             it('removes all pinny structure when given a custom structure', function() {
