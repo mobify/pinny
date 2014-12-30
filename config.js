@@ -4,7 +4,6 @@ require.config({
     'forceSync': true,
     'paths': {
         '$': 'src/js/jquery_wrapper',
-        'velocity': 'src/js/velocity_wrapper',
         'pinny': 'src/js/pinny',
         'effects': 'src/js/effects',
         'modal-center': 'dist/effect/modal-center',
@@ -17,6 +16,7 @@ require.config({
         'lockup': 'bower_components/lockup/dist/lockup',
         'shade': 'bower_components/shade/dist/shade',
         'deckard': 'bower_components/deckard/dist/deckard',
+        'velocity': 'src/js/velocity_wrapper',
         // 'velocity': 'bower_components/mobify-velocity/velocity'
     }
 });

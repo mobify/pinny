@@ -430,12 +430,14 @@ var requirejs, require, define;
 
 define("node_modules/almond/almond.js", function(){});
 
-define("$", (function (global) {
-    return function () {
-        var ret, fn;
-        return ret || global.$; // what does this mean
-    };
-}(this)));
+if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
+    define("$", (function (global) {
+	    return function () {
+	        var ret, fn;
+	        return ret || global.$; // what does this mean
+	    };
+	}(this)));
+};
 define("$", function(){});
 
 (function(factory) {
@@ -446,9 +448,8 @@ define("$", function(){});
     } else {
         factory(window.jQuery || window.Zepto);
     }
-}(function(global) {
-	var ret;
-	return ret || global.Velocity;
+}(function($) {
+	return $.Velocity;
 }));
 (function(factory) {
     if (typeof define === 'function' && define.amd) {

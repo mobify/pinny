@@ -6,7 +6,6 @@
     } else {
         factory(window.jQuery || window.Zepto);
     }
-}(function(global) {
-	var ret;
-	return ret || global.Velocity;
+}(function($) {
+	return $.Velocity;
 }));
