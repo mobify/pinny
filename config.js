@@ -16,7 +16,6 @@ require.config({
         'lockup': 'bower_components/lockup/dist/lockup',
         'shade': 'bower_components/shade/dist/shade',
         'deckard': 'bower_components/deckard/dist/deckard',
-        'velocity': 'src/js/velocity_wrapper',
-        // 'velocity': 'bower_components/mobify-velocity/velocity'
+        'velocity': 'src/js/velocity_wrapper'
     }
 });
