@@ -129,6 +129,15 @@
             this._bindEvents();
         },
 
+        destroy: function() {
+            this.$element.appendTo(document.body);
+
+            this.$pinny
+                .lockup('destroy')
+                .shade('destroy')
+                .remove();
+        },
+
         toggle: function() {
             this[this.$pinny.hasClass(classes.OPENED) ? 'close' : 'open']();
         },
