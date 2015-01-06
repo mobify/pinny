@@ -3,7 +3,7 @@ require.config({
     'keepBuildDir': true,
     'forceSync': true,
     'paths': {
-        '$': 'lib/zeptojs/dist/zepto',
+        '$': 'src/js/selector_library_wrapper',
         'pinny': 'src/js/pinny',
         'effects': 'src/js/effects',
         'modal-center': 'dist/effect/modal-center',
@@ -16,11 +16,6 @@ require.config({
         'lockup': 'bower_components/lockup/dist/lockup',
         'shade': 'bower_components/shade/dist/shade',
         'deckard': 'bower_components/deckard/dist/deckard',
-        'velocity': 'bower_components/mobify-velocity/velocity'
-    },
-    'shim': {
-        '$': {
-            exports: '$'
-        }
+        'velocity': 'src/js/velocity_wrapper'
     }
 });
