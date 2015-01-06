@@ -430,27 +430,26 @@ var requirejs, require, define;
 
 define("node_modules/almond/almond.js", function(){});
 
-if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
-    define("$", (function (global) {
-	    return function () {
-	        var ret, fn;
-	        return ret || global.$; // what does this mean
-	    };
-	}(this)));
-};
+define('$', (function (global) {
+    return function () {
+        var ret;
+        return ret || global.jQuery || global.Zepto;
+    };
+}(this)));
 define("$", function(){});
 
 (function(factory) {
     /* AMD module. */
-    // i think this means velocity depends on jquery/zepto to be loaded first?
-    if (typeof define === "function" && define.amd) {
+    if (typeof define === 'function' && define.amd) {
         define('velocity',['$'], factory);
-    } else {
+    }
+    else {
         factory(window.jQuery || window.Zepto);
     }
 }(function($) {
-	return $.Velocity;
+    return $.Velocity;
 }));
+
 (function(factory) {
     if (typeof define === 'function' && define.amd) {
         define('modal-center',[

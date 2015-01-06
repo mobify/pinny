@@ -3,7 +3,7 @@ require.config({
     'keepBuildDir': true,
     'forceSync': true,
     'paths': {
-        '$': 'src/js/jquery_wrapper',
+        '$': 'src/js/selector_library_wrapper',
         'pinny': 'src/js/pinny',
         'effects': 'src/js/effects',
         'modal-center': 'dist/effect/modal-center',
