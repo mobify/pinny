@@ -1,6 +1,6 @@
 {
   "name": "pinny",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "homepage": "https://github.com/mobify/pinny",
   "authors": [
     "Mobify <jobs@mobify.com>"
@@ -19,7 +19,7 @@
     "./!(src|dist|lib|templates)"
   ],
   "dependencies": {
-    "plugin": "~2.1.0",
+    "plugin": "https://github.com/mobify/plugin.git#returnable-methods",
     "mobify-velocity": "~1.1.2",
     "requirejs-text": "~2.0.12",
     "requirejs": "~2.1.14",

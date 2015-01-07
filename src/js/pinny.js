@@ -129,10 +129,9 @@
         destroy: function() {
             this.$element.appendTo(document.body);
 
-            this.$pinny
-                .lockup('destroy')
-                .shade('destroy')
-                .remove();
+            this.$pinny.lockup('destroy');
+            this.$pinny.shade('destroy');
+            this.$pinny.remove();
         },
 
         toggle: function() {

@@ -65,7 +65,7 @@
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
     }
 
-    Pinny.VERSION = '1.2.0';
+    Pinny.VERSION = '1.2.1';
 
     Pinny.DEFAULTS = {
         effect: null,
@@ -129,10 +129,9 @@
         destroy: function() {
             this.$element.appendTo(document.body);
 
-            this.$pinny
-                .lockup('destroy')
-                .shade('destroy')
-                .remove();
+            this.$pinny.lockup('destroy');
+            this.$pinny.shade('destroy');
+            this.$pinny.remove();
         },
 
         toggle: function() {
