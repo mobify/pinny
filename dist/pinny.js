@@ -360,7 +360,9 @@
 
             this.$pinny.attr('aria-hidden', 'true');
 
-            this.originalActiveElement.focus();
+            if (this.originalActiveElement) {
+                this.originalActiveElement.focus();
+            }
         },
 
         /**
