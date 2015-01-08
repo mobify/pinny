@@ -24,8 +24,8 @@
     "requirejs-text": "~2.0.12",
     "requirejs": "~2.1.14",
     "bouncefix.js": "~0.3.0",
-    "shade": "~1.1.0",
-    "lockup": "~1.1.0",
+    "shade": "mobify/shade#plugin-fix",
+    "lockup": "mobify/lockup#plugin-fix",
     "deckard": "~1.0.0"
   }
 }
