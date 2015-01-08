@@ -19,7 +19,7 @@
     "./!(src|dist|lib|templates)"
   ],
   "dependencies": {
-    "plugin": "https://github.com/mobify/plugin#returnable-methods",
+    "plugin": "mobify/plugin#returnable-methods",
     "mobify-velocity": "~1.1.2",
     "requirejs-text": "~2.0.12",
     "requirejs": "~2.1.14",
