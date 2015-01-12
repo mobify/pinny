@@ -65,7 +65,7 @@
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
     }
 
-    Pinny.VERSION = '1.1.2';
+    Pinny.VERSION = '1.2.0';
 
     Pinny.DEFAULTS = {
         effect: null,
@@ -127,6 +127,15 @@
             this.$element.removeAttr('hidden');
 
             this._bindEvents();
+        },
+
+        destroy: function() {
+            this.$element.appendTo(document.body);
+
+            this.$pinny
+                .lockup('destroy')
+                .shade('destroy')
+                .remove();
         },
 
         toggle: function() {
