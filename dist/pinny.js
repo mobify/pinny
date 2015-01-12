@@ -180,6 +180,8 @@
                     e.preventDefault();
                 }
             });
+
+            this._blurOnOrientationChange(this.$pinny);
         },
 
         /**
@@ -432,6 +434,19 @@
 
         _activeElement: function () {
             return $(document.activeElement);
+        },
+
+        /*
+        * In iOS, there is an issue when soft keyboard triggers, position fixed
+        * elements on screen don't get updated, distorting the UI.
+        * Fix: blur keyboard on orientationchange
+        */
+        _blurOnOrientationChange: function($pinny) {
+            if ($.os.ios) {
+                $(window).on('orientationchange', function(e) {
+                    $pinny.find(':focus').blur();
+                });
+            }
         },
 
         /**
