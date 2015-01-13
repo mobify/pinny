@@ -102,15 +102,27 @@
                 // open and locked the viewport up already
                 !this._activePinnies() && this.$pinny.lockup('lock');
 
+                this.$pinny
+                    .addClass(classes.OPENED)
+                    .attr('aria-hidden', 'false');
+
+                this.$container.attr('aria-hidden', 'true');
+
                 this._trigger('opened');
             },
             closeComplete: function() {
+                this.$pinny
+                    .removeClass(classes.OPENED)
+                    .attr('aria-hidden', 'true');
+
                 this._enableExternalInputs();
                 this._resetFocus();
 
                 // only unlock if there isn't another pinny
                 // that requires the viewport to be locked
                 !this._activePinnies() && this.$pinny.lockup('unlock');
+
+                this.$container.attr('aria-hidden', 'false');
 
                 this._trigger('closed');
             }
@@ -162,12 +174,6 @@
             this.options.shade && this.$shade.shade('open');
 
             this.effect.open.call(this);
-
-            this.$pinny
-                .addClass(classes.OPENED)
-                .attr('aria-hidden', 'false');
-
-            this.$container.attr('aria-hidden', 'true');
         },
 
         close: function() {
@@ -180,12 +186,6 @@
             bouncefix.remove(classes.SCROLLABLE);
 
             this.options.shade && this.$shade.shade('close');
-
-            this.$pinny
-                .removeClass(classes.OPENED)
-                .attr('aria-hidden', 'true');
-
-            this.$container.attr('aria-hidden', 'false');
 
             this.effect.close.call(this);
         },
