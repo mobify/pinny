@@ -95,6 +95,7 @@
          */
         animation: {
             openComplete: function() {
+                this._disableExternalInputs();
                 this._focus();
 
                 // only run lockup if another pinny isn't
@@ -104,6 +105,7 @@
                 this._trigger('opened');
             },
             closeComplete: function() {
+                this._enableExternalInputs();
                 this._resetFocus();
 
                 // only unlock if there isn't another pinny
@@ -161,7 +163,11 @@
 
             this.effect.open.call(this);
 
-            this.$pinny.addClass(classes.OPENED);
+            this.$pinny
+                .addClass(classes.OPENED)
+                .attr('aria-hidden', 'false');
+
+            this.$container.attr('aria-hidden', 'true');
         },
 
         close: function() {
@@ -175,7 +181,11 @@
 
             this.options.shade && this.$shade.shade('close');
 
-            this.$pinny.removeClass(classes.OPENED);
+            this.$pinny
+                .removeClass(classes.OPENED)
+                .attr('aria-hidden', 'true');
+
+            this.$container.attr('aria-hidden', 'false');
 
             this.effect.close.call(this);
         },
@@ -297,8 +307,11 @@
             return /<[a-z][\s\S]*>/i.test(input);
         },
 
+        /**
+         * @returns {boolean} indicating if there are any active pinnies on the page
+         */
         _activePinnies: function() {
-            return !!$('.pinny--is-open').length;
+            return !!$('.' + classes.OPENED).length;
         },
 
         /**
@@ -346,22 +359,10 @@
         _focus: function() {
             this.originalActiveElement = document.activeElement;
 
-            this._disableExternalInputs();
-
-            this.$pinny.attr('aria-hidden', 'false');
-
             this.$pinny.children().first().focus();
-
-            this.$container.attr('aria-hidden', 'true');
         },
 
         _resetFocus: function() {
-            this._enableExternalInputs();
-
-            this.$container.attr('aria-hidden', 'false');
-
-            this.$pinny.attr('aria-hidden', 'true');
-
             this.originalActiveElement && this.originalActiveElement.focus();
         },
 
@@ -400,7 +401,7 @@
             if (this._activePinnies()) {
                 return;
             }
-            
+
             $('[data-orig-tabindex]').each(function(_, el) {
                 var $el = $(el);
                 var oldTabIndex = parseInt($el.attr('data-orig-tabindex'));
