@@ -127,11 +127,13 @@
         },
 
         destroy: function() {
-            this.$element.appendTo(document.body);
-
             this.$pinny.lockup('destroy');
             this.$pinny.shade('destroy');
             this.$pinny.remove();
+
+            this.$element
+                .appendTo(document.body)
+                .removeData(this.name);
         },
 
         toggle: function() {
