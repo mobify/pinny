@@ -96,13 +96,9 @@
         animation: {
             openComplete: function() {
                 this._trigger('opened');
-
-                this._focus();
             },
             closeComplete: function() {
                 this._trigger('closed');
-
-                this._resetFocus();
             }
         },
 
@@ -226,9 +222,11 @@
                     container: this.options.container,
                     locked: function () {
                         plugin._handleKeyboardShown();
+                        plugin._focus();
                     },
                     unlocked: function () {
                         plugin._handleKeyboardHidden();
+                        plugin._resetFocus();
                     }
                 });
 
@@ -346,7 +344,7 @@
         _focus: function() {
             this.originalActiveElement = document.activeElement;
 
-            this._disableInputs();
+            this._disableExternalInputs();
 
             this.$pinny.attr('aria-hidden', 'false');
 
@@ -356,15 +354,13 @@
         },
 
         _resetFocus: function() {
-            this._enableInputs();
+            this._enableExternalInputs();
 
             this.$container.attr('aria-hidden', 'false');
 
             this.$pinny.attr('aria-hidden', 'true');
 
-            if (this.originalActiveElement) {
-                this.originalActiveElement.focus();
-            }
+            this.originalActiveElement && this.originalActiveElement.focus();
         },
 
         /**
@@ -372,7 +368,7 @@
          * by disabling tabbing into all inputs outside of
          * pinny using a negative tabindex.
          */
-        _disableInputs: function() {
+        _disableExternalInputs: function() {
             // If lockup is already locked don't try to disable inputs again
             if (this.$pinny.lockup('isLocked')) {
                 return;
@@ -393,11 +389,11 @@
         },
 
         /**
-         * Reverses the above!!
+         * Re-enables tabbing in inputs not inside Pinny's content
          */
-        _enableInputs: function() {
+        _enableExternalInputs: function() {
             // At this point, this pinny has been closed and lockup has unlocked.
-            // If there are any other pinny's open, we don't want to re-enable the
+            // If there are any other pinny's open we don't want to re-enable the
             // inputs as they still require them to be disabled.
             if (this._activePinnies()) {
                 return;
@@ -425,8 +421,13 @@
         _handleKeyboardShown: function() {
             if (iOS7orBelow) {
                 this.$pinny.find(FOCUSABLE_INPUT_ELEMENTS)
-                    .on(events.focus, this._inputFocus.bind(this))
-                    .on(events.blur, this._inputBlur.bind(this));
+                    .on(events.focus,
+                        function() {
+                            this._showSpacer();
+                            this._scrollToTarget();
+                        }.bind(this)
+                    )
+                    .on(events.blur, this._hideSpacer.bind(this));
             }
         },
 
@@ -439,13 +440,11 @@
         },
 
         /**
-         * In iOS7 or below, when inputs are focussed inside pinny, we show a
+         * In iOS7 or below, when inputs are focused inside pinny, we show a
          * spacer element at the bottom of pinny content so that it creates space
          * in the viewport to facilitate scrolling back to the element.
          */
-        _inputFocus: function () {
-            this.$spacer.removeAttr('hidden');
-
+        _scrollToTarget: function () {
             Velocity.animate(this._scrollTarget(), 'scroll', {
                 container: this.$content[0],
                 offset: -1 * (this.$header.height() + parseInt(this.$content.css('padding-top'))),
@@ -453,7 +452,11 @@
             });
         },
 
-        _inputBlur: function () {
+        _showSpacer: function() {
+            this.$spacer.removeAttr('hidden');
+        },
+
+        _hideSpacer: function () {
             !this._activeElement().is(FOCUSABLE_INPUT_ELEMENTS) && this.$spacer.attr('hidden', '');
         },
 
