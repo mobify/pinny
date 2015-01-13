@@ -1,3 +1,6 @@
+1.2.1
+    - Fixed input disabling on underlying page when pinny is open
+    - Upgraded to latest versions of plugin, shade, and lockup
 1.2.0
     - Added `destroy` function
 1.1.2
