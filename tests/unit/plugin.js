@@ -182,6 +182,7 @@ define([
                     })
                     .closest('.pinny');
 
+
                 assert.equal($pinny.find('.pinny__header').length, 1);
                 assert.equal($pinny.find('.pinny__content').length, 1);
                 assert.include($pinny.find('.pinny__header').text(), 'Something');
@@ -261,6 +262,54 @@ define([
                 assert.include($pinny.find('.pinny__footer--custom').text(), 'Custom footer');
 
                 $element.pinny('destroy');
+            });
+        });
+
+        describe('external inputs', function() {
+            var $externalInput1 = $('#external-input1');
+            var $externalInput2 = $('#external-input2');
+            var $externalSelect = $('#external-select');
+
+            beforeEach(function() {
+                $externalInput1.removeAttr('tabindex');
+                $externalInput2.attr('tabindex', 10);
+                $externalSelect.removeAttr('tabindex');
+            });
+
+            it('sets tabindex of focusable elements that are outside of pinny to -1 when pinny is open', function(done) {
+                $element.pinny({
+                    effect: modalCenter,
+                    opened: function() {
+                        assert.equal($externalInput1.attr('tabindex'), -1);
+                        assert.equal($externalInput2.attr('tabindex'), -1);
+                        assert.equal($externalSelect.attr('tabindex'), -1);
+
+                        $element.pinny('close');
+                    },
+                    closed: function() {
+                        _destroy(done);
+                    }
+                });
+
+                $element.pinny('open');
+            });
+
+            it('restores tabindex of focusable elements that are outside of pinny to its original value when pinny is closed', function(done) {
+                $element.pinny({
+                    effect: modalCenter,
+                    opened: function() {
+                        $element.pinny('close');
+                    },
+                    closed: function() {
+                        assert.equal($('#external-input1').attr('tabindex'), null);
+                        assert.equal($('#external-input2').attr('tabindex'), 10);
+                        assert.equal($('#external-select').attr('tabindex'), null);
+
+                        _destroy(done);
+                    }
+                });
+
+                $element.pinny('open');
             });
         });
 

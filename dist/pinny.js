@@ -95,9 +95,21 @@
          */
         animation: {
             openComplete: function() {
+                this._focus();
+
+                // only run lockup if another pinny isn't
+                // open and locked the viewport up already
+                !this._activePinnies() && this.$pinny.lockup('lock');
+
                 this._trigger('opened');
             },
             closeComplete: function() {
+                this._resetFocus();
+
+                // only unlock if there isn't another pinny
+                // that requires the viewport to be locked
+                !this._activePinnies() && this.$pinny.lockup('unlock');
+
                 this._trigger('closed');
             }
         },
@@ -147,13 +159,9 @@
 
             this.options.shade && this.$shade.shade('open');
 
-            // only run lockup if another pinny isn't
-            // open and locked the viewport up already
-            !this._activePinnies() && this.$pinny.lockup('lock');
+            this.effect.open.call(this);
 
             this.$pinny.addClass(classes.OPENED);
-
-            this.effect.open.call(this);
         },
 
         close: function() {
@@ -168,10 +176,6 @@
             this.options.shade && this.$shade.shade('close');
 
             this.$pinny.removeClass(classes.OPENED);
-
-            // only unlock if there isn't another pinny
-            // that requires the viewport to be locked
-            !this._activePinnies() && this.$pinny.lockup('unlock');
 
             this.effect.close.call(this);
         },
@@ -222,11 +226,9 @@
                     container: this.options.container,
                     locked: function () {
                         plugin._handleKeyboardShown();
-                        plugin._focus();
                     },
                     unlocked: function () {
                         plugin._handleKeyboardHidden();
-                        plugin._resetFocus();
                     }
                 });
 
@@ -398,10 +400,10 @@
             if (this._activePinnies()) {
                 return;
             }
-
+            
             $('[data-orig-tabindex]').each(function(_, el) {
                 var $el = $(el);
-                var oldTabIndex = $el.attr('data-orig-tabindex');
+                var oldTabIndex = parseInt($el.attr('data-orig-tabindex'));
 
                 if (oldTabIndex) {
                     $el.attr('tabindex', oldTabIndex);
