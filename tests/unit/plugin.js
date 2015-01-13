@@ -154,14 +154,6 @@ define([
 
                 $pinny.pinny('destroy');
             });
-            //
-            //it('creates pinny in the container element', function() {
-            //    var $pinny = $element.pinny({ effect: modalCenter, container: '#pinny-container' });
-            //
-            //    assert.equal($pinny.closest('#pinny-container').length, 1);
-            //
-            //    $pinny.pinny('destroy');
-            //});
         });
 
         describe('creates a pinny with correct header', function() {
