@@ -17,6 +17,8 @@ define([
 
         afterEach(function() {
             $element.pinny('destroy');
+
+            $('.lockup__container').removeClass('lockup__container').children().unwrap();
         });
 
         it('opens correctly using modal-center', function() {

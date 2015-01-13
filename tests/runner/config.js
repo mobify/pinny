@@ -13,7 +13,7 @@ require.config({
         'sheet-left': 'dist/effect/sheet-left',
         'sheet-right': 'dist/effect/sheet-right',
         'sheet-top': 'dist/effect/sheet-top',
-        'plugin': 'bower_components/plugin/dist/plugin.min',
+        'plugin': 'bower_components/plugin/dist/plugin',
         'shade': 'bower_components/shade/dist/shade.min',
         'deckard': 'bower_components/deckard/dist/deckard.min',
         'lockup': 'bower_components/lockup/dist/lockup',

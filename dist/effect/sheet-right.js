@@ -44,7 +44,6 @@
                     plugin.$pinny,
                     'reverse',
                     {
-                        begin: plugin.animation.beginClose.bind(plugin),
                         easing: plugin.options.easing,
                         duration: plugin.options.duration,
                         display: 'none',
