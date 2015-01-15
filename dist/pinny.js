@@ -202,7 +202,7 @@
                 }
             });
 
-            this._fixIOSInputJumpOnFocus(this.$pinny);
+            this._fixIOSInputJumpOnFocus();
         },
 
         /**
@@ -473,7 +473,7 @@
         * In iOS, blur keyboard on orientationchange to avoid position fixed
         * input elements from shifting
         */
-        _fixIOSInputJumpOnFocus: function($pinny) {
+        _fixIOSInputJumpOnFocus: function() {
             if ($.os.ios) {
                 $(window).on('orientationchange', function(e) {
                     var $focusedElement = $(document.activeElement);
