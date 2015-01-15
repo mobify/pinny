@@ -94,18 +94,37 @@
          * Common animation callbacks used in the effect objects
          */
         animation: {
-            beginClose: function() {
-
-            },
             openComplete: function() {
-                this._trigger('opened');
-
+                this._disableExternalInputs();
                 this._focus();
+
+                // only run lockup if another pinny isn't
+                // open and locked the viewport up already
+                !this._activePinnies() && this.$pinny.lockup('lock');
+
+                this.$pinny
+                    .addClass(classes.OPENED)
+                    .attr('aria-hidden', 'false');
+
+                this.$container.attr('aria-hidden', 'true');
+
+                this._trigger('opened');
             },
             closeComplete: function() {
-                this._trigger('closed');
+                this.$pinny
+                    .removeClass(classes.OPENED)
+                    .attr('aria-hidden', 'true');
 
+                this._enableExternalInputs();
                 this._resetFocus();
+
+                // only unlock if there isn't another pinny
+                // that requires the viewport to be locked
+                !this._activePinnies() && this.$pinny.lockup('unlock');
+
+                this.$container.attr('aria-hidden', 'false');
+
+                this._trigger('closed');
             }
         },
 
@@ -129,6 +148,16 @@
             this._bindEvents();
         },
 
+        destroy: function() {
+            this.$pinny.lockup('destroy');
+            this.$pinny.shade('destroy');
+            this.$pinny.remove();
+
+            this.$element
+                .appendTo(document.body)
+                .removeData(this.name);
+        },
+
         toggle: function() {
             this[this.$pinny.hasClass(classes.OPENED) ? 'close' : 'open']();
         },
@@ -142,13 +171,9 @@
 
             bouncefix.add(classes.SCROLLABLE);
 
-            this.effect.open.call(this);
-
             this.options.shade && this.$shade.shade('open');
 
-            this.$pinny.addClass(classes.OPENED);
-
-            this.$pinny.lockup('lock');
+            this.effect.open.call(this);
         },
 
         close: function() {
@@ -160,13 +185,9 @@
 
             bouncefix.remove(classes.SCROLLABLE);
 
-            this.$pinny.removeClass(classes.OPENED);
-
             this.options.shade && this.$shade.shade('close');
 
             this.effect.close.call(this);
-
-            this.$pinny.lockup('unlock');
         },
 
         _isOpen: function() {
@@ -188,13 +209,13 @@
          Builds Pinny using the following structure:
 
          <section class="pinny">
-             <div class="pinny__wrapper">
-                 <header class="pinny__header">{header content}</header>
-                 <div class="pinny__content">
-                 {content}
-                 </div>
-                 <footer class="pinny__footer">{footer content}</footer>
-             </div>
+         <div class="pinny__wrapper">
+         <header class="pinny__header">{header content}</header>
+         <div class="pinny__content">
+         {content}
+         </div>
+         <footer class="pinny__footer">{footer content}</footer>
+         </div>
          </section>
          */
         _build: function() {
@@ -289,6 +310,13 @@
         },
 
         /**
+         * @returns {boolean} indicating if there are any active pinnies on the page
+         */
+        _activePinnies: function() {
+            return !!$('.' + classes.OPENED).length;
+        },
+
+        /**
          * Takes the coverage option and turns it into a effect value
          */
         _coverage: function(divisor) {
@@ -333,23 +361,11 @@
         _focus: function() {
             this.originalActiveElement = document.activeElement;
 
-            this._disableInputs();
-
-            this.$pinny.attr('aria-hidden', 'false');
-
             this.$pinny.children().first().focus();
-
-            this.$container.attr('aria-hidden', 'true');
         },
 
         _resetFocus: function() {
-            this._enableInputs();
-
-            this.$container.attr('aria-hidden', 'false');
-
-            this.$pinny.attr('aria-hidden', 'true');
-
-            this.originalActiveElement.focus();
+            this.originalActiveElement && this.originalActiveElement.focus();
         },
 
         /**
@@ -357,7 +373,12 @@
          * by disabling tabbing into all inputs outside of
          * pinny using a negative tabindex.
          */
-        _disableInputs: function() {
+        _disableExternalInputs: function() {
+            // If lockup is already locked don't try to disable inputs again
+            if (this.$pinny.lockup('isLocked')) {
+                return;
+            }
+
             var $focusableElements = $(FOCUSABLE_ELEMENTS).not(function() {
                 return $(this).closest('.pinny').length;
             });
@@ -367,20 +388,25 @@
                 var currentTabIndex = $el.attr('tabindex') || 0;
 
                 $el
-                    .data('tabindex', currentTabIndex)
+                    .attr('data-orig-tabindex', currentTabIndex)
                     .attr('tabindex', '-1');
             });
         },
 
         /**
-         * Reverses the above!!
+         * Re-enables tabbing in inputs not inside Pinny's content
          */
-        _enableInputs: function() {
-            var $disabledInputs = $('[data-pinny-tabindex]');
+        _enableExternalInputs: function() {
+            // At this point, this pinny has been closed and lockup has unlocked.
+            // If there are any other pinny's open we don't want to re-enable the
+            // inputs as they still require them to be disabled.
+            if (this._activePinnies()) {
+                return;
+            }
 
-            $disabledInputs.each(function(_, el) {
+            $('[data-orig-tabindex]').each(function(_, el) {
                 var $el = $(el);
-                var oldTabIndex = $el.data('tabindex');
+                var oldTabIndex = parseInt($el.attr('data-orig-tabindex'));
 
                 if (oldTabIndex) {
                     $el.attr('tabindex', oldTabIndex);
@@ -388,7 +414,7 @@
                     $el.removeAttr('tabindex');
                 }
 
-                $el.removeData('tabindex');
+                $el.removeAttr('data-orig-tabindex');
             });
         },
 
@@ -400,8 +426,13 @@
         _handleKeyboardShown: function() {
             if (iOS7orBelow) {
                 this.$pinny.find(FOCUSABLE_INPUT_ELEMENTS)
-                    .on(events.focus, this._inputFocus.bind(this))
-                    .on(events.blur, this._inputBlur.bind(this));
+                    .on(events.focus,
+                        function() {
+                            this._showSpacer();
+                            this._scrollToTarget();
+                        }.bind(this)
+                    )
+                    .on(events.blur, this._hideSpacer.bind(this));
             }
         },
 
@@ -414,13 +445,11 @@
         },
 
         /**
-         * In iOS7 or below, when inputs are focussed inside pinny, we show a
+         * In iOS7 or below, when inputs are focused inside pinny, we show a
          * spacer element at the bottom of pinny content so that it creates space
          * in the viewport to facilitate scrolling back to the element.
          */
-        _inputFocus: function () {
-            this.$spacer.removeAttr('hidden');
-
+        _scrollToTarget: function () {
             Velocity.animate(this._scrollTarget(), 'scroll', {
                 container: this.$content[0],
                 offset: -1 * (this.$header.height() + parseInt(this.$content.css('padding-top'))),
@@ -428,7 +457,11 @@
             });
         },
 
-        _inputBlur: function () {
+        _showSpacer: function() {
+            this.$spacer.removeAttr('hidden');
+        },
+
+        _hideSpacer: function () {
             !this._activeElement().is(FOCUSABLE_INPUT_ELEMENTS) && this.$spacer.attr('hidden', '');
         },
 

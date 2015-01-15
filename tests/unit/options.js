@@ -5,34 +5,25 @@ define([
     'pinny'
 ], function(fixture, $, modalCenter) {
     var Pinny;
-    var element;
+    var $element;
     var pinny;
 
     describe('Pinny options', function() {
         beforeEach(function() {
             Pinny = $.fn.pinny.Constructor;
-            element = $(fixture);
-        });
-
-        afterEach(function() {
-            if (element) {
-                element.remove();
-                element = null;
-            }
-
-            $('.pinny__container').removeClass('pinny__container');
+            $element = $(fixture);
         });
 
         describe('creates default options when no options parameter not used', function() {
             beforeEach(function() {
-                pinny = new Pinny(element, {
+                pinny = new Pinny($element, {
                     effect: modalCenter
                 });
             });
 
             it('throws with no effect defines effect', function() {
                 assert.throws(function() {
-                    pinny = new Pinny(element);
+                    pinny = new Pinny($element);
                 });
             });
 
@@ -80,49 +71,49 @@ define([
 
         describe('creates custom options when options parameter used', function() {
             it('correctly defines effect', function() {
-                pinny = new Pinny(element, { effect: modalCenter });
+                pinny = new Pinny($element, { effect: modalCenter });
 
                 assert.deepEqual(pinny.options.effect, modalCenter);
                 assert.isFunction(pinny.options.effect);
             });
 
             it('correctly defines custom header', function() {
-                pinny = new Pinny(element, { effect: modalCenter, structure: { header: '<header>Pinnay</header>' } });
+                pinny = new Pinny($element, { effect: modalCenter, structure: { header: '<header>Pinnay</header>' } });
 
                 assert.equal(pinny.options.structure.header, '<header>Pinnay</header>');
                 assert.isString(pinny.options.structure.header);
             });
 
             it('correctly defines custom footer', function() {
-                pinny = new Pinny(element, { effect: modalCenter, structure: { footer: '<footer>Stinky foot</footer>' } });
+                pinny = new Pinny($element, { effect: modalCenter, structure: { footer: '<footer>Stinky foot</footer>' } });
 
                 assert.equal(pinny.options.structure.footer, '<footer>Stinky foot</footer>');
                 assert.isString(pinny.options.structure.footer);
             });
 
             it('correctly defines zIndex of 5', function() {
-                pinny = new Pinny(element, { effect: modalCenter, zIndex: 5 });
+                pinny = new Pinny($element, { effect: modalCenter, zIndex: 5 });
 
                 assert.equal(pinny.options.zIndex, 5);
                 assert.isNumber(pinny.options.zIndex);
             });
 
             it('correctly defines coverage of 80%', function() {
-                pinny = new Pinny(element, { effect: modalCenter, coverage: '80%' });
+                pinny = new Pinny($element, { effect: modalCenter, coverage: '80%' });
 
                 assert.equal(pinny.options.coverage, '80%');
                 assert.isString(pinny.options.coverage);
             });
 
             it('correctly defines duration of 400', function() {
-                pinny = new Pinny(element, { effect: modalCenter, duration: 400 });
+                pinny = new Pinny($element, { effect: modalCenter, duration: 400 });
 
                 assert.equal(pinny.options.duration, 400);
                 assert.isNumber(pinny.options.duration);
             });
 
             it('correctly defines easing as ease-in-out', function() {
-                pinny = new Pinny(element, { effect: modalCenter, easing: 'ease-in-out'});
+                pinny = new Pinny($element, { effect: modalCenter, easing: 'ease-in-out'});
 
                 assert.equal(pinny.options.easing, 'ease-in-out');
                 assert.isString(pinny.options.easing);
@@ -132,7 +123,7 @@ define([
                 var open = function() {
                     console.log('I\'m open!')
                 };
-                pinny = new Pinny(element, { effect: modalCenter, open: open });
+                pinny = new Pinny($element, { effect: modalCenter, open: open });
 
                 assert.equal(pinny.options.open, open);
                 assert.isFunction(pinny.options.open);
@@ -142,7 +133,7 @@ define([
                 var open = function() {
                     console.log('Open!')
                 };
-                pinny = new Pinny(element, { effect: modalCenter, open: open });
+                pinny = new Pinny($element, { effect: modalCenter, open: open });
 
                 assert.equal(pinny.options.open, open);
                 assert.isFunction(pinny.options.open);
@@ -152,7 +143,7 @@ define([
                 var opened = function() {
                     console.log('Opened!')
                 };
-                pinny = new Pinny(element, { effect: modalCenter, opened: opened });
+                pinny = new Pinny($element, { effect: modalCenter, opened: opened });
 
                 assert.equal(pinny.options.opened, opened);
                 assert.isFunction(pinny.options.opened);
@@ -162,7 +153,7 @@ define([
                 var close = function() {
                     console.log('Close!')
                 };
-                pinny = new Pinny(element, { effect: modalCenter, close: close });
+                pinny = new Pinny($element, { effect: modalCenter, close: close });
 
                 assert.equal(pinny.options.close, close);
                 assert.isFunction(pinny.options.close);
@@ -172,14 +163,14 @@ define([
                 var closed = function() {
                     console.log('Closed!')
                 };
-                pinny = new Pinny(element, { effect: modalCenter, closed: closed });
+                pinny = new Pinny($element, { effect: modalCenter, closed: closed });
 
                 assert.equal(pinny.options.closed, closed);
                 assert.isFunction(pinny.options.closed);
             });
 
-            it('correctly defines the container element', function() {
-                pinny = new Pinny(element, { effect: modalCenter, container: '#pinny-container' });
+            it('correctly defines the container $element', function() {
+                pinny = new Pinny($element, { effect: modalCenter, container: '#pinny-container' });
 
                 assert.equal(pinny.options.container, '#pinny-container');
             });
