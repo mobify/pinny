@@ -474,9 +474,10 @@
         * input elements from shifting
         */
         _fixIOSInputJumpOnFocus: function() {
+            var _this = this;
             if ($.os.ios) {
                 $(window).on('orientationchange', function(e) {
-                    var $focusedElement = $(document.activeElement);
+                    var $focusedElement = _this._activeElement();
                     if ($focusedElement.parents('.' + classes.PINNY).length) {
                         $focusedElement.blur();
                     }
