@@ -30,7 +30,12 @@
   -webkit-flex: 1;
       -ms-flex: 1;
           flex: 1;
+  background: white;
   -webkit-overflow-scrolling: touch; }
 
 [hidden] {
   display: none !important; }
+
+.android .shade.shade--is-open {
+  right: -100% !important;
+  bottom: -100% !important; }
