@@ -111,7 +111,9 @@
 // -----
 //
 // Let shadow fill 100% of viewport background after rotation
-// on Android 4.3 (HTC, Samsung Galazy S3)
+// on Android 4.3 (HTC, Samsung Galazy S3).
+//
+// Use !important to overwrite inline position styles
 
 .shade {
     &.shade--is-open {
