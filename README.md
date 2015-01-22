@@ -532,7 +532,7 @@ Currently, form inputs and selects inside of Pinny have issues on iOS7 and under
   * `npm install -g bower` to install [Bower](http://bower.io/)
 
 
-##### In the project folder run:
+#### Running
 1. `npm install`
 1. `bower install`
 1. `grunt serve`
