@@ -223,7 +223,7 @@ default: `{
             footer: false
         }`
 
-Defines the structure to use for Pinny. Specifically, Pinny tries to build its own HTML structure if passed the default options. 
+Defines the structure to use for Pinny. Specifically, Pinny tries to build its own HTML structure if passed the default options.
 
 **If you want to have full control over the HTML of your Pinny, including the header, footer, and content section, set `structure: false`**. Setting `structure: false` will still allow the `close` event to be bound to any element that has the `pinny__close` class, allowing you to specify the element that should trigger closing your Pinny.
 
@@ -521,19 +521,33 @@ $pinny.pinny('close');
 
 Currently, form inputs and selects inside of Pinny have issues on iOS7 and under. This is due to not being able to lock scrolling without causing rendering issues as well as iOS attempting to scroll the page when the keyboard opens. Forms work but will cause some visual jumping.
 
-## Building a distribution
+## Contribution
 
 ### Requirements
-* [node.js 0.10.x/npm](http://nodejs.org/download/)
-* [Grunt](http://gruntjs.com/)
-    * Install with `npm install -g grunt-cli`
-* [Bower](http://bower.io/)
-    * Install with `npm install -g bower`
 
-### Steps
+* To run Pinny you need to run several npm commands. Npm is a NodeJS package manager. You can find installation package by following this link [node.js 0.10.x/npm](http://nodejs.org/download/)
+
+### Steps on the first run
+
+In the project folder Run:
+
+1. `npm install -g grunt-cli` to install [Grunt](http://gruntjs.com/)
+1. `npm install -g bower` to install [Bower](http://bower.io/)
+1. 'grunt serve' to serve Pinny locally on http://localhost:3000
+
+### Steps on the further runs
+
+In the project folder run:
+
 1. `npm install`
 1. `bower install`
-1. `grunt build`
+1. 'grunt serve'
+
+#### Building Variations:
+
+* `grunt build` to compile changes once
+* 'grunt serve' to run a server, compile changes and then watch for changes and compile them
+* 'grunt && grunt watch' to compile changes then watch for changes and compile them
 
 The `dist` directory will be populated with minified versions of the css and javascript files for distribution and use with whatever build system you might use. The `src` directory has our raw unminified Sass and Javascript files if you prefer to work with those.
 
