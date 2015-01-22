@@ -533,6 +533,8 @@ In the project folder run:
 
 1. `npm install -g grunt-cli` to install [Grunt](http://gruntjs.com/)
 1. `npm install -g bower` to install [Bower](http://bower.io/)
+1. `npm install`
+1. `bower install`
 1. `grunt serve` to serve Pinny locally on http://localhost:3000
 
 ### Steps on the further runs
