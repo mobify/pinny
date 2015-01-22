@@ -533,7 +533,7 @@ In the project folder Run:
 
 1. `npm install -g grunt-cli` to install [Grunt](http://gruntjs.com/)
 1. `npm install -g bower` to install [Bower](http://bower.io/)
-1. 'grunt serve' to serve Pinny locally on http://localhost:3000
+1. `grunt serve` to serve Pinny locally on http://localhost:3000
 
 ### Steps on the further runs
 
@@ -541,13 +541,13 @@ In the project folder run:
 
 1. `npm install`
 1. `bower install`
-1. 'grunt serve'
+1. `grunt serve`
 
 #### Building Variations:
 
 * `grunt build` to compile changes once
-* 'grunt serve' to run a server, compile changes and then watch for changes and compile them
-* 'grunt && grunt watch' to compile changes then watch for changes and compile them
+* `grunt serve` to run a server, compile changes and then watch for changes and compile them
+* `grunt && grunt watch` to compile changes then watch for changes and compile them
 
 The `dist` directory will be populated with minified versions of the css and javascript files for distribution and use with whatever build system you might use. The `src` directory has our raw unminified Sass and Javascript files if you prefer to work with those.
 
