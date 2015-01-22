@@ -525,25 +525,19 @@ Currently, form inputs and selects inside of Pinny have issues on iOS7 and under
 
 ### Requirements
 
-* To run Pinny you need to run several npm commands. Npm is a NodeJS package manager. You can find installation package by following this link [node.js 0.10.x/npm](http://nodejs.org/download/)
+* [node.js 0.10.x/npm](http://nodejs.org/download/)
+* [Grunt](http://gruntjs.com/)
+  * `npm install -g grunt-cli` to install
+* [Bower](http://bower.io/)
+  * `npm install -g bower` to install [Bower](http://bower.io/)
 
-### Steps on the first run
-
-In the project folder run:
-
-1. `npm install -g grunt-cli` to install [Grunt](http://gruntjs.com/)
-1. `npm install -g bower` to install [Bower](http://bower.io/)
-1. `npm install`
-1. `bower install`
-1. `grunt serve` to serve Pinny locally on http://localhost:3000
-
-### Steps on the further runs
 
 In the project folder run:
 
 1. `npm install`
 1. `bower install`
 1. `grunt serve`
+
 
 #### Building Variations:
 
