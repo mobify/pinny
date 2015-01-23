@@ -521,26 +521,26 @@ $pinny.pinny('close');
 
 Currently, form inputs and selects inside of Pinny have issues on iOS7 and under. This is due to not being able to lock scrolling without causing rendering issues as well as iOS attempting to scroll the page when the keyboard opens. Forms work but will cause some visual jumping.
 
-## Contribution
+## Working with components and utilities locally
 
 ### Requirements
 
 * [Node.js 0.10.x/npm](http://nodejs.org/download/)
 * [Grunt](http://gruntjs.com/)
-  * `npm install -g grunt-cli` to install
+  * Install with `npm install -g grunt-cli`
 * [Bower](http://bower.io/)
-  * `npm install -g bower` to install [Bower](http://bower.io/)
+  * Install with `npm install -g bower`
 
 
-### Running
+### Steps
 1. `npm install`
 1. `bower install`
 1. `grunt serve`
 
 
-##### Building Variations:
+##### Available Grunt Tasks:
 * `grunt build` to compile changes once
-* `grunt serve` to run a server, compile changes and then watch for changes and compile them
+* `grunt serve` to run a server, compile changes and then watch for changes and compile them. Use grunt serve to preview the site at localhost:3000
 * `grunt && grunt watch` to compile changes then watch for changes and compile them
 
 The `dist` directory will be populated with minified versions of the css and javascript files for distribution and use with whatever build system you might use. The `src` directory has our raw unminified Sass and Javascript files if you prefer to work with those.
