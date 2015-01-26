@@ -35,7 +35,3 @@
 
 [hidden] {
   display: none !important; }
-
-.android .shade.shade--is-open {
-  right: -100% !important;
-  bottom: -100% !important; }
