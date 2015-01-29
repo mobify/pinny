@@ -1,5 +1,4 @@
-
-require(['config'], function() {
+require(['config_parent'], function() {
     require([
         'require',
         'chai',
@@ -17,6 +16,7 @@ require(['config'], function() {
             ];
 
             require(tests, function() {
+
                 assert = chai.assert;
 
                 if (window.mochaPhantomJS) {
