@@ -12,7 +12,7 @@ require(['config_parent'], function() {
                 //'../../tests/unit/options.js',
                 //'../../tests/unit/events.js',
                 //'../../tests/unit/sheets.js'
-                '../../tests/unit/myTest.js'
+                '../../tests/unit/testHarnessTest.js'
             ];
 
             require(tests, function() {

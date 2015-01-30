@@ -1,5 +1,5 @@
 
-require(['config'], function() {
+require(['testHarnessConfig'], function() {
     require([
         'bouncefix',
         '$',
@@ -17,7 +17,7 @@ require(['config'], function() {
     ],
         function(
             bounceFix, 
-            $, 
+            $,
             velocity, 
             modalCenter, 
             sheetBottom, 

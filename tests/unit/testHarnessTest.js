@@ -1,8 +1,8 @@
 define([
     '$',
     'text!fixtures/pinny.html',
-    'mug'
-], function(_$, fixture, mug) {
+    'iframeTestHarness'
+], function(_$, fixture, iframeTestHarness) {
     var Pinny;
     var modalCenter;
     var $element;
@@ -11,13 +11,13 @@ define([
     describe('Pinny constructor', function() {
         beforeEach(function(done) {
 
-            var pour = function($, pinnyEffect, $frame) {
+            var suiteSetup = function($, pinnyEffect, $frame) {
                 Pinny = $.fn.pinny.Constructor;
                 modalCenter = pinnyEffect;
                 $element = $(fixture);
             };
 
-            mug.createMug(pour, done);
+            iframeTestHarness.setUp(suiteSetup, done);
         });
 
         it('creates a pinny instance', function() {
@@ -27,8 +27,6 @@ define([
             });
 
             assert.isDefined(pinny);
-
-            console.log('pinny is in: ', pinny.$doc, pinny.$body.attr('id'));
         });
 
         it('creates a pinny instance', function() {
@@ -38,8 +36,6 @@ define([
             });
 
             assert.isDefined(pinny);
-
-            console.log('pinny is in: ', pinny.$doc, pinny.$body.attr('id'));
         });
 
         it('creates a pinny instance', function() {
@@ -49,8 +45,6 @@ define([
             });
 
             assert.isDefined(pinny);
-
-            console.log('pinny is in: ', pinny.$doc, pinny.$body.attr('id'));
         });
     });
 });
