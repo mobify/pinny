@@ -5,6 +5,7 @@
             'plugin',
             'bouncefix',
             'velocity',
+            'positionfix',
             'lockup',
             'shade',
             'deckard'
@@ -13,7 +14,7 @@
         var framework = window.Zepto || window.jQuery;
         factory(framework, window.Plugin, window.bouncefix);
     }
-}(function($, Plugin, bouncefix, Velocity) {
+}(function($, Plugin, bouncefix, Velocity, positionfix) {
     var EFFECT_REQUIRED = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
     var FOCUSABLE_ELEMENTS = 'a[href], area[href], input, select, textarea, button, iframe, object, embed, [tabindex], [contenteditable]';
     var FOCUSABLE_INPUT_ELEMENTS = 'input, select, textarea';
@@ -170,6 +171,7 @@
             this._trigger('open');
 
             bouncefix.add(classes.SCROLLABLE);
+            positionfix.startWatch();
 
             this.options.shade && this.$shade.shade('open');
 
@@ -184,6 +186,7 @@
             this._trigger('close');
 
             bouncefix.remove(classes.SCROLLABLE);
+            positionfix.stopWatch();
 
             this.options.shade && this.$shade.shade('close');
 
