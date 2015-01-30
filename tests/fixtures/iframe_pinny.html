@@ -5,28 +5,6 @@
     <input id="external-input1" type="text"/>
     <input id="external-input2" type="text" tabindex="10"/>
     <select id="external-select"><option>1</option></select>
-    <!-- don't really need to run tests in the iframe...but we can -->
-    <div id="mocha"></div>
 
-	<script data-main="main" src="../../bower_components/requirejs/require.js"></script>
-    <script>
-        // 1. is there a "require ready"?
-        // 
-        // 2. why do i need a test to run first before $.fn.pinny gets set?
-        //
-        // 1
-        setTimeout(function() {
-            window.$ = $;
-
-            require(['modal-center'], function(modalCenter){
-                console.log('in define');
-                window.PinnyEffect = modalCenter;
-            });
-
-            // 1
-            setTimeout(function() {
-                parent.postMessage('load', '*');
-            }, 1000);
-        }, 500);
-    </script>
+	<script data-main="../runner/main" src="../../bower_components/requirejs/require.js"></script>
 </div>

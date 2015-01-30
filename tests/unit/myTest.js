@@ -1,8 +1,8 @@
 define([
-    'text!fixtures/iframe_pinny.html'
-    // 'modal-center'
-    // 'pinny'
-], function(fixture/*, modalCenter*/) {
+    '$',
+    'text!fixtures/pinny.html',
+    'mug'
+], function(_$, fixture, mug) {
     var Pinny;
     var modalCenter;
     var $element;
@@ -10,55 +10,47 @@ define([
 
     describe('Pinny constructor', function() {
         beforeEach(function(done) {
-            // var $iframe = $('<iframe>', {
-            //     id: 'abc',
-            //     src: '/tests/fixtures/iframe_pinny.html'
-            // });
-            // var $iframe = $(fixture);
-            // var $iframe = $('<iframe>');
-            // var $fixture = $(fixture);
-            // $('#iframe_container').append($iframe);
-            // $($iframe[0].contentDocument).find('body').append($fixture);
-            var iFrame = document.createElement('iframe');
-            var domain = location.origin;
-            document.body.appendChild(iFrame);
 
-            window.addEventListener('message', function() {
-                $ = iFrame.contentWindow.$;
-
+            var pour = function($, pinnyEffect, $frame) {
                 Pinny = $.fn.pinny.Constructor;
-                modalCenter = iFrame.contentWindow.PinnyEffect;
-                $element = $(fixture).find('#pinny-container');
-                // end beforeEach, start running tests
-                done();
-            });
+                modalCenter = pinnyEffect;
+                $element = $(fixture);
+            };
 
-            iFrame.contentDocument.write(fixture);
-
-            // Pinny = $.fn.pinny.Constructor;
-            // $element = $(fixture);
-
-            // when scripts finish loading, finish "beforeEach" and start running the tests
-            //
-            // iframe.contentWindow.addEventListener("load", function() {
-            //  $element = iframe.contentWindow.$('sel')
-            //  done();    
-            //})
-            //iframe.contenDocument.write(fixture);
-            //document.close();
-            //
+            mug.createMug(pour, done);
         });
 
         it('creates a pinny instance', function() {
+
             var pinny = new Pinny($element, {
                 effect: modalCenter
             });
 
             assert.isDefined(pinny);
 
-            console.log('pinny is in: ', pinny.$doc);
+            console.log('pinny is in: ', pinny.$doc, pinny.$body.attr('id'));
+        });
 
-            // pinny.destroy();
+        it('creates a pinny instance', function() {
+
+            var pinny = new Pinny($element, {
+                effect: modalCenter
+            });
+
+            assert.isDefined(pinny);
+
+            console.log('pinny is in: ', pinny.$doc, pinny.$body.attr('id'));
+        });
+
+        it('creates a pinny instance', function() {
+
+            var pinny = new Pinny($element, {
+                effect: modalCenter
+            });
+
+            assert.isDefined(pinny);
+
+            console.log('pinny is in: ', pinny.$doc, pinny.$body.attr('id'));
         });
     });
 });

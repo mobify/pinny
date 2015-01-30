@@ -1,27 +1,50 @@
 
 require(['config'], function() {
     require([
-        'require',
-        'chai',
-        'mocha'
+        'bouncefix',
+        '$',
+        'velocity',
+        'modal-center',
+        'sheet-bottom',
+        'sheet-left',
+        'sheet-right',
+        'sheet-top',
+        'plugin',
+        'shade',
+        'deckard',
+        'lockup',
+        'pinny'
     ],
-        function(require, chai, mocha) {
+        function(
+            bounceFix, 
+            $, 
+            velocity, 
+            modalCenter, 
+            sheetBottom, 
+            sheetLeft, 
+            sheetRight, 
+            sheetTop, 
+            plugin, 
+            shade, 
+            deckard, 
+            lockup, 
+            pinny) {
 
-            var tests = [
-                '../../tests/unit/constructor.js',
-                // '../../tests/unit/plugin.js',
-                //'../../tests/unit/options.js',
-                //'../../tests/unit/events.js',
-                //'../../tests/unit/sheets.js'
-            ];
+            window.modalCenter = modalCenter;
+            window.bounceFix = bounceFix;
+            window.$ = $; 
+            window.Velocity = velocity; 
+            window.modalCenter = modalCenter;
+            window.sheetBottom = sheetBottom;
+            window.sheetLeft = sheetLeft;
+            window.sheetRight = sheetRight;
+            window.sheetTop = sheetTop;
+            window.plugin = plugin;
+            window.shade = shade;
+            window.deckard = deckard;
+            window.lockup = lockup;
+            window.pinny = pinny;
 
-            require(tests, function() {
-                assert = chai.assert;
-
-                if (window.mochaPhantomJS) {
-                    return window.mochaPhantomJS.run();
-                }
-                mocha.run();
-            });
+            window.parent.postMessage('loaded', '*');
         });
 });
