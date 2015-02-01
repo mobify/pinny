@@ -309,7 +309,7 @@ define([
                     .pinny({
                         effect: modalCenter
                     });
-                
+
                 $pinny.pinny('destroy');
 
                 assert.equal($element.parent()[0], $element.closest('body')[0]);
