@@ -1,8 +1,8 @@
 define([
     '$',
     'text!fixtures/pinny.html',
-    'iframeTestHarness'
-], function(_$, fixture, iframeTestHarness) {
+    'iframe-fixture'
+], function(_$, fixture, iframeFixture) {
     var Pinny;
     var modalCenter;
     var $element;
@@ -11,13 +11,13 @@ define([
     describe('Pinny constructor', function() {
         beforeEach(function(done) {
 
-            var suiteSetup = function($, pinnyEffect, $frame) {
+            var setUp = function($, pinnyEffect) {
                 Pinny = $.fn.pinny.Constructor;
                 modalCenter = pinnyEffect;
                 $element = $(fixture);
             };
 
-            iframeTestHarness.setUp(suiteSetup, done);
+            iframeFixture.setUp('iframe-pinny', setUp, done);
         });
 
         it('creates a pinny instance', function() {

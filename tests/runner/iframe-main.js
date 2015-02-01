@@ -1,5 +1,5 @@
 
-require(['testHarnessConfig'], function() {
+require(['iframe-config'], function() {
     require([
         'bouncefix',
         '$',

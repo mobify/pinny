@@ -1,4 +1,4 @@
-require(['config_parent'], function() {
+require(['test-config'], function() {
     require([
         'require',
         'chai',
