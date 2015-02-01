@@ -15,9 +15,12 @@ define([
             $body.append($frame);
         }
 
+        // listen for messages from the loaded iframe
         $(window).one('message', function() {
             var frameWindow = $frame[0].contentWindow;
 
+            // once the iframe is loaded, call back to the parent,
+            // passing through the required dependencies
             suite(frameWindow.$, frameWindow.dependencies);
         });
     };
