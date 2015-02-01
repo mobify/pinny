@@ -18,7 +18,7 @@ define([
         $(window).one('message', function() {
             var frameWindow = $frame[0].contentWindow;
 
-            suite(frameWindow.$, frameWindow.modalCenter);
+            suite(frameWindow.$, frameWindow.dependencies);
         });
     };
 

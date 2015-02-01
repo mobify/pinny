@@ -1,24 +1,32 @@
 define([
-    'text!fixtures/pinny.html',
-    '$',
-    'modal-center',
-    'sheet-top',
-    'sheet-bottom',
-    'sheet-left',
-    'sheet-right',
-    'pinny'
-], function(fixture, $, modalCenter, sheetTop, sheetBottom, sheetLeft, sheetRight) {
+    'iframe-fixture',
+    'text!fixtures/pinny.html'
+], function(iframeFixture, fixture) {
+    var Pinny;
     var $element;
+    var modalCenter;
+    var sheetTop;
+    var sheetBottom;
+    var sheetLeft;
+    var sheetRight;
+    var $;
 
     describe('Pinny sheets', function() {
-        beforeEach(function() {
-            $element = $(fixture);
-        });
+        beforeEach(function(done) {
+            var setUp = function(iFrame$, dependencies) {
+                $ = iFrame$;
+                Pinny = $.fn.pinny.Constructor;
+                modalCenter = dependencies.modalCenter;
+                sheetTop = dependencies.sheetTop;
+                sheetBottom = dependencies.sheetBottom;
+                sheetRight = dependencies.sheetRight;
+                sheetLeft = dependencies.sheetLeft;
+                $element = $(fixture);
 
-        afterEach(function() {
-            $element.pinny('destroy');
+                done();
+            };
 
-            $('.lockup__container').removeClass('lockup__container').children().unwrap();
+            iframeFixture.setUp('iframe-pinny', setUp);
         });
 
         it('opens correctly using modal-center', function() {

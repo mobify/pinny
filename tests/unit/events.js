@@ -9,10 +9,10 @@ define([
 
     describe('Pinny events', function() {
         beforeEach(function(done) {
-            var setUp = function(iFrame$, pinnyEffect) {
+            var setUp = function(iFrame$, dependencies) {
                 $ = iFrame$;
                 Pinny = $.fn.pinny.Constructor;
-                modalCenter = pinnyEffect;
+                modalCenter = dependencies.modalCenter;
                 $element = $(fixture);
 
                 done();

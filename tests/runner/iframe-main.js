@@ -23,27 +23,21 @@ require(['iframe-config'], function() {
             sheetBottom, 
             sheetLeft, 
             sheetRight, 
-            sheetTop, 
-            plugin, 
-            shade, 
-            deckard, 
-            lockup, 
-            pinny) {
+            sheetTop) {
 
-            window.modalCenter = modalCenter;
-            window.bounceFix = bounceFix;
-            window.$ = $; 
-            window.Velocity = velocity; 
-            window.modalCenter = modalCenter;
-            window.sheetBottom = sheetBottom;
-            window.sheetLeft = sheetLeft;
-            window.sheetRight = sheetRight;
-            window.sheetTop = sheetTop;
-            window.plugin = plugin;
-            window.shade = shade;
-            window.deckard = deckard;
-            window.lockup = lockup;
-            window.pinny = pinny;
+            var dependencies = {};
+
+            dependencies.modalCenter = modalCenter;
+            dependencies.bounceFix = bounceFix;
+            dependencies.$ = $;
+            dependencies.Velocity = velocity;
+            dependencies.modalCenter = modalCenter;
+            dependencies.sheetBottom = sheetBottom;
+            dependencies.sheetLeft = sheetLeft;
+            dependencies.sheetRight = sheetRight;
+            dependencies.sheetTop = sheetTop;
+
+            window.dependencies = dependencies;
 
             window.parent.postMessage('loaded', '*');
         });

@@ -11,13 +11,11 @@ require(['test-config'], function() {
                 '../../tests/unit/plugin.js',
                 '../../tests/unit/options.js',
                 '../../tests/unit/events.js',
-                //'../../tests/unit/sheets.js'
-                //'../../tests/unit/testHarnessTest.js'
+                '../../tests/unit/sheets.js'
             ];
 
             require(tests, function() {
-
-                assert = chai.assert;
+                window.assert = chai.assert;
 
                 if (window.mochaPhantomJS) {
                     return window.mochaPhantomJS.run();
