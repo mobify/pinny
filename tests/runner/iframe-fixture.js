@@ -4,7 +4,7 @@ define([
 
     var $body = $(document.body);
 
-    var setUp = function(fixture, suite, done) {
+    var setUp = function(fixture, suite) {
         var $frame = $('<iframe />').attr('src', '/tests/fixtures/' + fixture + '.html');
 
         var $oldiFrame = $body.find('iframe');
@@ -19,7 +19,6 @@ define([
             var frameWindow = $frame[0].contentWindow;
 
             suite(frameWindow.$, frameWindow.modalCenter);
-            done();
         });
     };
 

@@ -7,12 +7,12 @@ require(['test-config'], function() {
         function(require, chai, mocha) {
 
             var tests = [
-                //'../../tests/unit/constructor.js',
-                // '../../tests/unit/plugin.js',
+                '../../tests/unit/constructor.js',
+                '../../tests/unit/plugin.js',
                 //'../../tests/unit/options.js',
-                //'../../tests/unit/events.js',
+                '../../tests/unit/events.js',
                 //'../../tests/unit/sheets.js'
-                '../../tests/unit/testHarnessTest.js'
+                //'../../tests/unit/testHarnessTest.js'
             ];
 
             require(tests, function() {
