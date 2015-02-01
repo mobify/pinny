@@ -2,6 +2,7 @@ require.config({
     baseUrl: '../../',
     paths: {
         'text': 'bower_components/requirejs-text/text',
+        'glob': 'node_modules/requirejs-glob/lib/glob',
         'fixtures': 'tests/fixtures',
         '$': 'lib/zeptojs/dist/zepto',
         'chai': 'node_modules/chai/chai',
@@ -18,5 +19,8 @@ require.config({
         '$': {
             exports: '$'
         }
+    },
+    glob: {
+        middlewarePathPrefix: '/'
     }
 });

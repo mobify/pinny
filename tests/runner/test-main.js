@@ -1,20 +1,11 @@
 require(['test-config'], function() {
     require([
-        'require',
-        'chai',
-        'mocha'
-    ],
+            'require',
+            'chai',
+            'mocha'
+        ],
         function(require, chai, mocha) {
-
-            var tests = [
-                '../../tests/unit/constructor.js',
-                '../../tests/unit/plugin.js',
-                '../../tests/unit/options.js',
-                '../../tests/unit/events.js',
-                '../../tests/unit/sheets.js'
-            ];
-
-            require(tests, function() {
+            require(['glob!tests/unit/*.js'], function() {
                 window.assert = chai.assert;
 
                 if (window.mochaPhantomJS) {
