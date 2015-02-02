@@ -4,7 +4,7 @@
     "type": "git",
     "url": "https://github.com/mobify/pinny.git"
   },
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "A mobile first content fly-in UI plugin",
   "devDependencies": {
     "chai": "~1.9.0",
