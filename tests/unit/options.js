@@ -1,7 +1,7 @@
 define([
-    'iframe-fixture',
+    'test-sandbox',
     'text!fixtures/pinny.html'
-], function(iframeFixture, fixture) {
+], function(testSandbox, fixture) {
     var Pinny;
     var pinny;
     var $element;
@@ -10,7 +10,7 @@ define([
 
     describe('Pinny options', function() {
         beforeEach(function(done) {
-            var setUp = function(iFrame$, dependencies) {
+            var setUpComplete = function(iFrame$, dependencies) {
                 $ = iFrame$;
                 Pinny = $.fn.pinny.Constructor;
                 modalCenter = dependencies.modalCenter;
@@ -19,7 +19,7 @@ define([
                 done();
             };
 
-            iframeFixture.setUp('iframe-pinny', setUp);
+            testSandbox.setUp('sandbox', setUpComplete);
         });
 
         describe('creates default options when no options parameter not used', function() {
