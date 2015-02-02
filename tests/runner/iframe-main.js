@@ -27,10 +27,7 @@ require(['iframe-config'], function() {
 
             var dependencies = {};
 
-            dependencies.modalCenter = modalCenter;
-            dependencies.bounceFix = bounceFix;
             dependencies.$ = $;
-            dependencies.Velocity = velocity;
             dependencies.modalCenter = modalCenter;
             dependencies.sheetBottom = sheetBottom;
             dependencies.sheetLeft = sheetLeft;
