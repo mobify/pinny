@@ -4,17 +4,17 @@
             '$',
             'plugin',
             'bouncefix',
+            'synthetic-resize',
             'velocity',
-            'positionfix',
             'lockup',
             'shade',
             'deckard'
         ], factory);
     } else {
         var framework = window.Zepto || window.jQuery;
-        factory(framework, window.Plugin, window.bouncefix);
+        factory(framework, window.Plugin, window.bouncefix, window.syntheticresize);
     }
-}(function($, Plugin, bouncefix, Velocity, positionfix) {
+}(function($, Plugin, bouncefix, SyntheticResize, Velocity) {
     var EFFECT_REQUIRED = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
     var FOCUSABLE_ELEMENTS = 'a[href], area[href], input, select, textarea, button, iframe, object, embed, [tabindex], [contenteditable]';
     var FOCUSABLE_INPUT_ELEMENTS = 'input, select, textarea';
@@ -59,7 +59,8 @@
     var events = {
         click: 'click.pinny',
         focus: 'focus.pinny',
-        blur: 'blur.pinny'
+        blur: 'blur.pinny',
+        resize: 'resize.pinny'
     };
 
     function Pinny(element, options) {
@@ -103,6 +104,8 @@
                 // open and locked the viewport up already
                 !this._activePinnies() && this.$pinny.lockup('lock');
 
+                SyntheticResize.startWatching();
+
                 this.$pinny
                     .addClass(classes.OPENED)
                     .attr('aria-hidden', 'false');
@@ -122,6 +125,7 @@
                 // only unlock if there isn't another pinny
                 // that requires the viewport to be locked
                 !this._activePinnies() && this.$pinny.lockup('unlock');
+                !this._activePinnies() && SyntheticResize.stopWatching();
 
                 this.$container.attr('aria-hidden', 'false');
 
@@ -154,6 +158,9 @@
             this.$pinny.shade('destroy');
             this.$pinny.remove();
 
+            SyntheticResize.destroy();
+            $(window).off(events.resize);
+
             this.$element
                 .appendTo(document.body)
                 .removeData(this.name);
@@ -171,7 +178,6 @@
             this._trigger('open');
 
             bouncefix.add(classes.SCROLLABLE);
-            positionfix.startWatch();
 
             this.options.shade && this.$shade.shade('open');
 
@@ -186,7 +192,6 @@
             this._trigger('close');
 
             bouncefix.remove(classes.SCROLLABLE);
-            positionfix.stopWatch();
 
             this.options.shade && this.$shade.shade('close');
 
@@ -198,12 +203,22 @@
         },
 
         _bindEvents: function() {
+            var container = this.$pinny;
+
             // Block scrolling on anything but pinny content
-            this.$pinny.on('touchmove', function(e) {
+            container.on('touchmove', function(e) {
                 if (!$(e.target).parents().hasClass(classes.CONTENT)) {
                     e.preventDefault();
                 }
             });
+
+            if ($.os.ios && $.os.major === 7) {
+                $(window).on(events.resize, function(e) {
+                    if (container.hasClass(classes.OPENED)) {
+                        window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
+                    }
+                });
+            }
         },
 
         /**

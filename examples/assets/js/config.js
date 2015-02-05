@@ -14,8 +14,8 @@ require.config({
         'shade': 'bower_components/shade/dist/shade.min',
         'lockup': 'bower_components/lockup/src/js/lockup',
         'deckard': 'bower_components/deckard/dist/deckard.min',
-        'pinny': 'src/js/pinny',
-        'positionfix': 'src/js/positionfix'
+        'synthetic-resize': 'bower_components/synthetic-resize/dist/synthetic-resize.min',
+        'pinny': 'src/js/pinny'
     },
     'shim': {
         '$': {

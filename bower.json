@@ -26,7 +26,8 @@
     "bouncefix.js": "~0.3.0",
     "shade": "~1.1.1",
     "lockup": "~1.1.1",
-    "deckard": "~1.0.0"
+    "deckard": "~1.0.0",
+    "synthetic-resize": "git@github.com:mobify/synthetic-resize.git#synthetic-resize"
   }
 }
 
