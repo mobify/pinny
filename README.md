@@ -538,10 +538,14 @@ Currently, form inputs and selects inside of Pinny have issues on iOS7 and under
 1. `grunt serve`
 
 
-##### Available Grunt Tasks:
-* `grunt build` to compile changes once
-* `grunt serve` to run a server, compile changes and then watch for changes and compile them. Use grunt serve to preview the site at localhost:3000
-* `grunt && grunt watch` to compile changes then watch for changes and compile them
+##### Grunt Tasks:
+* `grunt` or `grunt build` - compile changes once
+* `grunt watch` - watch for changes and compile them. To preview the site run webserver separately
+* `grunt serve` - run a server, compile changes and then watch for changes and compile them. Use grunt serve to preview the site at **localhost:3000**
+* `grunt release` - release a new version of Pinny by tagging it, bumping package.json, and publishing to npm. **Note**: this only works if you have access to release Pinny.
+* `grunt test` - run Pinny's test suite in your console
+* `grunt test_browser` - run a server that allows you to run pinny's test suite in your browser by browsing to **localhost:8888/tests/runner**
+
 
 The `dist` directory will be populated with minified versions of the css and javascript files for distribution and use with whatever build system you might use. The `src` directory has our raw unminified Sass and Javascript files if you prefer to work with those.
 
