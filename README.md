@@ -521,7 +521,7 @@ $pinny.pinny('close');
 
 Currently, form inputs and selects inside of Pinny have issues on iOS7 and under. This is due to not being able to lock scrolling without causing rendering issues as well as iOS attempting to scroll the page when the keyboard opens. Forms work but will cause some visual jumping.
 
-## Working with components and utilities locally
+## Working with Pinny locally
 
 ### Requirements
 
