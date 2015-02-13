@@ -1,32 +1,31 @@
 define([
-    'text!fixtures/pinny.html',
-    '$',
-    'modal-center',
-    'pinny'
-], function(fixture, $, modalCenter) {
+    'test-sandbox',
+    'text!fixtures/pinny.html'
+], function(testSandbox, fixture) {
+    var Pinny;
     var $element;
-
-    /**
-     * We need to delay destroying pinny until the animation is completed,
-     * so we delay the destruction until then.
-     */
-    var _destroy = function(done) {
-        setTimeout(function() {
-            $element.pinny('destroy');
-            done();
-        }, 500);
-    };
+    var modalCenter;
+    var $;
 
     describe('Pinny events', function() {
-        beforeEach(function() {
-            $element = $(fixture);
+        beforeEach(function(done) {
+            var setUpComplete = function(iFrame$, dependencies) {
+                $ = iFrame$;
+                Pinny = $.fn.pinny.Constructor;
+                modalCenter = dependencies.modalCenter;
+                $element = $(fixture);
+
+                done();
+            };
+
+            testSandbox.setUp('sandbox', setUpComplete);
         });
 
         it('fires the open event when pinny is opened', function(done) {
             $element.pinny({
                 effect: modalCenter,
                 open: function() {
-                    _destroy(done);
+                    done();
                 }
             });
 
@@ -37,7 +36,7 @@ define([
             $element.pinny({
                 effect: modalCenter,
                 opened: function() {
-                    _destroy(done);
+                    done();
                 }
             });
 
@@ -50,15 +49,15 @@ define([
                 effect: modalCenter,
                 open: function() {
                     openCount++;
+
+                    if (openCount == 2) {
+                        done();
+                    }
                 }
             });
 
             $element.pinny('open');
             $element.pinny('open');
-
-            _destroy(done);
-
-            assert.equal(openCount, 1);
         });
 
         it('fires the close event when pinny is closed', function(done) {
@@ -68,7 +67,7 @@ define([
                     $element.pinny('close');
                 },
                 close: function() {
-                    _destroy(done);
+                    done();
                 }
             });
 
@@ -82,7 +81,7 @@ define([
                     $element.pinny('close');
                 },
                 closed: function() {
-                    _destroy(done);
+                    done();
                 }
             });
 
@@ -104,7 +103,7 @@ define([
 
                         assert.equal(closeCount, 1);
 
-                        _destroy(done);
+                        done();
                     }, 1000);
 
                 },

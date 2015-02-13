@@ -1,17 +1,25 @@
 define([
-    'text!fixtures/pinny.html',
-    '$',
-    'modal-center',
-    'pinny'
-], function(fixture, $, modalCenter) {
+    'test-sandbox',
+    'text!fixtures/pinny.html'
+], function(testSandbox, fixture) {
     var Pinny;
-    var $element;
     var pinny;
+    var $element;
+    var modalCenter;
+    var $;
 
     describe('Pinny options', function() {
-        beforeEach(function() {
-            Pinny = $.fn.pinny.Constructor;
-            $element = $(fixture);
+        beforeEach(function(done) {
+            var setUpComplete = function(iFrame$, dependencies) {
+                $ = iFrame$;
+                Pinny = $.fn.pinny.Constructor;
+                modalCenter = dependencies.modalCenter;
+                $element = $(fixture);
+
+                done();
+            };
+
+            testSandbox.setUp('sandbox', setUpComplete);
         });
 
         describe('creates default options when no options parameter not used', function() {
