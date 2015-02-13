@@ -538,7 +538,7 @@ Currently, form inputs and selects inside of Pinny have issues on iOS7 and under
 1. `grunt serve`
 
 
-##### Grunt Tasks:
+### Grunt Tasks:
 * `grunt` or `grunt build` - compile changes once
 * `grunt watch` - watch for changes and compile them. To preview the site run webserver separately
 * `grunt serve` - run a server, compile changes and then watch for changes and compile them. Use grunt serve to preview the site at **localhost:3000**
