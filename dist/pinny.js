@@ -431,6 +431,10 @@
                         }.bind(this)
                     )
                     .on(events.blur, this._hideSpacer.bind(this));
+                // Issue 73: We should perform these actions in
+                //  addition to binding them
+                this._showSpacer();
+                this._scrollToTarget();
             }
         },
 
