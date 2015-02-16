@@ -167,6 +167,11 @@
                 return;
             }
 
+            if ($.os.ios && $.os.major >= 8) {
+                var scrollTop = $(window).scrollTop();
+                window.scrollTo(0, +scrollTop + 1);
+            }
+
             this._trigger('open');
 
             bouncefix.add(classes.SCROLLABLE);
