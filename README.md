@@ -79,7 +79,7 @@ define([
 
 Pinny requires very minimal markup. All Pinny needs is a div with your content and it will automatically transform into what we need.
 
-> To avoid any unwanted FOUT, decorate the content you will be passing to Pinny with the `hidden` attribute. We will remove that attribute when Pinny is initialized.
+> To avoid any unwanted FOUT, decorate the content you will be passing to Pinny with the `hidden` attribute. The `hidden` attribute will be removed when Pinny is initialized.
 
 For accessibility and functional purposes, Pinny will wrap all of your body content in a wrapping container. This could conflict with other plugins that alter your page's markup. If you're seeing issues, try initializing Pinny after your other plugins. If you want to specify your own wrapping container, add a class of `lockup__container` to the element. This element should be a root level element to be effective. You can also [pass Pinny a `container` parameter](https://github.com/mobify/pinny/tree/1.0-alpha#container).
 
@@ -539,12 +539,11 @@ Currently, form inputs and selects inside of Pinny have issues on iOS7 and under
 
 
 ### Grunt Tasks:
-* `grunt` or `grunt build` - compile changes once
-* `grunt watch` - watch for changes and compile them. To preview the site run webserver separately
-* `grunt serve` - run a server, compile changes and then watch for changes and compile them. Use grunt serve to preview the site at **localhost:3000**
-* `grunt release` - release a new version of Pinny by tagging it, bumping package.json, and publishing to npm. **Note**: this only works if you have access to release Pinny.
-* `grunt test` - run Pinny's test suite in your console
-* `grunt test_browser` - run a server that allows you to run pinny's test suite in your browser by browsing to **localhost:8888/tests/runner**
+* `grunt` or `grunt build` - builds a distributable release
+* `grunt watch` - watches for changes and builds when changes are detected. 
+* `grunt serve` - runs the server, building changes and then watching for changes. Use grunt serve to preview the site at **http://localhost:3000**
+* `grunt test` - runs Pinny's test suite in your console
+* `grunt test:browser` - runs a server that allows you to run pinny's test suite in your browser by browsing to **http://localhost:8888/tests/runner**
 
 
 The `dist` directory will be populated with minified versions of the css and javascript files for distribution and use with whatever build system you might use. The `src` directory has our raw unminified Sass and Javascript files if you prefer to work with those.
