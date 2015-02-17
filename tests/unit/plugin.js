@@ -26,13 +26,13 @@ define([
             it('defines pinny in Zepto', function() {
                 var pinny = $.fn.pinny;
 
-                assert.isDefined(pinny);
+                expect(pinny).to.be.defined;
             });
 
             it('defines pinny as a function', function() {
                 var pinny = $.fn.pinny;
 
-                assert.isFunction(pinny);
+                expect(pinny).to.be.a('function');
             });
         });
 
@@ -42,7 +42,7 @@ define([
                     effect: modalCenter
                 });
 
-                assert.isDefined($element.data('pinny'));
+                expect($element.data('pinny')).to.be.defined;
             });
 
             it('stores $element inside instance', function() {
@@ -50,13 +50,13 @@ define([
                     effect: modalCenter
                 });
 
-                assert.isDefined($element.data('pinny').$pinny);
+                expect($element.data('pinny').$pinny).to.be.defined;
             });
         });
 
         describe('invoking pinny methods before plugin is initialized', function() {
             it('throws when not initialized', function() {
-                assert.throws(function() { $element.pinny('open'); });
+                expect(function() { $element.pinny('open'); }).to.throw;
             });
         });
 
@@ -65,7 +65,7 @@ define([
                 $element.pinny({
                     effect: modalCenter,
                     opened: function() {
-                        assert.isTrue($element.closest('.pinny').hasClass('pinny--is-open'));
+                        expect($element.closest('.pinny').hasClass('pinny--is-open'));
 
                         done();
                     }
@@ -81,7 +81,7 @@ define([
                         $element.pinny('close');
                     },
                     closed: function() {
-                        assert.isFalse($element.closest('.pinny').hasClass('pinny--is-open'));
+                        expect($element.closest('.pinny').hasClass('pinny--is-open'));
 
                         done();
                     }
@@ -97,7 +97,7 @@ define([
                         $element.closest('.pinny').find('.pinny__close').trigger('click');
                     },
                     closed: function() {
-                        assert.isFalse($element.closest('.pinny').hasClass('pinny--is-open'));
+                        expect($element.closest('.pinny').hasClass('pinny--is-open')).to.be.false;
 
                         done();
                     }
@@ -109,7 +109,7 @@ define([
 
         describe('invoking plugin methods on uninitialized plugin', function() {
             it('throws for method calls that don\'t exist', function() {
-                assert.throws(function() {
+                expect(function() {
                     $element
                         .pinny({
                             effect: modalCenter
@@ -119,7 +119,7 @@ define([
             });
 
             it('throws when attempting to invoke private methods', function() {
-                assert.throws(function() {
+                expect(function() {
                     $element
                         .pinny({
                             effect: modalCenter
@@ -129,7 +129,7 @@ define([
             });
 
             it('throws when attempting to invoke methods that aren\'t functions', function() {
-                assert.throws(function() {
+                expect(function() {
                     $element
                         .pinny({
                             effect: modalCenter
@@ -143,7 +143,7 @@ define([
             it('creates pinny with the default container', function() {
                 var $pinny = $element.pinny({ effect: modalCenter });
 
-                assert.equal($pinny.closest('.lockup__container').length, 1);
+                expect($pinny.closest('.lockup__container').length).to.equal(1);
             });
         });
 
@@ -156,8 +156,8 @@ define([
                     }
                 });
 
-                assert.equal($pinny.find('.pinny__header').length, 1);
-                assert.equal($pinny.find('.pinny__content').length, 1);
+                expect($pinny.find('.pinny__header')).to.have.length(1);
+                expect($pinny.find('.pinny__content')).to.have.length(1);
             });
 
             it('creates the correct structure with header = "Something"', function() {
@@ -171,9 +171,9 @@ define([
                     .closest('.pinny');
 
 
-                assert.equal($pinny.find('.pinny__header').length, 1);
-                assert.equal($pinny.find('.pinny__content').length, 1);
-                assert.include($pinny.find('.pinny__header').text(), 'Something');
+                expect($pinny.find('.pinny__header')).to.have.length(1);
+                expect($pinny.find('.pinny__content')).to.have.length(1);
+                expect($pinny.find('.pinny__header').text()).to.contain('Something');
             });
 
             it('creates the correct structure with an HTML header', function() {
@@ -186,9 +186,9 @@ define([
                     })
                     .closest('.pinny');
 
-                assert.equal($pinny.find('.pinny__header').length, 1);
-                assert.equal($pinny.find('.pinny__header--custom').length, 1);
-                assert.include($pinny.find('.pinny__header--custom').text(), 'Custom header');
+                expect($pinny.find('.pinny__header')).to.have.length(1);
+                expect($pinny.find('.pinny__header--custom')).to.have.length(1);
+                expect($pinny.find('.pinny__header--custom').text()).to.contain('Custom header');
             });
         });
 
@@ -203,9 +203,9 @@ define([
                     }
                 });
 
-                assert.equal($pinny.find('.pinny__header').length, 1);
-                assert.equal($pinny.find('.pinny__content').length, 1);
-                assert.equal($pinny.find('.pinny__footer').length, 0);
+                expect($pinny.find('.pinny__header')).to.have.length(1);
+                expect($pinny.find('.pinny__content')).to.have.length(1);
+                expect($pinny.find('.pinny__footer')).to.have.length(0);
             });
 
             it('creates the correct structure with footer = "Footer"', function() {
@@ -219,10 +219,10 @@ define([
                     })
                     .closest('.pinny');
 
-                assert.equal($pinny.find('.pinny__header').length, 1);
-                assert.equal($pinny.find('.pinny__content').length, 1);
-                assert.equal($pinny.find('.pinny__footer').length, 1);
-                assert.include($pinny.find('.pinny__footer').text(), 'Footer');
+                expect($pinny.find('.pinny__header')).to.have.length(1);
+                expect($pinny.find('.pinny__content')).to.have.length(1);
+                expect($pinny.find('.pinny__footer')).to.have.length(1);
+                expect($pinny.find('.pinny__footer').text()).to.contain('Footer');
             });
 
             it('creates the correct structure with an HTML footer', function() {
@@ -236,9 +236,9 @@ define([
                     })
                     .closest('.pinny');
 
-                assert.equal($pinny.find('.pinny__header').length, 1);
-                assert.equal($pinny.find('.pinny__footer--custom').length, 1);
-                assert.include($pinny.find('.pinny__footer--custom').text(), 'Custom footer');
+                expect($pinny.find('.pinny__header')).to.have.length(1);
+                expect($pinny.find('.pinny__footer--custom')).to.have.length(1);
+                expect($pinny.find('.pinny__footer--custom').text()).to.contain('Custom footer');
             });
         });
 
@@ -257,9 +257,10 @@ define([
                 $element.pinny({
                     effect: modalCenter,
                     opened: function() {
-                        assert.equal($externalInput1.attr('tabindex'), -1);
-                        assert.equal($externalInput2.attr('tabindex'), -1);
-                        assert.equal($externalSelect.attr('tabindex'), -1);
+                        console.log($externalInput1.attr('tabindex'))
+                        expect(+$externalInput1.attr('tabindex')).to.equal(-1);
+                        expect(+$externalInput2.attr('tabindex')).to.equal(-1);
+                        expect(+$externalSelect.attr('tabindex')).to.equal(-1);
 
                         $element.pinny('close');
                     },
@@ -278,9 +279,9 @@ define([
                         $element.pinny('close');
                     },
                     closed: function() {
-                        assert.equal($('#external-input1').attr('tabindex'), null);
-                        assert.equal($('#external-input2').attr('tabindex'), 10);
-                        assert.equal($('#external-select').attr('tabindex'), null);
+                        expect($externalInput1.attr('tabindex')).to.be.null;
+                        expect(+$externalInput2.attr('tabindex')).to.equal(10);
+                        expect($externalSelect.attr('tabindex')).to.be.null;
 
                         done();
                     }
@@ -299,7 +300,7 @@ define([
 
                 $pinny.pinny('destroy');
 
-                assert.equal($element.parent()[0], $element.closest('body')[0]);
+                expect($element.parent()[0]).to.equal($element.closest('body')[0]);
             });
 
             it('removes all pinny structure when given a custom structure', function() {
@@ -312,7 +313,7 @@ define([
 
                 $pinny.pinny('destroy');
 
-                assert.equal($element.parent()[0], $element.closest('body')[0]);
+                expect($element.parent()[0]).to.equal($element.closest('body')[0]);
             });
         });
     });
