@@ -101,7 +101,7 @@ define([
                     setTimeout(function() {
                         $element.pinny('close');
 
-                        assert.equal(closeCount, 1);
+                        expect(closeCount).to.equal(1);
 
                         done();
                     }, 1000);

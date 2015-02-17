@@ -26,9 +26,7 @@ define([
                 effect: modalCenter
             });
 
-            assert.isDefined(pinny);
-
-            pinny.destroy();
+            expect(pinny).to.be.defined;
         });
     });
 });
