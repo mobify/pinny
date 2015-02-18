@@ -83,10 +83,13 @@
 // 1. `display: flex` is coming from `.pinny__wrapper`
 // 2. This allows the content to grow or shrink as necessary based on content
 //    and the header/footer
+// 3. Fills content background after rotation on Android 4.3 (HTC, Samsung Galaxy S3)
 
 .pinny__content {
     overflow: auto;
     flex: 1; // 1, 2
+
+    background: white; // 3
 
     -webkit-overflow-scrolling: touch;
 }
