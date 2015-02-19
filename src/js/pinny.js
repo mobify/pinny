@@ -81,6 +81,7 @@
         easing: 'swing',
         duration: 200,
         shade: {},
+        lockup: {},
         open: $.noop,
         opened: $.noop,
         close: $.noop,
@@ -100,7 +101,7 @@
 
                 // only run lockup if another pinny isn't
                 // open and locked the viewport up already
-                !this._activePinnies() && this.$pinny.lockup('lock');
+                !this._activePinnies() && this.options.lockup && this.$pinny.lockup('lock');
 
                 this.$pinny
                     .addClass(classes.OPENED)
@@ -120,7 +121,7 @@
 
                 // only unlock if there isn't another pinny
                 // that requires the viewport to be locked
-                !this._activePinnies() && this.$pinny.lockup('unlock');
+                !this._activePinnies() && this.options.lockup && this.$pinny.lockup('unlock');
 
                 this.$container.attr('aria-hidden', 'false');
 
