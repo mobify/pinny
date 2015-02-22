@@ -1,31 +1,39 @@
 define([
-    'text!fixtures/pinny.html',
-    '$',
-    'modal-center',
-    'sheet-top',
-    'sheet-bottom',
-    'sheet-left',
-    'sheet-right',
-    'pinny'
-], function(fixture, $, modalCenter, sheetTop, sheetBottom, sheetLeft, sheetRight) {
+    'test-sandbox',
+    'text!fixtures/pinny.html'
+], function(testSandbox, fixture) {
+    var Pinny;
     var $element;
+    var modalCenter;
+    var sheetTop;
+    var sheetBottom;
+    var sheetLeft;
+    var sheetRight;
+    var $;
 
     describe('Pinny sheets', function() {
-        beforeEach(function() {
-            $element = $(fixture);
-        });
+        beforeEach(function(done) {
+            var setUpComplete = function(iFrame$, dependencies) {
+                $ = iFrame$;
+                Pinny = $.fn.pinny.Constructor;
+                modalCenter = dependencies.modalCenter;
+                sheetTop = dependencies.sheetTop;
+                sheetBottom = dependencies.sheetBottom;
+                sheetRight = dependencies.sheetRight;
+                sheetLeft = dependencies.sheetLeft;
+                $element = $(fixture);
 
-        afterEach(function() {
-            $element.pinny('destroy');
+                done();
+            };
 
-            $('.lockup__container').removeClass('lockup__container').children().unwrap();
+            testSandbox.setUp('sandbox', setUpComplete);
         });
 
         it('opens correctly using modal-center', function() {
             var $pinny = $element.pinny({
                 effect: modalCenter,
                 opened: function() {
-                    assert.isTrue($pinny.closest('.pinny').hasClass('pinny--is-open'));
+                    expect($pinny.closest('.pinny').hasClass('pinny--is-open')).to.be.true;
                 }
             });
 
@@ -36,7 +44,7 @@ define([
             var $pinny = $element.pinny({
                 effect: sheetTop,
                 opened: function() {
-                    assert.isTrue($pinny.closest('.pinny').hasClass('pinny--is-open'));
+                    expect($pinny.closest('.pinny').hasClass('pinny--is-open')).to.be.true;
                 }
             });
 
@@ -47,7 +55,7 @@ define([
             var $pinny = $element.pinny({
                 effect: sheetBottom,
                 opened: function() {
-                    assert.isTrue($pinny.closest('.pinny').hasClass('pinny--is-open'));
+                    expect($pinny.closest('.pinny').hasClass('pinny--is-open')).to.be.true;
                 }
             });
 
@@ -58,7 +66,7 @@ define([
             var $pinny = $element.pinny({
                 effect: sheetLeft,
                 opened: function() {
-                    assert.isTrue($pinny.closest('.pinny').hasClass('pinny--is-open'));
+                    expect($pinny.closest('.pinny').hasClass('pinny--is-open')).to.be.true;
                 }
             });
 
@@ -69,7 +77,7 @@ define([
             var $pinny = $element.pinny({
                 effect: sheetRight,
                 opened: function() {
-                    assert.isTrue($pinny.closest('.pinny').hasClass('pinny--is-open'));
+                    expect($pinny.closest('.pinny').hasClass('pinny--is-open')).to.be.true;
                 }
             });
 

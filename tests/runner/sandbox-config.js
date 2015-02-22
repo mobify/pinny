@@ -17,7 +17,7 @@ require.config({
         'shade': 'bower_components/shade/dist/shade.min',
         'deckard': 'bower_components/deckard/dist/deckard.min',
         'lockup': 'bower_components/lockup/dist/lockup',
-        'synthetic-resize': 'bower_components/synthetic-resize/dist/synthetic-resize.min',
+        'event-polyfill': 'dist/utils/event-polyfil',
         'pinny': 'dist/pinny'
     },
     'shim': {

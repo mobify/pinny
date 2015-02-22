@@ -1,6 +1,6 @@
 {
   "name": "pinny",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "homepage": "https://github.com/mobify/pinny",
   "authors": [
     "Mobify <jobs@mobify.com>"
@@ -26,8 +26,7 @@
     "bouncefix.js": "~0.3.0",
     "shade": "~1.1.1",
     "lockup": "~1.1.1",
-    "deckard": "~1.0.0",
-    "synthetic-resize": "git@github.com:mobify/synthetic-resize.git#synthetic-resize"
+    "deckard": "~1.0.0"
   }
 }
 
