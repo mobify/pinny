@@ -33,6 +33,7 @@
     /* jshint ignore:end */
 
     var iOS7orBelow = $.os.ios && $.os.major <= 7;
+    var iOS8 = $.os.ios && $.os.major >= 8;
 
     var classes = {
         PINNY: 'pinny',
@@ -109,6 +110,15 @@
                 this.$container.attr('aria-hidden', 'true');
 
                 this._trigger('opened');
+
+                // CSOPS-1165: Fix broken Eddie Bauer Pinny for iOS8
+                //
+                // After forcing a scroll when opening on iOS8, we need to reset scrollTop
+                // after lockup has been locked
+
+                if (iOS8) {
+                    $(window).scrollTop(0);
+                }
             },
             closeComplete: function() {
                 this.$pinny
@@ -167,7 +177,11 @@
                 return;
             }
 
-            if ($.os.ios && $.os.major >= 8) {
+            // CSOPS-1165: Fix broken Eddie Bauer Pinny for iOS8
+            //
+            // On iOS8, Pinny could be initially broken unless the page scrolls for at least 1 pixel before opening
+            // By forcing a scroll, Pinny would be built and render properly
+            if (iOS8) {
                 var scrollTop = $(window).scrollTop();
                 window.scrollTo(0, +scrollTop + 1);
             }
