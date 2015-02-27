@@ -97,6 +97,7 @@
          */
         animation: {
             openComplete: function() {
+                var plugin = this;
                 this._disableExternalInputs();
                 this._focus();
 
@@ -105,8 +106,7 @@
                 !this._activePinnies() && this.$pinny.lockup('lock');
 
                 EventPolyfill.on(events.resize, function() {
-                    console.log('resize event firing')
-                    window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
+                    plugin._repaint();
                 });
 
                 this.$pinny
@@ -376,6 +376,10 @@
 
             $header
                 .attr('id', headerID);
+        },
+
+        _repaint: function() {
+            window.scrollTo(document.body.scrollLeft, document.body.scrollTop + 1);
         },
 
         _focus: function() {

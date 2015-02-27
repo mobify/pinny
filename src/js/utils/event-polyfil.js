@@ -15,55 +15,73 @@
         this.event = event;
         this.callback = callback;
         this.interval = 1000;
+        this.polling = false;
         this.iOS7 = $.os.ios && $.os.major === 7;
         this.$window = $(window);
-        this.previousHeight = this.$window.height();
-        this.previousOrientation = this.getOrientation();
-
-        this.iOS7 && this.start();
-
-        this.$window.on(this.event, this.fn);
     };
 
-    EventPolyfill.prototype.start = function() {
+    /**
+     * Binds window resize and, for iOS7 devices where the resize event doesn't fire,
+     * starts the resize polling that detects when resize is triggered.
+     * @private
+     */
+    EventPolyfill.prototype._start = function() {
         var self = this;
 
-        (function pollForResize() {
-            self.timer = setTimeout(function() {
-                var currentHeight = self.$window.height();
-                var currentOrientation = self.getOrientation();
+        this.$window.on(this.event, function() {
+            self.callback();
+        });
 
-                if (self.previousOrientation === currentOrientation && Math.abs(self.previousHeight - currentHeight) > 10) {
-                    console.log('triggering resize event')
-                    self.previousHeight = currentHeight;
-                    self.$window.trigger(self.event);
-                } else {
-                    self.previousOrientation = currentOrientation;
+        if (this.iOS7) {
+            this.polling = true;
+            this.previousHeight = this.$window.height();
+            this.previousOrientation = this._getOrientation();
+
+            (function pollForResize() {
+                if (self.polling) {
+                    self.timer = setTimeout(function() {
+                        var currentHeight = self.$window.height();
+                        var currentOrientation = self._getOrientation();
+
+                        // if we're still in the same orientation as the last time we polled, and if the window has changed height,
+                        // fire the callback! The height should have changed significantly, i.e. the address bar popped up.
+                        if (self.previousOrientation === currentOrientation && Math.abs(self.previousHeight - currentHeight) > 10) {
+                            self.callback();
+                        } else {
+                            self.previousOrientation = currentOrientation;
+                        }
+
+                        self.previousHeight = currentHeight;
+                        pollForResize();
+                    }, self.interval);
                 }
+            })();
+        }
 
-                pollForResize();
-            }, self.interval);
-        })();
     };
 
-    EventPolyfill.prototype.stop = function() {
-        this.iOS7 && clearTimeout(this.timer);
+    /**
+     * Unbinds the resize event and, for iOS7 devices, stops the resize polling.
+     * @private
+     */
+    EventPolyfill.prototype._stop = function() {
+        this.iOS7 && (this.polling = false);
 
         this.$window.off(this.event);
     };
 
-    EventPolyfill.prototype.getOrientation = function() {
+    EventPolyfill.prototype._getOrientation = function() {
         return $.orientation.portrait ? 'portrait' : 'landscape';
     };
 
     EventPolyfill.on = function(event, fn) {
-        if (!instance) {
-            instance = new EventPolyfill(event, fn);
-        }
+        !instance && (instance = new EventPolyfill(event, fn));
+
+        instance._start();
     };
 
     EventPolyfill.off = function() {
-        instance && instance.stop();
+        instance && instance._stop();
     };
 
     return EventPolyfill;
