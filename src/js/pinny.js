@@ -215,14 +215,6 @@
                     e.preventDefault();
                 }
             });
-
-            if ($.os.ios && $.os.major === 7) {
-                $(window).on(events.resize, function(e) {
-                    if (container.hasClass(classes.OPENED)) {
-                        window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
-                    }
-                });
-            }
         },
 
         /**

@@ -67,7 +67,7 @@
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
     }
 
-    Pinny.VERSION = '1.2.2';
+    Pinny.VERSION = '2.0.0';
 
     Pinny.DEFAULTS = {
         effect: null,
@@ -215,14 +215,6 @@
                     e.preventDefault();
                 }
             });
-
-            if ($.os.ios && $.os.major === 7) {
-                $(window).on(events.resize, function(e) {
-                    if (container.hasClass(classes.OPENED)) {
-                        window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
-                    }
-                });
-            }
         },
 
         /**
