@@ -1,3 +1,5 @@
+2.0.2
+    - Fix for issue #73 - On iOS 7 first input focus does not invoke _scrollToTarget() correctly
 2.0.1
     - Fix for issue #63 - pinny gets distored when software keyboard is active and orientation changes
 2.0.0
