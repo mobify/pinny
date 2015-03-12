@@ -58,13 +58,11 @@
         FOOTER: '{0}'
     };
 
-    var events = {
-        click: 'click.pinny',
-        focus: 'focus.pinny',
-        blur: 'blur.pinny',
-        resize: 'resize.pinny',
-        orientationchange: 'orientationchange.pinny'
-    };
+    var events = {};
+
+    $.each(['click', 'focus', 'blur', 'resize', 'orientationchange'], function(_, event) {
+        events[event] = event + '.pinny';
+    });
 
     function Pinny(element, options) {
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);

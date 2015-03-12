@@ -115,7 +115,7 @@ define([
                             effect: modalCenter
                         })
                         .pinny('noMethod');
-                });
+                }).to.throw;
             });
 
             it('throws when attempting to invoke private methods', function() {
@@ -125,7 +125,7 @@ define([
                             effect: modalCenter
                         })
                         .pinny('_init');
-                });
+                }).to.throw;
             });
 
             it('throws when attempting to invoke methods that aren\'t functions', function() {
@@ -135,7 +135,7 @@ define([
                             effect: modalCenter
                         })
                         .pinny('singleItemOpen');
-                });
+                }).to.throw;
             });
         });
 
@@ -257,7 +257,6 @@ define([
                 $element.pinny({
                     effect: modalCenter,
                     opened: function() {
-                        console.log($externalInput1.attr('tabindex'))
                         expect(+$externalInput1.attr('tabindex')).to.equal(-1);
                         expect(+$externalInput2.attr('tabindex')).to.equal(-1);
                         expect(+$externalSelect.attr('tabindex')).to.equal(-1);
