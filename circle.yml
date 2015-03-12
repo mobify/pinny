@@ -8,4 +8,5 @@ test:
         - bower cache clean
         - bower install
     override:
+        - grunt lint
         - grunt test 
