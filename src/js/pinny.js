@@ -8,7 +8,8 @@
             'velocity',
             'lockup',
             'shade',
-            'deckard'
+            'deckard',
+            'isChildOf'
         ], factory);
     } else {
         var framework = window.Zepto || window.jQuery;
@@ -60,7 +61,8 @@
         click: 'click.pinny',
         focus: 'focus.pinny',
         blur: 'blur.pinny',
-        resize: 'resize.pinny'
+        resize: 'resize.pinny',
+        orientationchange: 'orientationchange.pinny'
     };
 
     function Pinny(element, options) {
@@ -109,6 +111,10 @@
                     plugin._repaint();
                 });
 
+                if (!this._activePinnies() && $.os.ios && $.os.major === 7) {
+                    $(window).on(events.orientationchange, this._blurActiveElement.bind(this));
+                }
+
                 this.$pinny
                     .addClass(classes.OPENED)
                     .attr('aria-hidden', 'false');
@@ -130,6 +136,7 @@
                 if (!this._activePinnies()) {
                     this.$pinny.lockup('unlock');
                     EventPolyfill.off(events.resize);
+                    $(window).off(events.orientationchange);
                 }
 
                 this.$container.attr('aria-hidden', 'false');
@@ -207,6 +214,7 @@
         },
 
         _bindEvents: function() {
+            var plugin = this;
             var container = this.$pinny;
 
             // Block scrolling on anything but pinny content
@@ -215,8 +223,6 @@
                     e.preventDefault();
                 }
             });
-
-            this._fixIOSInputJumpOnFocus();
         },
 
         /**
@@ -397,9 +403,8 @@
                 return;
             }
 
-            var plugin = this;
             var $focusableElements = $(FOCUSABLE_ELEMENTS).not(function() {
-                return plugin._isWithin($(this), classes.PINNY);
+                return $(this).isChildOf('.' + classes.PINNY);
             });
 
             $focusableElements.each(function(_, el) {
@@ -488,24 +493,8 @@
             return $(document.activeElement);
         },
 
-        _isWithin: function($element, selector) {
-            return ($element.closest('.' + selector).length) ? true : false;
-        },
-
-        /*
-        * In iOS, blur keyboard on orientationchange to avoid position fixed
-        * input elements from shifting
-        */
-        _fixIOSInputJumpOnFocus: function() {
-            var plugin = this;
-            if ($.os.ios) {
-                $(window).on('orientationchange', function(e) {
-                    var $focusedElement = plugin._activeElement();
-                    if (plugin._isWithin($focusedElement, classes.PINNY)) {
-                        $focusedElement.blur();
-                    }
-                });
-            }
+        _blurActiveElement: function() {
+            this._activeElement().blur();
         },
 
         /**
