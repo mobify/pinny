@@ -1,3 +1,5 @@
+2.0.1
+    - Fix for issue #63 - pinny gets distored when software keyboard is active and orientation changes
 2.0.0
     - Fixing issue in iOS7 where triggering the address bar causes the cursor's position
       to be be outside of the focussed input field
