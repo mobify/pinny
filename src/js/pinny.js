@@ -111,7 +111,7 @@
                     plugin._repaint();
                 });
 
-                if (!this._activePinnies() && $.os.ios && $.os.major === 7) {
+                if (!this._activePinnies() && iOS7orBelow) {
                     $(window).on(events.orientationchange, this._blurActiveElement.bind(this));
                 }
 
