@@ -70,7 +70,7 @@
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
     }
 
-    Pinny.VERSION = '2.0.1';
+    Pinny.VERSION = '2.0.2';
 
     Pinny.DEFAULTS = {
         effect: null,
@@ -444,20 +444,22 @@
         },
 
         /**
-         * In iOS7 or below, when elements are focussed inside pinny
+         * In iOS7 or below, when elements are focused inside pinny
          * the keyboard obscures the input. We need to scroll back to
          * the element to keep it in view.
          */
         _handleKeyboardShown: function() {
             if (iOS7orBelow) {
+                var activate = function() {
+                    this._showSpacer();
+                    this._scrollToTarget();
+                };
+
                 this.$pinny.find(FOCUSABLE_INPUT_ELEMENTS)
-                    .on(events.focus,
-                    function() {
-                        this._showSpacer();
-                        this._scrollToTarget();
-                    }.bind(this)
-                )
+                    .on(events.focus, activate.bind(this))
                     .on(events.blur, this._hideSpacer.bind(this));
+
+                activate.call(this);
             }
         },
 
