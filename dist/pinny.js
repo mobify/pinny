@@ -8,7 +8,8 @@
             'velocity',
             'lockup',
             'shade',
-            'deckard'
+            'deckard',
+            'isChildOf'
         ], factory);
     } else {
         var framework = window.Zepto || window.jQuery;
@@ -33,6 +34,7 @@
     }
     /* jshint ignore:end */
 
+    var $window = $(window);
     var iOS7orBelow = $.os.ios && $.os.major <= 7;
 
     var classes = {
@@ -60,14 +62,15 @@
         click: 'click.pinny',
         focus: 'focus.pinny',
         blur: 'blur.pinny',
-        resize: 'resize.pinny'
+        resize: 'resize.pinny',
+        orientationchange: 'orientationchange.pinny'
     };
 
     function Pinny(element, options) {
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
     }
 
-    Pinny.VERSION = '2.0.0';
+    Pinny.VERSION = '2.0.1';
 
     Pinny.DEFAULTS = {
         effect: null,
@@ -109,6 +112,10 @@
                     plugin._repaint();
                 });
 
+                if (!this._activePinnies() && iOS7orBelow) {
+                    $window.on(events.orientationchange, this._blurActiveElement.bind(this));
+                }
+
                 this.$pinny
                     .addClass(classes.OPENED)
                     .attr('aria-hidden', 'false');
@@ -130,6 +137,7 @@
                 if (!this._activePinnies()) {
                     this.$pinny.lockup('unlock');
                     EventPolyfill.off(events.resize);
+                    $window.off(events.orientationchange);
                 }
 
                 this.$container.attr('aria-hidden', 'false');
@@ -207,6 +215,7 @@
         },
 
         _bindEvents: function() {
+            var plugin = this;
             var container = this.$pinny;
 
             // Block scrolling on anything but pinny content
@@ -396,7 +405,7 @@
             }
 
             var $focusableElements = $(FOCUSABLE_ELEMENTS).not(function() {
-                return $(this).closest('.pinny').length;
+                return $(this).isChildOf('.' + classes.PINNY);
             });
 
             $focusableElements.each(function(_, el) {
@@ -483,6 +492,10 @@
 
         _activeElement: function() {
             return $(document.activeElement);
+        },
+
+        _blurActiveElement: function() {
+            this._activeElement().blur();
         },
 
         /**
