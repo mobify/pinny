@@ -34,6 +34,7 @@
     }
     /* jshint ignore:end */
 
+    var $window = $(window);
     var iOS7orBelow = $.os.ios && $.os.major <= 7;
 
     var classes = {
@@ -112,7 +113,7 @@
                 });
 
                 if (!this._activePinnies() && iOS7orBelow) {
-                    $(window).on(events.orientationchange, this._blurActiveElement.bind(this));
+                    $window.on(events.orientationchange, this._blurActiveElement.bind(this));
                 }
 
                 this.$pinny
@@ -136,7 +137,7 @@
                 if (!this._activePinnies()) {
                     this.$pinny.lockup('unlock');
                     EventPolyfill.off(events.resize);
-                    $(window).off(events.orientationchange);
+                    $window.off(events.orientationchange);
                 }
 
                 this.$container.attr('aria-hidden', 'false');
