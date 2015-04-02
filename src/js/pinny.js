@@ -120,6 +120,8 @@
                     .addClass(classes.OPENED)
                     .attr('aria-hidden', 'false');
 
+                this.bouncefix = bouncefix;
+
                 bouncefix.add(classes.SCROLLABLE);
 
                 this.$container.attr('aria-hidden', 'true');
