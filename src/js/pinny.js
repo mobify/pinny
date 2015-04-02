@@ -120,6 +120,10 @@
                     .addClass(classes.OPENED)
                     .attr('aria-hidden', 'false');
 
+                this.bouncefix = bouncefix;
+
+                bouncefix.add(classes.SCROLLABLE);
+
                 this.$container.attr('aria-hidden', 'true');
 
                 this._trigger('opened');
@@ -139,6 +143,8 @@
                     EventPolyfill.off(events.resize);
                     $window.off(events.orientationchange);
                 }
+
+                bouncefix.remove(classes.SCROLLABLE);
 
                 this.$container.attr('aria-hidden', 'false');
 
@@ -189,8 +195,6 @@
 
             this._trigger('open');
 
-            bouncefix.add(classes.SCROLLABLE);
-
             this.options.shade && this.$shade.shade('open');
 
             this.effect.open.call(this);
@@ -202,8 +206,6 @@
             }
 
             this._trigger('close');
-
-            bouncefix.remove(classes.SCROLLABLE);
 
             this.options.shade && this.$shade.shade('close');
 
