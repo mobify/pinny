@@ -513,7 +513,7 @@
         _scrollTarget: function() {
             var $scrollTarget = this._activeElement();
 
-            if ($scrollTarget.is(FOCUSABLE_INPUT_ELEMENTS)) { return; }
+            if (!$scrollTarget.is(FOCUSABLE_INPUT_ELEMENTS)) { return; }
 
             var $activeElementParent = $scrollTarget.parent();
 
