@@ -106,7 +106,11 @@
 
                 // only run lockup if another pinny isn't
                 // open and locked the viewport up already
-                !this._activePinnies() && this.$pinny.lockup('lock');
+                if (this._activePinnies()) {
+                    this.$pinny.data('lockup')._trigger('locked');
+                } else {
+                    this.$pinny.lockup('lock');
+                }
 
                 EventPolyfill.on(events.resize, function() {
                     plugin._repaint();
@@ -134,7 +138,9 @@
 
                 // only unlock if there isn't another pinny
                 // that requires the viewport to be locked
-                if (!this._activePinnies()) {
+                if (this._activePinnies()) {
+                    this.$pinny.data('lockup')._trigger('unlocked');
+                } else {
                     this.$pinny.lockup('unlock');
                     EventPolyfill.off(events.resize);
                     $window.off(events.orientationchange);
