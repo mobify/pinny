@@ -477,7 +477,11 @@
          * in the viewport to facilitate scrolling back to the element.
          */
         _scrollToTarget: function() {
-            Velocity.animate(this._scrollTarget(), 'scroll', {
+            var $scrollTarget = this._scrollTarget();
+
+            if (!$scrollTarget) { return; }
+
+            Velocity.animate($scrollTarget, 'scroll', {
                 container: this.$content[0],
                 offset: -1 * (this.$header.height() + parseInt(this.$content.css('padding-top'))),
                 duration: this.options.scrollDuration
@@ -508,6 +512,9 @@
          */
         _scrollTarget: function() {
             var $scrollTarget = this._activeElement();
+
+            if ($scrollTarget.is(FOCUSABLE_INPUT_ELEMENTS)) { return; }
+
             var $activeElementParent = $scrollTarget.parent();
 
             while ($activeElementParent.css('position') === 'relative' && !$activeElementParent.hasClass(classes.CONTENT)) {
