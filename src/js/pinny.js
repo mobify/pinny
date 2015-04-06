@@ -450,16 +450,12 @@
          */
         _handleKeyboardShown: function() {
             if (iOS7orBelow) {
-                var activate = function() {
-                    this._showSpacer();
-                    this._scrollToTarget();
-                };
-
                 this.$pinny.find(FOCUSABLE_INPUT_ELEMENTS)
-                    .on(events.focus, activate.bind(this))
+                    .on(events.focus, function() {
+                        this._showSpacer();
+                        this._scrollToTarget();
+                    }.bind(this))
                     .on(events.blur, this._hideSpacer.bind(this));
-
-                activate.call(this);
             }
         },
 
