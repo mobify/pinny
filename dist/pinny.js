@@ -286,7 +286,6 @@
                     .addClass(classes.CONTENT)
                     .addClass(classes.SCROLLABLE)
                     .append(this.$element)
-                    .append(this.$spacer)
                     .appendTo($wrapper);
 
                 this._buildComponent('footer').appendTo($wrapper);
