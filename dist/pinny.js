@@ -18,7 +18,10 @@
 }(function($, Plugin, bouncefix, EventPolyfill, Velocity) {
     var EFFECT_REQUIRED = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
     var FOCUSABLE_ELEMENTS = 'a[href], area[href], input, select, textarea, button, iframe, object, embed, [tabindex], [contenteditable]';
-    var FOCUSABLE_INPUT_ELEMENTS = 'input, select, textarea';
+    var FOCUSABLE_INPUT_ELEMENTS =
+        'input[type="text"], input[type="email"], input[type="password"],' +
+        'input[type="tel"], input[type="search"], input[type="number"],' +
+        'select, textarea';
 
     /**
      * Function.prototype.bind polyfill required for < iOS6
