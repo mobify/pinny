@@ -38,7 +38,8 @@
     /* jshint ignore:end */
 
     var $window = $(window);
-    var iOS7orBelow = $.os.ios && $.os.major <= 7;
+    var needsSpacer = ($.os.ios && $.os.major <= 7) ||
+        ($.os.android && $.os.major <= 4);
 
     var classes = {
         PINNY: 'pinny',
@@ -119,7 +120,7 @@
                     plugin._repaint();
                 });
 
-                if (!this._activePinnies() && iOS7orBelow) {
+                if (!this._activePinnies() && needsSpacer) {
                     $window.on(events.orientationchange, this._blurActiveElement.bind(this));
                 }
 
@@ -452,12 +453,12 @@
         },
 
         /**
-         * In iOS7 or below, when elements are focused inside pinny
+         * In iOS7/Android 4 or below, when elements are focused inside pinny
          * the keyboard obscures the input. We need to scroll back to
          * the element to keep it in view.
          */
         _handleKeyboardShown: function() {
-            if (iOS7orBelow) {
+            if (needsSpacer) {
                 this.$pinny.find(FOCUSABLE_INPUT_ELEMENTS)
                     .on(events.focus, function() {
                         this._showSpacer();
@@ -468,7 +469,7 @@
         },
 
         _handleKeyboardHidden: function() {
-            if (iOS7orBelow) {
+            if (needsSpacer) {
                 this.$pinny.find(FOCUSABLE_INPUT_ELEMENTS)
                     .off(events.focus)
                     .off(events.blur);
@@ -476,7 +477,7 @@
         },
 
         /**
-         * In iOS7 or below, when inputs are focused inside pinny, we show a
+         * In iOS7/Android 4 or below, when inputs are focused inside pinny, we show a
          * spacer element at the bottom of pinny content so that it creates space
          * in the viewport to facilitate scrolling back to the element.
          */

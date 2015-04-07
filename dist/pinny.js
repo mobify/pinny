@@ -38,7 +38,8 @@
     /* jshint ignore:end */
 
     var $window = $(window);
-    var iOS7orBelow = $.os.ios && $.os.major <= 7;
+    var needsSpacer = ($.os.ios && $.os.major <= 7) ||
+        ($.os.android && $.os.major <= 4);
 
     var classes = {
         PINNY: 'pinny',
@@ -119,7 +120,7 @@
                     plugin._repaint();
                 });
 
-                if (!this._activePinnies() && iOS7orBelow) {
+                if (!this._activePinnies() && needsSpacer) {
                     $window.on(events.orientationchange, this._blurActiveElement.bind(this));
                 }
 
@@ -457,7 +458,7 @@
          * the element to keep it in view.
          */
         _handleKeyboardShown: function() {
-            if (iOS7orBelow) {
+            if (needsSpacer) {
                 this.$pinny.find(FOCUSABLE_INPUT_ELEMENTS)
                     .on(events.focus, function() {
                         this._showSpacer();
@@ -468,7 +469,7 @@
         },
 
         _handleKeyboardHidden: function() {
-            if (iOS7orBelow) {
+            if (needsSpacer) {
                 this.$pinny.find(FOCUSABLE_INPUT_ELEMENTS)
                     .off(events.focus)
                     .off(events.blur);
