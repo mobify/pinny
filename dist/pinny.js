@@ -460,9 +460,7 @@
         _handleKeyboardShown: function() {
             if (needsSpacer) {
                 this.$pinny.find(FOCUSABLE_INPUT_ELEMENTS)
-                    .on(events.focus, function() {
-                        this._showSpacer();
-                    }.bind(this))
+                    .on(events.focus, this._showSpacer.bind(this))
                     .on(events.blur, this._hideSpacer.bind(this));
             }
         },
