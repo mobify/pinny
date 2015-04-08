@@ -453,7 +453,7 @@
         },
 
         /**
-         * In iOS7 or below, when elements are focused inside pinny
+         * In iOS7/Android 4 or below, when elements are focused inside pinny
          * the keyboard obscures the input. We need to scroll back to
          * the element to keep it in view.
          */
@@ -462,7 +462,6 @@
                 this.$pinny.find(FOCUSABLE_INPUT_ELEMENTS)
                     .on(events.focus, function() {
                         this._showSpacer();
-                        this._scrollToTarget();
                     }.bind(this))
                     .on(events.blur, this._hideSpacer.bind(this));
             }
@@ -474,23 +473,6 @@
                     .off(events.focus)
                     .off(events.blur);
             }
-        },
-
-        /**
-         * In iOS7 or below, when inputs are focused inside pinny, we show a
-         * spacer element at the bottom of pinny content so that it creates space
-         * in the viewport to facilitate scrolling back to the element.
-         */
-        _scrollToTarget: function() {
-            var $scrollTarget = this._scrollTarget();
-
-            if (!$scrollTarget) { return; }
-
-            Velocity.animate($scrollTarget, 'scroll', {
-                container: this.$content[0],
-                offset: -1 * (this.$header.height() + parseInt(this.$content.css('padding-top'))),
-                duration: this.options.scrollDuration
-            });
         },
 
         _showSpacer: function() {
@@ -507,27 +489,6 @@
 
         _blurActiveElement: function() {
             this._activeElement().blur();
-        },
-
-        /**
-         * Returns the closest parent element that doesn't have relative positioning
-         * (within the pinny__content container). Relative positioning messes with
-         * Velocity's scroll, which prevents us from correctly scrolling back to active
-         * inputs in pinny__content.
-         */
-        _scrollTarget: function() {
-            var $scrollTarget = this._activeElement();
-
-            if (!$scrollTarget.is(FOCUSABLE_INPUT_ELEMENTS)) { return; }
-
-            var $activeElementParent = $scrollTarget.parent();
-
-            while ($activeElementParent.css('position') === 'relative' && !$activeElementParent.hasClass(classes.CONTENT)) {
-                $scrollTarget = $activeElementParent;
-                $activeElementParent = $scrollTarget.parent();
-            }
-
-            return $scrollTarget;
         }
     });
 
