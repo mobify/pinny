@@ -120,7 +120,7 @@
                     plugin._repaint();
                 });
 
-                if (!this._activePinnies() && needsSpacer) {
+                if (!this._activePinnies()) {
                     $window.on(events.orientationchange, this._blurActiveElement.bind(this));
                 }
 
