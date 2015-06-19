@@ -24,6 +24,8 @@
             });
 
         return {
+            openGesture: 'swiperight',
+            closeGesture: 'swipeleft',
             open: function() {
 
 

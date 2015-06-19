@@ -90,9 +90,7 @@
         scrollDuration: 50,
         spacerHeight: 300,
         swipeEnabled: true,
-        swipeOptions: {
-            openDirection: 'right'
-        }
+        swipeOptions: {}
     };
 
     Plugin.create('pinny', Pinny, {
@@ -233,15 +231,15 @@
                 this.hammer = new HammerJs(this.$container[0], this.swipeOptions);
 
                 // Only horizonal swiping is supported.
-                if (effect.openDirection) {
+                if (effect.openGesture) {
                     this.hammer
-                        .on(effect.openDirection, function () {
+                        .on(effect.openGesture, function () {
                             plugin.open();
                         });
                 }
-                if (effect.closeDirection) {
+                if (effect.closeGesture) {
                     this.hammer
-                        .on(effect.closeDirection, function () {
+                        .on(effect.closeGesture, function () {
                             plugin.close();
                         });
                 }
