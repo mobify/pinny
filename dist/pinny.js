@@ -314,25 +314,20 @@
             }
 
             if (this.options.swipeEnabled) {
-                var options = this.options.swipeOptions;
+                var effect = this.effect;
                 this.hammer = new HammerJs(this.$container[0], this.swipeOptions);
 
                 // Only horizonal swiping is supported.
-                if (options.openDirection && options.openDirection === 'right') {
+                if (effect.openDirection) {
                     this.hammer
-                        .on('swiperight', function () {
+                        .on(effect.openDirection, function () {
                             plugin.open();
-                        })
-                        .on('swipeleft', function () {
-                            plugin.close();
                         });
-                } else {
+                }
+                if (effect.closeDirection) {
                     this.hammer
-                        .on('swiperight', function () {
+                        .on(effect.closeDirection, function () {
                             plugin.close();
-                        })
-                        .on('swipeleft', function () {
-                            plugin.open();
                         });
                 }
 
