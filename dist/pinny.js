@@ -5,6 +5,7 @@
             'plugin',
             'bouncefix',
             'velocity',
+            'hammerjs',
             'lockup',
             'shade',
             'deckard'
@@ -13,7 +14,7 @@
         var framework = window.Zepto || window.jQuery;
         factory(framework, window.Plugin, window.bouncefix);
     }
-}(function($, Plugin, bouncefix, Velocity) {
+}(function($, Plugin, bouncefix, Velocity, HammerJs) {
     var EFFECT_REQUIRED = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
     var FOCUSABLE_ELEMENTS = 'a[href], area[href], input, select, textarea, button, iframe, object, embed, [tabindex], [contenteditable]';
     var FOCUSABLE_INPUT_ELEMENTS = 'input, select, textarea';
@@ -87,7 +88,11 @@
         close: $.noop,
         closed: $.noop,
         scrollDuration: 50,
-        spacerHeight: 300
+        spacerHeight: 300,
+        swipeEnabled: true,
+        swipeOptions: {
+            openDirection: 'right'
+        }
     };
 
     Plugin.create('pinny', Pinny, {
@@ -306,6 +311,22 @@
                         duration: this.options.duration
                     }
                 )));
+            }
+
+            if (this.options.swipeEnabled) {
+                this.hammer = new HammerJs(this.$container, this.swipeOptions);
+
+                // Only horizonal swiping is supported.
+                if (this.swipeOptions.openDirection && this.swipeOptions.openDirection === 'right') {
+                    this.hammer
+                        .on('swiperight', this.open)
+                        .on('swipeleft', this.close);
+                } else {
+                    this.hammer
+                        .on('swiperight', this.close)
+                        .on('swipeleft', this.open);
+                }
+
             }
         },
 

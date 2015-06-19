@@ -317,7 +317,7 @@
                 this.hammer = new HammerJs(this.$container, this.swipeOptions);
 
                 // Only horizonal swiping is supported.
-                if (this.swipeOptions.openDirection && this.swipeOptions.openDirection == 'right') {
+                if (this.swipeOptions.openDirection && this.swipeOptions.openDirection === 'right') {
                     this.hammer
                         .on('swiperight', this.open)
                         .on('swipeleft', this.close);
