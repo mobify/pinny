@@ -320,12 +320,20 @@
                 // Only horizonal swiping is supported.
                 if (options.openDirection && options.openDirection === 'right') {
                     this.hammer
-                        .on('swiperight', this.open)
-                        .on('swipeleft', this.close);
+                        .on('swiperight', function () {
+                            this.open();
+                        })
+                        .on('swipeleft', function () {
+                            this.close();
+                        });
                 } else {
                     this.hammer
-                        .on('swiperight', this.close)
-                        .on('swipeleft', this.open);
+                        .on('swiperight', function () {
+                            this.close();
+                        })
+                        .on('swipeleft', function () {
+                            this.open();
+                        });
                 }
 
             }
