@@ -321,18 +321,18 @@
                 if (options.openDirection && options.openDirection === 'right') {
                     this.hammer
                         .on('swiperight', function () {
-                            this.open();
+                            plugin.open();
                         })
                         .on('swipeleft', function () {
-                            this.close();
+                            plugin.close();
                         });
                 } else {
                     this.hammer
                         .on('swiperight', function () {
-                            this.close();
+                            plugin.close();
                         })
                         .on('swipeleft', function () {
-                            this.open();
+                            plugin.open();
                         });
                 }
 
