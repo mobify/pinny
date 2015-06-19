@@ -219,12 +219,34 @@
         },
 
         _bindEvents: function() {
+            var plugin = this;
+
             // Block scrolling on anything but pinny content
             this.$pinny.on('touchmove', function(e) {
                 if (!$(e.target).parents().hasClass(classes.CONTENT)) {
                     e.preventDefault();
                 }
             });
+
+            if (this.options.swipeEnabled) {
+                var effect = this.effect;
+                this.hammer = new HammerJs(this.$container[0], this.swipeOptions);
+
+                // Only horizonal swiping is supported.
+                if (effect.openDirection) {
+                    this.hammer
+                        .on(effect.openDirection, function () {
+                            plugin.open();
+                        });
+                }
+                if (effect.closeDirection) {
+                    this.hammer
+                        .on(effect.closeDirection, function () {
+                            plugin.close();
+                        });
+                }
+
+            }
         },
 
         /**
@@ -311,26 +333,6 @@
                         duration: this.options.duration
                     }
                 )));
-            }
-
-            if (this.options.swipeEnabled) {
-                var effect = this.effect;
-                this.hammer = new HammerJs(this.$container[0], this.swipeOptions);
-
-                // Only horizonal swiping is supported.
-                if (effect.openDirection) {
-                    this.hammer
-                        .on(effect.openDirection, function () {
-                            plugin.open();
-                        });
-                }
-                if (effect.closeDirection) {
-                    this.hammer
-                        .on(effect.closeDirection, function () {
-                            plugin.close();
-                        });
-                }
-
             }
         },
 
