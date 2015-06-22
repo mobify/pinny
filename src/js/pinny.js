@@ -283,9 +283,9 @@
                             plugin.$pinny.removeClass('pinny--is-opening');
                             plugin.$pinny.addClass('pinny--is-closing');
 
-                            if (plugin.$pinny.hasClass('pinny--is-opening')) {
+                            //if (plugin.$pinny.hasClass('pinny--is-opening')) {
                                 deltaP = 100 - deltaP
-                            }
+                            //}
 
                             plugin.close(deltaP + '%');
                         } else {
