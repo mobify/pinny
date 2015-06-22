@@ -230,7 +230,7 @@
             if (effect.openGesture) {
                 manager.on(effect.openGesture, function (e) {
                     ignoreSwipe = $(e.target).parents('.needstouch').length ||
-                                    $(e.target).parents('.pinny').length;
+                                    $(e.target).parents('.pinny.pinny--is-open').length;
                     if (!ignoreSwipe && typeof(cb) === 'function') {
                         plugin.open();
                     }
