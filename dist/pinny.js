@@ -116,6 +116,8 @@
 
                 this._trigger('opened');
 
+                this.$pinny.removeClass('pinny--is-opening');
+
                 // CSOPS-1165: Fix broken Eddie Bauer Pinny for iOS8
                 //
                 // After forcing a scroll when opening on iOS8, we need to reset scrollTop
@@ -140,6 +142,8 @@
                 this.$container.attr('aria-hidden', 'false');
 
                 this._trigger('closed');
+
+                this.$pinny.removeClass('pinny--is-closing');
             }
         },
 
@@ -200,8 +204,6 @@
             }
 
             this.effect.open.call(this, percentage);
-
-            this.$pinny.removeClass('pinny--is-opening');
         },
 
         close: function(percentage) {
@@ -216,10 +218,8 @@
 
                 this.options.shade && this.$shade.shade('close');
             }
-            
-            this.effect.close.call(this, percentage);
 
-            this.$pinny.removeClass('pinny--is-closing');
+            this.effect.close.call(this, percentage);
         },
 
         _isOpen: function() {
