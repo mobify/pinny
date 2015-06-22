@@ -257,10 +257,6 @@
                             plugin.$pinny.removeClass('pinny--is-closing');
                             plugin.$pinny.addClass('pinny--is-opening');
 
-                            if (plugin.$pinny.hasClass('pinny--is-opening')) {
-                                deltaP = 100 - deltaP
-                            }
-
                             plugin.open(deltaP);
                         } else {
                             plugin.open();
@@ -277,7 +273,7 @@
                                     $target.hasClass('.needstouch').length;
 
                     if (!ignoreSwipe) {
-                        var deltaP = -1 * Math.abs(e.deltaX) / plugin.$container.width() * 100;
+                        var deltaP = Math.abs(e.deltaX) / plugin.$container.width() * 100;
 
                         if (isInteractive) {
                             plugin.$pinny.removeClass('pinny--is-opening');

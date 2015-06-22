@@ -29,18 +29,22 @@
             closeGesture: 'swipeleft',
             interactiveOpenGesture: 'panright',
             interactiveCloseGesture: 'panleft',
-            open: function(percentage) {
+            open: function(percentage) { // Accepts a percentage value to open by 0 - 100
                 console.log('open: ', percentage);
+
                 if (percentage) {
-                    plugin.$pinny.css('-webkit-transform', 'translateX(-' + percentage + '%)');
-                    plugin.$pinny.css('transform', 'translateX(-' + percentage + '%)');
+                    // Translate to percentage open on screen
+                    percentage = -1 * (100 - percentage);
+
+                    plugin.$pinny.css('-webkit-transform', 'translateX(' + percentage + '%)');
+                    plugin.$pinny.css('transform', 'translateX(' + percentage + '%)');
                     plugin.$pinny.css('display', 'block');
                     lastKnownCoverage = percentage;
                 } else {
                     // Force feed the initial value
                     Velocity.animate(
                         plugin.$pinny,
-                        { translateX: lastKnownCoverage ? [0, '-' + lastKnownCoverage + '%'] : [0, '-100%'] },
+                        { translateX: lastKnownCoverage ? [0, lastKnownCoverage + '%'] : [0, '-100%'] },
                         {
                             easing: plugin.options.easing,
                             duration: plugin.options.duration,
@@ -53,7 +57,7 @@
                 }
 
             },
-            close: function(percentage) {
+            close: function(percentage) {  // Accepts a percentage value to close by 0 - 100
                 console.log('close: ', percentage);
                 if (percentage) {
                     plugin.$pinny.css('-webkit-transform', 'translateX(-' + percentage + '%)');
