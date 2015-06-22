@@ -89,7 +89,7 @@
         closed: $.noop,
         scrollDuration: 50,
         spacerHeight: 300,
-        swipeEnabled: false,
+        swipeEnabled: true,
         swipeOptions: {}
     };
 
