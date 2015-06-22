@@ -217,6 +217,7 @@
         },
 
         _buildTouchManager: function(el, gesture, cb) {
+            var plugin = this;
             var ignoreSwipe = false;
             var manager = new HammerJs.Manager(el, {
                 recognizers: [
@@ -227,7 +228,7 @@
             manager.on(gesture, function (e) {
                 ignoreSwipe = $(e.target).parents('.needstouch').length;
                 if (!ignoreSwipe) {
-                    cb.apply(this);
+                    cb.apply(plugin);
                 }
             });
         },
