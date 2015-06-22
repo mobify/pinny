@@ -227,20 +227,22 @@
                 ]
             });
 
+            // Open
             if (effect.openGesture) {
                 manager.on(effect.openGesture, function (e) {
                     ignoreSwipe = $(e.target).parents('.needstouch').length ||
                                     $(e.target).parents('.pinny.pinny--is-open').length;
-                    if (!ignoreSwipe && typeof(cb) === 'function') {
+                    if (!ignoreSwipe) {
                         plugin.open();
                     }
                 });
             }
 
+            // Close
             if (effect.closeGesture) {
                 manager.on(effect.closeGesture, function (e) {
                     ignoreSwipe = $(e.target).parents('.needstouch').length;
-                    if (!ignoreSwipe && typeof(cb) === 'function') {
+                    if (!ignoreSwipe) {
                         plugin.close();
                     }
                 });
