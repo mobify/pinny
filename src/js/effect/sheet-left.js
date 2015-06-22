@@ -56,10 +56,10 @@
             close: function(percentage) {
 
                 if (percentage) {
-                    plugin.$pinny.css('-webkit-transform', 'translateX(' + percentage + ')');
-                    plugin.$pinny.css('transform', 'translateX(' + percentage + ')');
-                    plugin.$pinny.css('display', 'block');
-                    lastKnownCoverage = percentage;
+                    plugin.$pinny.css('-webkit-transform', 'translateX(-' + percentage + ')');
+                    plugin.$pinny.css('transform', 'translateX(-' + percentage + ')');
+
+                    lastKnownCoverage = '-' + percentage;
                 } else {
                     Velocity.animate(
                         plugin.$pinny,
