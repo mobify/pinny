@@ -207,7 +207,7 @@
         },
 
         close: function(percentage) {
-            if (!this._isOpen()) {
+            if (!this._isOpen() && !this.$pinny.hasClass('pinny--is-closing')) {
                 return;
             }
 
