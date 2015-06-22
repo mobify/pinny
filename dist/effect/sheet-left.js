@@ -37,15 +37,6 @@
                     plugin.$pinny.css('transform', 'translateX(-' + percentage + ')');
                     plugin.$pinny.css('display', 'block');
                     lastKnownCoverage = '-' + percentage;
-
-                    // Velocity.animate(
-                    //     plugin.$pinny,
-                    //     {
-                    //         translateX: '-' + percentage,
-                    //         display: 'block'
-                    //     }
-                    // );
-
                 } else {
                     // Force feed the initial value
                     Velocity.animate(
@@ -64,16 +55,26 @@
 
             },
             close: function() {
-                Velocity.animate(
-                    plugin.$pinny,
-                    'reverse',
-                    {
-                        easing: plugin.options.easing,
-                        duration: plugin.options.duration,
-                        display: 'none',
-                        complete: plugin.animation.closeComplete.bind(plugin)
-                    }
-                );
+                
+                if (percentage) {
+                    plugin.$pinny.css('-webkit-transform', 'translateX(' + percentage + ')');
+                    plugin.$pinny.css('transform', 'translateX(' + percentage + ')');
+                    plugin.$pinny.css('display', 'block');
+                    lastKnownCoverage = percentage;
+                } else {
+                    Velocity.animate(
+                        plugin.$pinny,
+                        { translateX: lastKnownCoverage ? [lastKnownCoverage, 0] : ['-100%', 0] },
+                        {
+                            easing: plugin.options.easing,
+                            duration: plugin.options.duration,
+                            display: 'none',
+                            complete: plugin.animation.closeComplete.bind(plugin)
+                        }
+                    );
+
+                    lastKnownCoverage = '';
+                }
             }
         };
     };

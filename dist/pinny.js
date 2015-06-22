@@ -200,20 +200,26 @@
             }
 
             this.effect.open.call(this, percentage);
+
+            this.$pinny.removeClass('pinny--is-opening');
         },
 
-        close: function() {
+        close: function(percentage) {
             if (!this._isOpen()) {
                 return;
             }
 
-            this._trigger('close');
+            if (!percentage) {
+                this._trigger('close');
 
-            bouncefix.remove(classes.SCROLLABLE);
+                bouncefix.remove(classes.SCROLLABLE);
 
-            this.options.shade && this.$shade.shade('close');
+                this.options.shade && this.$shade.shade('close');
+            }
+            
+            this.effect.close.call(this, percentage);
 
-            this.effect.close.call(this);
+            this.$pinny.removeClass('pinny--is-closing');
         },
 
         _isOpen: function() {
@@ -248,6 +254,7 @@
                         var deltaP = 100 - (e.deltaX / plugin.$container.width() * 100);
 
                         if (isInteractive) {
+                            plugin.$pinny.removeClass('pinny--is-closing');
                             plugin.$pinny.addClass('pinny--is-opening');
                             console.log(deltaP + '%');
                             plugin.open(deltaP + '%');
@@ -266,7 +273,16 @@
                                     $target.hasClass('.needstouch').length;
 
                     if (!ignoreSwipe) {
-                        isInteractive ? plugin.close('-50%') : plugin.close();
+                        var deltaP = 100 - (e.deltaX / plugin.$container.width() * 100);
+
+                        if (isInteractive) {
+                            plugin.$pinny.removeClass('pinny--is-opening');
+                            plugin.$pinny.addClass('pinny--is-closing');
+                            console.log(deltaP + '%');
+                            plugin.close(deltaP + '%');
+                        } else {
+                            plugin.close();
+                        }
                     }
                 });
             }
@@ -276,6 +292,8 @@
                     // TODO: determine if user was opening or closing.
                     if (plugin.$pinny.hasClass('pinny--is-opening')) {
                         plugin.open();
+                    } else if (plugin.$pinny.hasClass('pinny--is-closing')) {
+                        plugin.close();
                     }
                 });
             }
