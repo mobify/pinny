@@ -249,6 +249,7 @@
 
                         if (isInteractive) {
                             plugin.$pinny.addClass('pinny--is-opening');
+                            console.log(deltaP + '%');
                             plugin.open(deltaP + '%');
                         } else {
                             plugin.open();
