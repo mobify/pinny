@@ -30,7 +30,7 @@
             interactiveOpenGesture: 'panright',
             interactiveCloseGesture: 'panleft',
             open: function(percentage) {
-
+                console.log('open: ', percentage);
                 if (percentage) {
                     plugin.$pinny.css('-webkit-transform', 'translateX(-' + percentage + ')');
                     plugin.$pinny.css('transform', 'translateX(-' + percentage + ')');
@@ -54,7 +54,7 @@
 
             },
             close: function(percentage) {
-
+                console.log('close: ', percentage);
                 if (percentage) {
                     plugin.$pinny.css('-webkit-transform', 'translateX(-' + percentage + ')');
                     plugin.$pinny.css('transform', 'translateX(-' + percentage + ')');

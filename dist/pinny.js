@@ -256,7 +256,7 @@
                         if (isInteractive) {
                             plugin.$pinny.removeClass('pinny--is-closing');
                             plugin.$pinny.addClass('pinny--is-opening');
-                            console.log(deltaP + '%');
+
                             plugin.open(deltaP + '%');
                         } else {
                             plugin.open();
@@ -278,7 +278,7 @@
                         if (isInteractive) {
                             plugin.$pinny.removeClass('pinny--is-opening');
                             plugin.$pinny.addClass('pinny--is-closing');
-                            console.log(deltaP + '%');
+
                             plugin.close(deltaP + '%');
                         } else {
                             plugin.close();
