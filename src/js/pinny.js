@@ -251,7 +251,7 @@
                                     $target.parents('.pinny.pinny--is-open').length;
 
                     if (!ignoreSwipe) {
-                        var deltaP = 100 - (e.deltaX / plugin.$container.width() * 100);
+                        var deltaP = 100 - (Math.abs(e.deltaX) / plugin.$container.width() * 100);
 
                         if (isInteractive) {
                             plugin.$pinny.removeClass('pinny--is-closing');

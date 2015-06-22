@@ -63,7 +63,7 @@
                 } else {
                     Velocity.animate(
                         plugin.$pinny,
-                        { translateX: lastKnownCoverage ? [lastKnownCoverage, 0] : ['-100%', 0] },
+                        { translateX: lastKnownCoverage ? ['-100%', lastKnownCoverage] : ['-100%', 0] },
                         {
                             easing: plugin.options.easing,
                             duration: plugin.options.duration,
