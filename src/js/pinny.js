@@ -182,7 +182,7 @@
         },
 
         open: function(percentage) {
-            if (this._isOpen()) {
+            if (this._isOpen() && !this.$pinny.hasClass('pinny--is-opening')) {
                 return;
             }
 
