@@ -216,6 +216,22 @@
             return this.$pinny.hasClass(classes.OPENED);
         },
 
+        _buildTouchManager: function(el, gesture, cb) {
+            var ignoreSwipe = false;
+            var manager = new HammerJs.Manager(el, {
+                recognizers: [
+                    [HammerJs.Swipe, { direction: HammerJs.DIRECTION_HORIZONTAL }],
+                ]
+            });
+
+            manager.on(gesture, function (e) {
+                ignoreSwipe = $(e.target).parents('.needstouch').length;
+                if (!ignoreSwipe) {
+                    cb.apply(this);
+                }
+            });
+        },
+
         _bindEvents: function() {
             var plugin = this;
 
@@ -228,22 +244,9 @@
 
             if (this.options.swipeEnabled) {
                 var effect = this.effect;
-                this.hammer = new HammerJs(this.$container[0], this.swipeOptions);
 
-                // Only horizonal swiping is supported.
-                if (effect.openGesture) {
-                    this.hammer
-                        .on(effect.openGesture, function () {
-                            plugin.open();
-                        });
-                }
-                if (effect.closeGesture) {
-                    this.hammer
-                        .on(effect.closeGesture, function () {
-                            plugin.close();
-                        });
-                }
-
+                this._buildTouchManager(this.$container[0], effect.openGesture, plugin.open);
+                this._buildTouchManager(this.$pinny[0], effect.closeGesture, plugin.close);
             }
         },
 
