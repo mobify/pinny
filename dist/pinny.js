@@ -230,8 +230,11 @@
             // Open
             if (effect.openGesture) {
                 manager.on(effect.openGesture, function (e) {
-                    ignoreSwipe = $(e.target).parents('.needstouch').length ||
-                                    $(e.target).parents('.pinny.pinny--is-open').length;
+                    var $target = $(e.target);
+                    ignoreSwipe = $target.parents('.needstouch').length ||
+                                    $target.hasClass('.needstouch').length ||
+                                    $target.parents('.pinny.pinny--is-open').length;
+
                     if (!ignoreSwipe) {
                         plugin.open();
                     }
@@ -241,7 +244,10 @@
             // Close
             if (effect.closeGesture) {
                 manager.on(effect.closeGesture, function (e) {
-                    ignoreSwipe = $(e.target).parents('.needstouch').length;
+                    var $target = $(e.target);
+                    ignoreSwipe = $target.parents('.needstouch').length ||
+                                    $target.hasClass('.needstouch').length;
+
                     if (!ignoreSwipe) {
                         plugin.close();
                     }
