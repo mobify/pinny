@@ -177,7 +177,7 @@
             this[this.$pinny.hasClass(classes.OPENED) ? 'close' : 'open']();
         },
 
-        open: function() {
+        open: function(percentage) {
             if (this._isOpen()) {
                 return;
             }
@@ -197,7 +197,7 @@
 
             this.options.shade && this.$shade.shade('open');
 
-            this.effect.open.call(this);
+            this.effect.open.call(this, percentage);
         },
 
         close: function() {
