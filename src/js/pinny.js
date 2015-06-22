@@ -228,7 +228,7 @@
             if (gesture) {
                 manager.on(gesture, function (e) {
                     ignoreSwipe = $(e.target).parents('.needstouch').length;
-                    if (!ignoreSwipe) {
+                    if (!ignoreSwipe && typeod(cb) === 'function') {
                         cb.apply(plugin);
                     }
                 });
