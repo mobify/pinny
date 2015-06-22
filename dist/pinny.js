@@ -182,20 +182,22 @@
                 return;
             }
 
-            // CSOPS-1165: Fix broken Eddie Bauer Pinny for iOS8
-            //
-            // On iOS8, Pinny could be initially broken unless the page scrolls for at least 1 pixel before opening
-            // By forcing a scroll, Pinny would be built and render properly
-            if (iOS8) {
-                var scrollTop = $(window).scrollTop();
-                window.scrollTo(0, +scrollTop + 1);
+            if (!percentage) {
+                // CSOPS-1165: Fix broken Eddie Bauer Pinny for iOS8
+                //
+                // On iOS8, Pinny could be initially broken unless the page scrolls for at least 1 pixel before opening
+                // By forcing a scroll, Pinny would be built and render properly
+                if (iOS8) {
+                    var scrollTop = $(window).scrollTop();
+                    window.scrollTo(0, +scrollTop + 1);
+                }
+
+                this._trigger('open');
+
+                bouncefix.add(classes.SCROLLABLE);
+
+                this.options.shade && this.$shade.shade('open');
             }
-
-            this._trigger('open');
-
-            bouncefix.add(classes.SCROLLABLE);
-
-            this.options.shade && this.$shade.shade('open');
 
             this.effect.open.call(this, percentage);
         },
@@ -264,6 +266,13 @@
                     if (!ignoreSwipe) {
                         isInteractive ? plugin.close('-50%') : plugin.close();
                     }
+                });
+            }
+
+            if (isInteractive) {
+                manager.on('panend', function (e) {
+                    // TODO: determine if user was opening or closing.
+                    plugin.open();
                 });
             }
         },
