@@ -32,7 +32,7 @@
                 //percentage = percentage || '-100%';
 
                 if (percentage) {
-                    plugin.$pinny.css('transform', 'translateX(' + percentage + ')');
+                    plugin.$pinny.css('transform', 'translateX(-' + percentage + ')');
                 } else {
                     // Force feed the initial value
                     Velocity.animate(
