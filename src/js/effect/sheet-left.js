@@ -29,19 +29,24 @@
             interactiveOpenGesture: 'panright',
             interactiveCloseGesture: 'panleft',
             open: function(percentage) {
-                percentage = percentage || '100%';
+                //percentage = percentage || '-100%';
 
-                // Force feed the initial value
-                Velocity.animate(
-                    plugin.$pinny,
-                    { translateX: [0, percentage] },
-                    {
-                        easing: plugin.options.easing,
-                        duration: plugin.options.duration,
-                        display: 'block',
-                        complete: plugin.animation.openComplete.bind(plugin)
-                    }
-                );
+                if (percentage) {
+                    plugin.$pinny.css('transform', 'translateX(' + percentage + ')');
+                } else {
+                    // Force feed the initial value
+                    Velocity.animate(
+                        plugin.$pinny,
+                        { translateX: [0, '-100%'] },
+                        {
+                            easing: plugin.options.easing,
+                            duration: plugin.options.duration,
+                            display: 'block',
+                            complete: plugin.animation.openComplete.bind(plugin)
+                        }
+                    );
+                }
+
             },
             close: function() {
                 Velocity.animate(

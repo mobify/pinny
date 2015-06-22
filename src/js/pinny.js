@@ -243,7 +243,8 @@
                                     $target.parents('.pinny.pinny--is-open').length;
 
                     if (!ignoreSwipe) {
-                        isInteractive ? plugin.open('-50%') : plugin.open();
+                        var deltaP = 100 - (e.deltaX / plugin.$container.width());
+                        isInteractive ? plugin.open('-' + deltaP + '%') : plugin.open();
                     }
                 });
             }
