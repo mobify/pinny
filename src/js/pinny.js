@@ -216,7 +216,9 @@
             return this.$pinny.hasClass(classes.OPENED);
         },
 
-        _buildTouchManager: function(el, gesture, cb) {
+        _buildTouchManager: function(el, effect) {
+
+            var gesture = effect.openGesture;
             var plugin = this;
             var ignoreSwipe = false;
             var manager = new HammerJs.Manager(el, {
@@ -225,11 +227,21 @@
                 ]
             });
 
-            if (gesture) {
-                manager.on(gesture, function (e) {
+            if (effect.openGesture) {
+                manager.on(effect.openGesture, function (e) {
+                    ignoreSwipe = $(e.target).parents('.needstouch').length ||
+                                    $(e.target).parents('.pinny').length;
+                    if (!ignoreSwipe && typeof(cb) === 'function') {
+                        plugin.open();
+                    }
+                });
+            }
+
+            if (effect.closeGesture) {
+                manager.on(effect.closeGesture, function (e) {
                     ignoreSwipe = $(e.target).parents('.needstouch').length;
                     if (!ignoreSwipe && typeof(cb) === 'function') {
-                        cb.apply(plugin);
+                        plugin.close();
                     }
                 });
             }
@@ -248,8 +260,7 @@
             if (this.options.swipeEnabled) {
                 var effect = this.effect;
 
-                this._buildTouchManager(this.$container[0], effect.openGesture, plugin.open);
-                this._buildTouchManager(this.$pinny[0], effect.closeGesture, plugin.close);
+                this._buildTouchManager(this.$container[0], effect);
             }
         },
 
