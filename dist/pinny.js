@@ -248,6 +248,7 @@
                         var deltaP = 100 - (e.deltaX / plugin.$container.width() * 100);
 
                         if (isInteractive) {
+                            plugin.$pinny.addClass('pinny--is-opening');
                             plugin.open(deltaP + '%');
                         } else {
                             plugin.open();
@@ -272,7 +273,9 @@
             if (isInteractive) {
                 manager.on('panend', function (e) {
                     // TODO: determine if user was opening or closing.
-                    plugin.open();
+                    if (plugin.$pinny.hasClass('pinny--is-opening')) {
+                        plugin.open();
+                    }
                 });
             }
         },
