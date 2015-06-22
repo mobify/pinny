@@ -26,6 +26,8 @@
         return {
             openGesture: 'swipeleft',
             closeGesture: 'swiperight',
+            interactiveOpenGesture: 'panleft',
+            interactiveCloseGesture: 'panright',
             open: function() {
 
 

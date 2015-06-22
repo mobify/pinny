@@ -90,7 +90,9 @@
         scrollDuration: 50,
         spacerHeight: 300,
         swipeEnabled: true,
-        swipeOptions: {}
+        swipeOptions: {
+            interactive: true
+        }
     };
 
     Plugin.create('pinny', Pinny, {
@@ -221,35 +223,40 @@
             var gesture = effect.openGesture;
             var plugin = this;
             var ignoreSwipe = false;
+            var isInteractive = plugin.options.swipeOptions.interactive;
+            var recognizer = isInteractive ? HammerJs.Pan : HammerJs.Swipe;
             var manager = new HammerJs.Manager(el, {
                 recognizers: [
-                    [HammerJs.Swipe, { direction: HammerJs.DIRECTION_HORIZONTAL }],
+                    [recognizer, { direction: HammerJs.DIRECTION_HORIZONTAL }],
                 ]
             });
 
+            var openGesture = isInteractive ? effect.interactiveOpenGesture : effect.openGesture;
+            var closeGesture = isInteractive ? effect.interactiveCloseGesture : effect.closeGesture;
+
             // Open
-            if (effect.openGesture) {
-                manager.on(effect.openGesture, function (e) {
+            if (openGesture) {
+                manager.on(openGesture, function (e) {
                     var $target = $(e.target);
                     ignoreSwipe = $target.parents('.needstouch').length ||
                                     $target.hasClass('.needstouch').length ||
                                     $target.parents('.pinny.pinny--is-open').length;
 
                     if (!ignoreSwipe) {
-                        plugin.open();
+                        isInteractive ? plugin.open('-50%') : plugin.open();
                     }
                 });
             }
 
             // Close
-            if (effect.closeGesture) {
-                manager.on(effect.closeGesture, function (e) {
+            if (closeGesture) {
+                manager.on(closeGesture, function (e) {
                     var $target = $(e.target);
                     ignoreSwipe = $target.parents('.needstouch').length ||
                                     $target.hasClass('.needstouch').length;
 
                     if (!ignoreSwipe) {
-                        plugin.close();
+                        isInteractive ? plugin.close('-50%') : plugin.close();
                     }
                 });
             }

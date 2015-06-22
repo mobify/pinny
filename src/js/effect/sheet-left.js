@@ -26,13 +26,15 @@
         return {
             openGesture: 'swiperight',
             closeGesture: 'swipeleft',
-            open: function() {
-
+            interactiveOpenGesture: 'panright',
+            interactiveCloseGesture: 'panleft',
+            open: function(percentage) {
+                percentage = percentage || '100%';
 
                 // Force feed the initial value
                 Velocity.animate(
                     plugin.$pinny,
-                    { translateX: [0, '-100%'] },
+                    { translateX: [0, percentage] },
                     {
                         easing: plugin.options.easing,
                         duration: plugin.options.duration,
