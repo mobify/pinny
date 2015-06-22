@@ -22,6 +22,7 @@
                 width: coverage ? 'auto' : this.options.coverage,
                 height: 'auto'
             });
+        var lastKnownCoverage;
 
         return {
             openGesture: 'swiperight',
@@ -32,14 +33,24 @@
                 //percentage = percentage || '-100%';
 
                 if (percentage) {
-                    plugin.$pinny.css('-webkit-transform', 'translateX(-' + percentage + ')');
-                    plugin.$pinny.css('transform', 'translateX(-' + percentage + ')');
-                    plugin.$pinny.css('display', 'block');
+                    // plugin.$pinny.css('-webkit-transform', 'translateX(-' + percentage + ')');
+                    // plugin.$pinny.css('transform', 'translateX(-' + percentage + ')');
+                    // plugin.$pinny.css('display', 'block');
+                    lastKnownCoverage = '-' + percentage;
+
+                    Velocity.animate(
+                        plugin.$pinny,
+                        {
+                            translateX: '-' + percentage,
+                            display: 'block'
+                        }
+                    );
+
                 } else {
                     // Force feed the initial value
                     Velocity.animate(
                         plugin.$pinny,
-                        { translateX: '-100%' },
+                        { translateX: lastKnownCoverage ? [0, lastKnownCoverage] : [0, '-100%'] },
                         {
                             easing: plugin.options.easing,
                             duration: plugin.options.duration,
