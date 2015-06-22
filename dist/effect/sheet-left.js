@@ -32,15 +32,15 @@
             open: function(percentage) {
                 console.log('open: ', percentage);
                 if (percentage) {
-                    plugin.$pinny.css('-webkit-transform', 'translateX(-' + percentage + ')');
-                    plugin.$pinny.css('transform', 'translateX(-' + percentage + ')');
+                    plugin.$pinny.css('-webkit-transform', 'translateX(-' + percentage + '%)');
+                    plugin.$pinny.css('transform', 'translateX(-' + percentage + '%)');
                     plugin.$pinny.css('display', 'block');
-                    lastKnownCoverage = '-' + percentage;
+                    lastKnownCoverage = percentage;
                 } else {
                     // Force feed the initial value
                     Velocity.animate(
                         plugin.$pinny,
-                        { translateX: lastKnownCoverage ? [0, lastKnownCoverage] : [0, '-100%'] },
+                        { translateX: lastKnownCoverage ? [0, '-' + lastKnownCoverage + '%'] : [0, '-100%'] },
                         {
                             easing: plugin.options.easing,
                             duration: plugin.options.duration,
@@ -56,14 +56,14 @@
             close: function(percentage) {
                 console.log('close: ', percentage);
                 if (percentage) {
-                    plugin.$pinny.css('-webkit-transform', 'translateX(-' + percentage + ')');
-                    plugin.$pinny.css('transform', 'translateX(-' + percentage + ')');
+                    plugin.$pinny.css('-webkit-transform', 'translateX(-' + percentage + '%)');
+                    plugin.$pinny.css('transform', 'translateX(-' + percentage + '%)');
 
-                    lastKnownCoverage = '-' + percentage;
+                    lastKnownCoverage = percentage;
                 } else {
                     Velocity.animate(
                         plugin.$pinny,
-                        { translateX: lastKnownCoverage ? ['-100%', lastKnownCoverage] : ['-100%', 0] },
+                        { translateX: lastKnownCoverage ? ['-100%', '-' + lastKnownCoverage + '%'] : ['-100%', 0] },
                         {
                             easing: plugin.options.easing,
                             duration: plugin.options.duration,

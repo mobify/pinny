@@ -251,7 +251,7 @@
                                     $target.parents('.pinny.pinny--is-open').length;
 
                     if (!ignoreSwipe) {
-                        var deltaP = Math.abs(e.deltaX) / plugin.$container.width() * 100;
+                        var deltaP = e.deltaX / plugin.$container.width() * 100;
 
                         if (isInteractive) {
                             plugin.$pinny.removeClass('pinny--is-closing');
@@ -261,7 +261,7 @@
                                 deltaP = 100 - deltaP
                             }
 
-                            plugin.open(deltaP + '%');
+                            plugin.open(deltaP);
                         } else {
                             plugin.open();
                         }
@@ -277,17 +277,13 @@
                                     $target.hasClass('.needstouch').length;
 
                     if (!ignoreSwipe) {
-                        var deltaP = Math.abs(e.deltaX) / plugin.$container.width() * 100;
+                        var deltaP = -1 * Math.abs(e.deltaX) / plugin.$container.width() * 100;
 
                         if (isInteractive) {
                             plugin.$pinny.removeClass('pinny--is-opening');
                             plugin.$pinny.addClass('pinny--is-closing');
 
-                            //if (plugin.$pinny.hasClass('pinny--is-opening')) {
-                                deltaP = 100 - deltaP
-                            //}
-
-                            plugin.close(deltaP + '%');
+                            plugin.close(deltaP);
                         } else {
                             plugin.close();
                         }
