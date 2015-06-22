@@ -39,7 +39,7 @@
                     // Force feed the initial value
                     Velocity.animate(
                         plugin.$pinny,
-                        { translateX: [0, '-100%'] },
+                        { translateX: '-100%' },
                         {
                             easing: plugin.options.easing,
                             duration: plugin.options.duration,
