@@ -182,9 +182,9 @@
         },
 
         open: function(percentage) {
-            if (this._isOpen() && !this.$pinny.hasClass('pinny--is-opening')) {
-                return;
-            }
+            // if (this._isOpen() && !this.$pinny.hasClass('pinny--is-opening')) {
+            //     return;
+            // }
 
             if (!percentage) {
                 // CSOPS-1165: Fix broken Eddie Bauer Pinny for iOS8
@@ -207,9 +207,9 @@
         },
 
         close: function(percentage) {
-            if (!this._isOpen() && !this.$pinny.hasClass('pinny--is-closing')) {
-                return;
-            }
+            // if (!this._isOpen() && !this.$pinny.hasClass('pinny--is-closing')) {
+            //     return;
+            // }
 
             if (!percentage) {
                 this._trigger('close');
