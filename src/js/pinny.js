@@ -225,12 +225,14 @@
                 ]
             });
 
-            manager.on(gesture, function (e) {
-                ignoreSwipe = $(e.target).parents('.needstouch').length;
-                if (!ignoreSwipe) {
-                    cb.apply(plugin);
-                }
-            });
+            if (gesture) {
+                manager.on(gesture, function (e) {
+                    ignoreSwipe = $(e.target).parents('.needstouch').length;
+                    if (!ignoreSwipe) {
+                        cb.apply(plugin);
+                    }
+                });
+            }
         },
 
         _bindEvents: function() {
