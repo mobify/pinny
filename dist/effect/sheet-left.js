@@ -28,6 +28,10 @@
         var setVisibility = function (dPercent) {
             console.log('State: ', dPercent);
 
+            if (dPercent < 0 || dPercent > 100) {
+                return;
+            }
+
             dPercent = -100 + dPercent;
             // Translate to percentage open on screen
             plugin.$pinny.css('-webkit-transform', 'translateX(' + dPercent + '%)');

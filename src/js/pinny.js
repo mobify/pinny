@@ -281,14 +281,14 @@
                     }
                 });
 
-                // manager.on('panend', function (e) {
-                //     // TODO: determine if user was opening or closing.
-                //     if (lastKnownDirection === Hammer.DIRECTION_RIGHT && plugin.$pinny.hasClass(classes.OPENING)) {
-                //         plugin.open();
-                //     } else if (lastKnownDirection === Hammer.DIRECTION_LEFT && plugin.$pinny.hasClass(classes.CLOSING)) {
-                //         plugin.close();
-                //     }
-                // });
+                manager.on('panend', function (e) {
+                    // TODO: determine if user was opening or closing.
+                    if (lastKnownDirection === openDirection) {
+                        plugin.open();
+                    } else {
+                        plugin.close();
+                    }
+                });
             } else {
                 manager.on('swipe', function (e) {
                     var $target = $(e.target);
