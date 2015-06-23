@@ -239,10 +239,7 @@
             var recognizer = isInteractive ? Hammer.Pan : Hammer.Swipe;
             var manager = new Hammer.Manager(el, {
                 recognizers: [
-                    [recognizer, {
-                        direction: Hammer.DIRECTION_HORIZONTAL,
-                        threshold: plugin.$container.width() * 0.20
-                    }],
+                    [recognizer, { direction: Hammer.DIRECTION_HORIZONTAL }],
                 ]
             });
             var isReverse = false;
@@ -268,7 +265,7 @@
 
                         if (!isOpen) { // Opening
                             console.log('Open: ', deltaP);
-                            if (plugin._activePinnies()) { // Do no open if there are active pinnies.
+                            if (plugin._activePinnies(true) > 0) { // Do no open if there are active pinnies.
                                 return;
                             }
 
@@ -435,8 +432,12 @@
         /**
          * @returns {boolean} indicating if there are any active pinnies on the page
          */
-        _activePinnies: function() {
-            return !!$('.' + classes.OPENED + ', .' + classes.CLOSING).length;
+        _activePinnies: function(excludeSelf) {
+            var $activePinnies = $('.' + classes.OPENED + ', .' + classes.OPENING + ', .' + classes.CLOSING);
+
+            return excludeSelf ?
+                !!$activePinnies.not('[aria-labelledby="pinny-' + this.id + '__header"]').length :
+                !!$activePinnies.length;
         },
 
         /**
