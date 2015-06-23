@@ -241,15 +241,14 @@
             var isReverse = false;
             var isOpen = plugin._isOpen();
             var lastKnownDirection;
-            window.Hammer = Hammer;
-            window.HammerManager = manager;
+
             // Determine if the effect is considered reverse here.
             // if () {
             //
             // }
 
             if (isInteractive) {
-                manager.on('panemove', function (e) {
+                manager.on('panmove', function (e) {
                     var $target = $(e.target);
                     ignoreSwipe = $target.parents('.needstouch').length ||
                                     $target.hasClass('.needstouch').length;
