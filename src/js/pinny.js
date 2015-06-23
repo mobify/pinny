@@ -272,7 +272,7 @@
                         if (!isOpen) {
                             console.log('Open: ', deltaP);
                             plugin.$pinny.addClass(classes.OPENING);
-                            plugin.close(deltaP);
+                            plugin.open(deltaP);
                         } else {
                             console.log('Close: ', deltaP);
                             plugin.$pinny.addClass(classes.CLOSING);
