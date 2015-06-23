@@ -53,7 +53,7 @@
                         }
                     );
 
-                    lastKnownCoverage = 100;
+                    lastKnownCoverage = 0;
                 }
 
             },
@@ -62,14 +62,14 @@
                 if (percentage) {
                     percentage = -1 * (lastKnownCoverage - percentage);
 
-                    plugin.$pinny.css('-webkit-transform', 'translateX(-' + percentage + '%)');
-                    plugin.$pinny.css('transform', 'translateX(-' + percentage + '%)');
+                    plugin.$pinny.css('-webkit-transform', 'translateX(' + percentage + '%)');
+                    plugin.$pinny.css('transform', 'translateX(' + percentage + '%)');
 
                     lastKnownCoverage = percentage;
                 } else {
                     Velocity.animate(
                         plugin.$pinny,
-                        { translateX: lastKnownCoverage ? ['-100%', '-' + lastKnownCoverage + '%'] : ['-100%', 0] },
+                        { translateX: lastKnownCoverage ? ['-100%',  lastKnownCoverage + '%'] : ['-100%', 0] },
                         {
                             easing: plugin.options.easing,
                             duration: plugin.options.duration,
@@ -78,7 +78,7 @@
                         }
                     );
 
-                    lastKnownCoverage = 0;
+                    lastKnownCoverage = 100;
                 }
             }
         };
