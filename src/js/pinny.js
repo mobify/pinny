@@ -321,7 +321,9 @@
             if (this.options.swipeEnabled) {
                 var effect = this.effect;
 
-                this._buildTouchManager(this.$container[0], effect);
+                if (effect.openDirection) {
+                    this._buildTouchManager(this.$container[0], effect);
+                }
             }
         },
 
