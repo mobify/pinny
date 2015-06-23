@@ -298,6 +298,7 @@
                         !plugin._activePinnies() && !plugin._isOpen() && plugin.open();
                     } else {
                         plugin.close();
+                        plugin.$pinny.lockup('unlock');
                     }
                 });
             } else {
