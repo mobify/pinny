@@ -264,7 +264,7 @@
                         plugin.$pinny.removeClass(classes.CLOSING);
                         plugin.$pinny.removeClass(classes.OPENING);
 
-                        if (e.direction === openDirection) {
+                        if (!isOpen) {
                             console.log('Open: ', deltaP);
                             plugin.$pinny.addClass(classes.OPENING);
                             plugin.open(deltaP);
