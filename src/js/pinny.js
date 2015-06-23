@@ -241,7 +241,7 @@
             var recognizer = isInteractive ? Hammer.Pan : Hammer.Swipe;
             var manager = new Hammer.Manager(el, {
                 recognizers: [
-                    [recognizer, {}],
+                    [recognizer, { direction: Hammer.DIRECTION_HORIZONTAL }],
                 ]
             });
             var isReverse = false;
