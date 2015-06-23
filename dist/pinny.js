@@ -282,7 +282,7 @@
                 manager.on('panend', function (e) {
                     // TODO: determine if user was opening or closing.
                     if (lastKnownDirection === openDirection) {
-                        !plugin._activePinnies() && !plugin._isOpen() && plugin.open();
+                        (plugin._activePinnies(true) === 0) && !plugin._isOpen() && plugin.open();
                     } else {
                         plugin.close();
                     }
