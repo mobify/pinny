@@ -280,7 +280,7 @@
                             }
 
                             console.log('Open: ', deltaP);
-                            plugin.$pinny.lockup('lock')
+                            plugin.$pinny.lockup('lock');
 
                             plugin.$pinny.addClass(classes.OPENING);
                             plugin.open(deltaP);
@@ -295,7 +295,7 @@
                 manager.on('panend', function (e) {
                     // TODO: determine if user was opening or closing.
                     if (lastKnownDirection === openDirection) {
-                        plugin.open();
+                        !plugin._isOpen() && plugin.open();
                     } else {
                         plugin.close();
                     }
