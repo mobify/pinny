@@ -446,7 +446,7 @@
          * @returns {boolean} indicating if there are any active pinnies on the page
          */
         _activePinnies: function() {
-            return !!$('.' + classes.OPENED).length;
+            return !!$('.' + classes.OPENED + ', .' + classes.CLOSING).length;
         },
 
         /**
