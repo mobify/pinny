@@ -256,10 +256,11 @@
                 manager.on('panmove', function (e) {
                     var $target = $(e.target);
                     var isOpen = plugin._isOpen();
+                    var isOpening = plugin._isOpening();
                     lastKnownDirection = e.direction;
                     ignoreSwipe = $target.parents('.needstouch').length ||
                                     $target.hasClass('.needstouch').length ||
-                                    (!isOpen && lastKnownDirection !== openDirection && !_isOpening());
+                                    (!isOpen && lastKnownDirection !== openDirection && !isOpening);
 
                     if (!ignoreSwipe) {
                         var deltaP = Math.abs(e.deltaX / plugin.$container.width() * 100);
