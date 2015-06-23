@@ -118,7 +118,7 @@
 
                 this._trigger('opened');
 
-                this.$pinny.removeClass('pinny--is-opening');
+                this.$pinny.removeClass(classes.OPENING);
 
                 // CSOPS-1165: Fix broken Eddie Bauer Pinny for iOS8
                 //
@@ -145,7 +145,7 @@
 
                 this._trigger('closed');
 
-                this.$pinny.removeClass('pinny--is-closing');
+                this.$pinny.removeClass(classes.CLOSING);
             }
         },
 
@@ -252,13 +252,13 @@
                 manager.on('panmove', function (e) {
                     var $target = $(e.target);
                     var isOpen = plugin._isOpen();
+                    lastKnownDirection = e.direction;
                     ignoreSwipe = $target.parents('.needstouch').length ||
-                                    $target.hasClass('.needstouch').length;
+                                    $target.hasClass('.needstouch').length ||
+                                    (!isOpen && lastKnownDirection !== openDirection);
 
                     if (!ignoreSwipe) {
                         var deltaP = Math.abs(e.deltaX / plugin.$container.width() * 100);
-
-                        lastKnownDirection = e.direction;
 
                         // Reset status
                         plugin.$pinny.removeClass(classes.CLOSING);
