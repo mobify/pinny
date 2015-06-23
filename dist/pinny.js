@@ -282,7 +282,7 @@
                 manager.on('panend', function (e) {
                     // TODO: determine if user was opening or closing.
                     if (lastKnownDirection === openDirection) {
-                        (plugin._activePinnies(true) === 0) && !plugin._isOpen() && plugin.open();
+                        !plugin._activePinnies(true) && !plugin._isOpen() && plugin.open();
                     } else {
                         plugin.close();
                     }
@@ -436,7 +436,7 @@
             var $activePinnies = $('.' + classes.OPENED + ', .' + classes.OPENING + ', .' + classes.CLOSING);
 
             return excludeSelf ?
-                !!$activePinnies.not('[aria-labelledby="pinny-' + this.id + '__header"]').length :
+                !!$activePinnies.filter(':not([aria-labelledby="' + this.id + '__header"])').length :
                 !!$activePinnies.length;
         },
 
