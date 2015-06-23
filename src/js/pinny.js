@@ -106,6 +106,8 @@
                 this._disableExternalInputs();
                 this._focus();
 
+                this.$pinny.removeClass(classes.OPENING);
+
                 // only run lockup if another pinny isn't
                 // open and locked the viewport up already
                 !this._activePinnies() && this.$pinny.lockup('lock');
@@ -117,8 +119,6 @@
                 this.$container.attr('aria-hidden', 'true');
 
                 this._trigger('opened');
-
-                this.$pinny.removeClass(classes.OPENING);
 
                 // CSOPS-1165: Fix broken Eddie Bauer Pinny for iOS8
                 //
@@ -132,6 +132,7 @@
             closeComplete: function() {
                 this.$pinny
                     .removeClass(classes.OPENED)
+                    .removeClass(classes.CLOSING)
                     .attr('aria-hidden', 'true');
 
                 this._enableExternalInputs();
@@ -144,8 +145,6 @@
                 this.$container.attr('aria-hidden', 'false');
 
                 this._trigger('closed');
-
-                this.$pinny.removeClass(classes.CLOSING);
             }
         },
 
@@ -248,11 +247,6 @@
             });
             var isReverse = false;
             var lastKnownDirection;
-
-            // Determine if the effect is considered reverse here.
-            // if () {
-            //
-            // }
 
             if (isInteractive) {
                 manager.on('panmove', function (e) {
