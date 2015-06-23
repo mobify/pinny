@@ -53,13 +53,15 @@
                         }
                     );
 
-                    lastKnownCoverage = '';
+                    lastKnownCoverage = 100;
                 }
 
             },
             close: function(percentage) {  // Accepts a percentage value to close by 0 - 100
                 console.log('close: ', percentage);
                 if (percentage) {
+                    percentage = -1 * (lastKnownCoverage - percentage);
+
                     plugin.$pinny.css('-webkit-transform', 'translateX(-' + percentage + '%)');
                     plugin.$pinny.css('transform', 'translateX(-' + percentage + '%)');
 
@@ -76,7 +78,7 @@
                         }
                     );
 
-                    lastKnownCoverage = '';
+                    lastKnownCoverage = 0;
                 }
             }
         };
