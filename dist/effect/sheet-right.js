@@ -32,14 +32,14 @@
                 return;
             }
 
-            dPercent = 100 + dPercent;
+            dPercent = 100 - dPercent;
             // Translate to percentage open on screen
             plugin.$pinny.css('-webkit-transform', 'translateX(' + dPercent + '%)');
             plugin.$pinny.css('transform', 'translateX(' + dPercent + '%)');
 
             currentCoverage = dPercent;
 
-            if (dPercent > -100) {
+            if (dPercent < 100) {
                 plugin.$pinny.css('display', 'block');
             } else {
                 plugin.$pinny.css('display', 'none');
