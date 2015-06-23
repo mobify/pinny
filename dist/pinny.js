@@ -269,7 +269,7 @@
                         plugin.$pinny.removeClass(classes.CLOSING);
                         plugin.$pinny.removeClass(classes.OPENING);
 
-                        if (isOpen) {
+                        if (!isOpen) {
                             console.log('Open: ', deltaP);
                             plugin.$pinny.addClass(classes.OPENING);
                             plugin.close(deltaP);
