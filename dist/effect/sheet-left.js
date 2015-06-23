@@ -27,6 +27,8 @@
         var currentCoverage = 0;
         var setVisibility = function (dPercent) {
             console.log('State: ', dPercent);
+
+            dPercent = -100 + dPercent;
             // Translate to percentage open on screen
             plugin.$pinny.css('-webkit-transform', 'translateX(' + dPercent + '%)');
             plugin.$pinny.css('transform', 'translateX(' + dPercent + '%)');
@@ -45,7 +47,7 @@
             open: function(dPercent) { // Accepts a percentage value 0 = fully closed, 100 = fully open
 
                 if (dPercent) {
-                    setVisibility(-1 * (100 - dPercent));
+                    setVisibility(dPercent);
                 } else {
                     // Force feed the initial value
                     Velocity.animate(
@@ -64,7 +66,7 @@
             close: function(dPercent) {  // Accepts a percentage value 0 = fully open, 100 = fully closed
 
                 if (dPercent) {
-                    setVisibility(-1 * dPercent);
+                    setVisibility(100 - dPercent);
                 } else {
                     Velocity.animate(
                         plugin.$pinny,
