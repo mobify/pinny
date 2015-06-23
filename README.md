@@ -53,6 +53,9 @@ We highly recommend using Require.js with Pinny. To use Require, you have to ref
         'lockup': 'bower_components/lockup/dist/lockup.min',
         'deckard': 'bower_components/deckard/dist/deckard.min',
         'bouncefix': 'bower_components/bouncefix.js/dist/bouncefix.min'
+        'velocity': 'bower_components/mobify-velocity/velocity.min',
+        'isChildOf': 'bower_components/selector-utils/src/selector/isChildOf',
+        'sheet-top': 'bower_components/pinny/dist/effect/sheet-top.min'
     }
 }
 
