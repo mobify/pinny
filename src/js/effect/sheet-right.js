@@ -2,13 +2,14 @@
     if (typeof define === 'function' && define.amd) {
         define([
             '$',
-            'velocity'
+            'velocity',
+            'Hammer'
         ], factory);
     } else {
         var framework = window.Zepto || window.jQuery;
         factory(framework, framework.Velocity);
     }
-}(function($, Velocity) {
+}(function($, Velocity, Hammer) {
     return function() {
         var plugin = this;
         var coverage = this._coverage();
@@ -24,10 +25,7 @@
             });
 
         return {
-            openGesture: 'swipeleft',
-            closeGesture: 'swiperight',
-            interactiveOpenGesture: 'panleft',
-            interactiveCloseGesture: 'panright',
+            openDirection: Hammer.DIRECTION_LEFT,
             open: function() {
 
 

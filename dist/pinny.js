@@ -5,7 +5,7 @@
             'plugin',
             'bouncefix',
             'velocity',
-            'hammerjs',
+            'hammer',
             'lockup',
             'shade',
             'deckard'
@@ -14,7 +14,7 @@
         var framework = window.Zepto || window.jQuery;
         factory(framework, window.Plugin, window.bouncefix);
     }
-}(function($, Plugin, bouncefix, Velocity, HammerJs) {
+}(function($, Plugin, bouncefix, Velocity, Hammer) {
     var EFFECT_REQUIRED = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
     var FOCUSABLE_ELEMENTS = 'a[href], area[href], input, select, textarea, button, iframe, object, embed, [tabindex], [contenteditable]';
     var FOCUSABLE_INPUT_ELEMENTS = 'input, select, textarea';
@@ -228,72 +228,72 @@
 
         _buildTouchManager: function(el, effect) {
 
-            var gesture = effect.openGesture;
+            var openDirection = effect.openDirection;
             var plugin = this;
             var ignoreSwipe = false;
             var isInteractive = plugin.options.swipeOptions.interactive;
-            var recognizer = isInteractive ? HammerJs.Pan : HammerJs.Swipe;
-            var manager = new HammerJs.Manager(el, {
+            var recognizer = isInteractive ? Hammer.Pan : Hammer.Swipe;
+            var manager = new Hammer.Manager(el, {
                 recognizers: [
-                    [recognizer, { direction: HammerJs.DIRECTION_HORIZONTAL }],
+                    [recognizer, { direction: Hammer.DIRECTION_HORIZONTAL }],
                 ]
             });
+            var isReverse = false;
+            var isOpen = plugin._isOpen();
+            var lastKnownDirection;
+            // Determine if the effect is considered reverse here.
+            // if () {
+            //
+            // }
 
-            var openGesture = isInteractive ? effect.interactiveOpenGesture : effect.openGesture;
-            var closeGesture = isInteractive ? effect.interactiveCloseGesture : effect.closeGesture;
-
-            // Open
-            if (openGesture) {
-                manager.on(openGesture, function (e) {
-                    var $target = $(e.target);
-                    ignoreSwipe = $target.parents('.needstouch').length ||
-                                    $target.hasClass('.needstouch').length ||
-                                    $target.parents('.pinny.pinny--is-open').length;
-
-                    if (!ignoreSwipe) {
-                        var deltaP = e.deltaX / plugin.$container.width() * 100;
-
-                        if (isInteractive) {
-                            plugin.$pinny.removeClass('pinny--is-closing');
-                            plugin.$pinny.addClass('pinny--is-opening');
-
-                            plugin.open(deltaP);
-                        } else {
-                            plugin.open();
-                        }
-                    }
-                });
-            }
-
-            // Close
-            if (closeGesture) {
-                manager.on(closeGesture, function (e) {
+            if (isInteractive) {
+                manager.on('panemove', function (e) {
                     var $target = $(e.target);
                     ignoreSwipe = $target.parents('.needstouch').length ||
                                     $target.hasClass('.needstouch').length;
 
                     if (!ignoreSwipe) {
-                        var deltaP = Math.abs(e.deltaX) / plugin.$container.width() * 100;
+                        var deltaP = e.deltaX / plugin.$container.width() * 100;
+                        deltaP = isReverse ? deltaP * -1 : deltaP;
 
-                        if (isInteractive) {
-                            plugin.$pinny.removeClass('pinny--is-opening');
-                            plugin.$pinny.addClass('pinny--is-closing');
+                        if (deltaP <= 0) {
+                            return;
+                        }
 
+                        lastKnownDirection = e.direction;
+
+                        if (isOpen) {
+                            console.log('Open: ', deltaP);
                             plugin.close(deltaP);
                         } else {
-                            plugin.close();
+                            console.log('Close: ', deltaP);
+                            plugin.close(deltaP);
                         }
                     }
                 });
-            }
 
-            if (isInteractive) {
                 manager.on('panend', function (e) {
                     // TODO: determine if user was opening or closing.
-                    if (plugin.$pinny.hasClass('pinny--is-opening')) {
+                    if (lastKnownDirection === Hammer.DIRECTION_RIGHT) {
                         plugin.open();
-                    } else if (plugin.$pinny.hasClass('pinny--is-closing')) {
+                    } else if (lastKnownDirection === Hammer.DIRECTION_LEFT) {
                         plugin.close();
+                    }
+                });
+            } else {
+                manager.on('swipe', function (e) {
+                    var $target = $(e.target);
+                    ignoreSwipe = $target.parents('.needstouch').length ||
+                                    $target.hasClass('.needstouch').length;
+
+                    if (!ignoreSwipe) {
+                        var deltaP = isReverse ? e.deltaX * -1 : e.deltaX;
+
+                        if (deltaP >= 0) {
+                            plugin.open();
+                        } else {
+                            plugin.close();
+                        }
                     }
                 });
             }

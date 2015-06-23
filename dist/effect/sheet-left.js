@@ -2,13 +2,14 @@
     if (typeof define === 'function' && define.amd) {
         define([
             '$',
-            'velocity'
+            'velocity',
+            'hammer'
         ], factory);
     } else {
         var framework = window.Zepto || window.jQuery;
         factory(framework, framework.Velocity);
     }
-}(function($, Velocity) {
+}(function($, Velocity, Hammer) {
     return function() {
         var plugin = this;
         var coverage = this._coverage();
@@ -22,29 +23,34 @@
                 width: coverage ? 'auto' : this.options.coverage,
                 height: 'auto'
             });
-        var lastKnownCoverage;
+
+        var currentCoverage = 0;
+        var setVisibility = function (dPercent) {
+            console.log('State: ', dPercent)
+            // Translate to percentage open on screen
+            plugin.$pinny.css('-webkit-transform', 'translateX(' + dPercent + '%)');
+            plugin.$pinny.css('transform', 'translateX(' + dPercent + '%)');
+
+            currentCoverage = dPercent;
+
+            if (dPercent > -100) {
+                plugin.$pinny.css('display', 'block');
+            } else {
+                plugin.$pinny.css('display', 'none');
+            }
+        };
 
         return {
-            openGesture: 'swiperight',
-            closeGesture: 'swipeleft',
-            interactiveOpenGesture: 'panright',
-            interactiveCloseGesture: 'panleft',
-            open: function(percentage) { // Accepts a percentage value to open by 0 - 100
-                console.log('open: ', percentage);
+            openDirection: Hammer.DIRECTION_RIGHT,
+            open: function(dPercent) { // Accepts a percentage value 0 = fully closed, 100 = fully open
 
-                if (percentage) {
-                    // Translate to percentage open on screen
-                    percentage = -1 * (100 - percentage);
-
-                    plugin.$pinny.css('-webkit-transform', 'translateX(' + percentage + '%)');
-                    plugin.$pinny.css('transform', 'translateX(' + percentage + '%)');
-                    plugin.$pinny.css('display', 'block');
-                    lastKnownCoverage = percentage;
+                if (dPercent) {
+                    setVisibility(-1 * (100 - dPercent));
                 } else {
                     // Force feed the initial value
                     Velocity.animate(
                         plugin.$pinny,
-                        { translateX: lastKnownCoverage ? [0, lastKnownCoverage + '%'] : [0, '-100%'] },
+                        { translateX: currentCoverage ? [0, currentCoverage + '%'] : [0, '-100%'] },
                         {
                             easing: plugin.options.easing,
                             duration: plugin.options.duration,
@@ -52,24 +58,17 @@
                             complete: plugin.animation.openComplete.bind(plugin)
                         }
                     );
-
-                    lastKnownCoverage = 0;
                 }
 
             },
-            close: function(percentage) {  // Accepts a percentage value to close by 0 - 100
-                console.log('close: ', percentage);
-                if (percentage) {
-                    percentage = -1 * (lastKnownCoverage - percentage);
+            close: function(dPercent) {  // Accepts a percentage value 0 = fully open, 100 = fully closed
 
-                    plugin.$pinny.css('-webkit-transform', 'translateX(' + percentage + '%)');
-                    plugin.$pinny.css('transform', 'translateX(' + percentage + '%)');
-
-                    lastKnownCoverage = percentage;
+                if (dPercent) {
+                    setVisibility(-1 * dPercent);
                 } else {
                     Velocity.animate(
                         plugin.$pinny,
-                        { translateX: lastKnownCoverage ? ['-100%',  lastKnownCoverage + '%'] : ['-100%', 0] },
+                        { translateX: currentCoverage ? ['-100%',  currentCoverage + '%'] : ['-100%', 0] },
                         {
                             easing: plugin.options.easing,
                             duration: plugin.options.duration,
@@ -77,8 +76,6 @@
                             complete: plugin.animation.closeComplete.bind(plugin)
                         }
                     );
-
-                    lastKnownCoverage = 100;
                 }
             }
         };

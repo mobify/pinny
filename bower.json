@@ -27,6 +27,6 @@
     "shade": "~1.1.1",
     "lockup": "~1.1.1",
     "deckard": "~1.0.0",
-    "hammerjs": "https://github.com/hammerjs/hammer.js.git"
+    "hammer": "https://github.com/hammerjs/hammer.js.git"
   }
 }
