@@ -47,7 +47,7 @@
         };
 
         return {
-            //openDirection: Hammer.DIRECTION_LEFT,
+            openDirection: Hammer.DIRECTION_LEFT,
             open: function(dPercent) {
 
                 if (dPercent) {
