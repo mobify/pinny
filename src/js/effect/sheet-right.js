@@ -3,7 +3,7 @@
         define([
             '$',
             'velocity',
-            'Hammer'
+            'hammer'
         ], factory);
     } else {
         var framework = window.Zepto || window.jQuery;

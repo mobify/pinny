@@ -26,7 +26,7 @@
 
         var currentCoverage = 0;
         var setVisibility = function (dPercent) {
-            console.log('State: ', dPercent)
+            console.log('State: ', dPercent);
             // Translate to percentage open on screen
             plugin.$pinny.css('-webkit-transform', 'translateX(' + dPercent + '%)');
             plugin.$pinny.css('transform', 'translateX(' + dPercent + '%)');
