@@ -272,6 +272,7 @@
                         if (!isOpen) {
                             console.log('Open: ', deltaP);
                             plugin.$pinny.addClass(classes.OPENING);
+                            this.options.shade && this.$shade.shade('open');
                             plugin.open(deltaP);
                         } else {
                             console.log('Close: ', deltaP);
