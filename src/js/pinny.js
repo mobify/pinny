@@ -224,6 +224,10 @@
             this.effect.close.call(this, percentage);
         },
 
+        _isOpening: function() {
+            return this.$pinny.hasClass(classes.OPENING);
+        },
+
         _isOpen: function() {
             return this.$pinny.hasClass(classes.OPENED);
         },
@@ -255,7 +259,7 @@
                     lastKnownDirection = e.direction;
                     ignoreSwipe = $target.parents('.needstouch').length ||
                                     $target.hasClass('.needstouch').length ||
-                                    (!isOpen && lastKnownDirection !== openDirection);
+                                    (!isOpen && lastKnownDirection !== openDirection && !_isOpening());
 
                     if (!ignoreSwipe) {
                         var deltaP = Math.abs(e.deltaX / plugin.$container.width() * 100);
