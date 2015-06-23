@@ -184,7 +184,7 @@
         },
 
         open: function(percentage) {
-            if (this._isOpen()) {
+            if (this._isOpen() || !this._isOpening()) {
                 return;
             }
 
@@ -209,7 +209,7 @@
         },
 
         close: function(percentage) {
-            if (!this._isOpen()) {
+            if (!this._isOpen() || this._isOpening()) {
                 return;
             }
 
