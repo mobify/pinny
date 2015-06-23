@@ -263,7 +263,8 @@
                     lastKnownDirection = e.direction;
                     ignoreSwipe = $target.parents('.needstouch').length ||
                                     $target.hasClass('.needstouch').length ||
-                                    (!isOpen && lastKnownDirection !== openDirection && !isOpening);
+                                    (!isOpen && lastKnownDirection !== openDirection && !isOpening) ||
+                                    (isOpen && lastKnownDirection === openDirection);
 
                     if (!ignoreSwipe) {
                         var deltaP = Math.abs(e.deltaX / plugin.$container.width() * 100);
@@ -272,13 +273,18 @@
                         plugin.$pinny.removeClass(classes.CLOSING);
                         plugin.$pinny.removeClass(classes.OPENING);
 
-                        if (!isOpen) {
+                        if (!isOpen) { // Opening
+
+                            if (plugin._activePinnies()) { // Do no open if there are active pinnies.
+                                return;
+                            }
+
                             console.log('Open: ', deltaP);
                             plugin.$pinny.lockup('lock')
 
                             plugin.$pinny.addClass(classes.OPENING);
                             plugin.open(deltaP);
-                        } else {
+                        } else { // Closing
                             console.log('Close: ', deltaP);
                             plugin.$pinny.addClass(classes.CLOSING);
                             plugin.close(deltaP);
