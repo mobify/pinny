@@ -256,12 +256,7 @@
                                     $target.hasClass('.needstouch').length;
 
                     if (!ignoreSwipe) {
-                        var deltaP = e.deltaX / plugin.$container.width() * 100;
-                        deltaP = isReverse ? deltaP * -1 : deltaP;
-
-                        if (deltaP <= 0) {
-                            return;
-                        }
+                        var deltaP = Math.abs(e.deltaX / plugin.$container.width() * 100);
 
                         lastKnownDirection = e.direction;
 
