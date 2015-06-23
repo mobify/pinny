@@ -241,6 +241,8 @@
             var isReverse = false;
             var isOpen = plugin._isOpen();
             var lastKnownDirection;
+            window.Hammer = Hammer;
+            window.HammerManager = manager;
             // Determine if the effect is considered reverse here.
             // if () {
             //
