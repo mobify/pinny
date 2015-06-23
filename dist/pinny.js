@@ -43,8 +43,10 @@
         SPACER: 'pinny__spacer',
         TITLE: 'pinny__title',
         CLOSE: 'pinny__close',
+        CLOSING: 'pinny__closing',
         CONTENT: 'pinny__content',
         OPENED: 'pinny--is-open',
+        OPENING: 'pinny--is-opening',
         SCROLLABLE: 'pinny--is-scrollable'
     };
 
@@ -263,24 +265,30 @@
 
                         lastKnownDirection = e.direction;
 
+                        // Reset status
+                        plugin.$pinny.removeClass(classes.CLOSING);
+                        plugin.$pinny.removeClass(classes.OPENING);
+
                         if (isOpen) {
                             console.log('Open: ', deltaP);
+                            plugin.$pinny.addClass(classes.OPENING);
                             plugin.close(deltaP);
                         } else {
                             console.log('Close: ', deltaP);
+                            plugin.$pinny.addClass(classes.CLOSING);
                             plugin.close(deltaP);
                         }
                     }
                 });
 
-                manager.on('panend', function (e) {
-                    // TODO: determine if user was opening or closing.
-                    if (lastKnownDirection === Hammer.DIRECTION_RIGHT) {
-                        plugin.open();
-                    } else if (lastKnownDirection === Hammer.DIRECTION_LEFT) {
-                        plugin.close();
-                    }
-                });
+                // manager.on('panend', function (e) {
+                //     // TODO: determine if user was opening or closing.
+                //     if (lastKnownDirection === Hammer.DIRECTION_RIGHT && plugin.$pinny.hasClass(classes.OPENING)) {
+                //         plugin.open();
+                //     } else if (lastKnownDirection === Hammer.DIRECTION_LEFT && plugin.$pinny.hasClass(classes.CLOSING)) {
+                //         plugin.close();
+                //     }
+                // });
             } else {
                 manager.on('swipe', function (e) {
                     var $target = $(e.target);
