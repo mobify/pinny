@@ -219,7 +219,7 @@
             }
 
             bouncefix.remove(classes.SCROLLABLE);
-            
+
             this.effect.close.call(this, percentage);
         },
 
@@ -273,13 +273,10 @@
                         plugin.$pinny.removeClass(classes.OPENING);
 
                         if (!isOpen) { // Opening
-
+                            console.log('Open: ', deltaP);
                             if (plugin._activePinnies()) { // Do no open if there are active pinnies.
                                 return;
                             }
-
-                            console.log('Open: ', deltaP);
-                            plugin.$pinny.lockup('lock');
 
                             plugin.$pinny.addClass(classes.OPENING);
                             plugin.open(deltaP);
@@ -297,7 +294,6 @@
                         !plugin._activePinnies() && !plugin._isOpen() && plugin.open();
                     } else {
                         plugin.close();
-                        plugin.$pinny.lockup('unlock');
                     }
                 });
             } else {
