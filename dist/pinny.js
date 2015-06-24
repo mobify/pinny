@@ -132,6 +132,7 @@
             closeComplete: function() {
                 this.$pinny
                     .removeClass(classes.OPENED)
+                    .removeClass(classes.OPENING)
                     .removeClass(classes.CLOSING)
                     .attr('aria-hidden', 'true');
 
