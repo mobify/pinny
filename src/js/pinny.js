@@ -268,7 +268,7 @@
                         plugin.$pinny.removeClass(classes.OPENING);
 
                         if (!isOpen) { // Opening
-                            console.log('Open: ', deltaP);
+                            console.log('Open: ', deltaP, e.angle);
                             if (plugin._activePinnies(true) > 0) { // Do no open if there are active pinnies.
                                 return;
                             }
