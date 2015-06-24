@@ -240,7 +240,10 @@
             var recognizer = isInteractive ? Hammer.Pan : Hammer.Swipe;
             var manager = new Hammer.Manager(el, {
                 recognizers: [
-                    [recognizer, { direction: Hammer.DIRECTION_HORIZONTAL }],
+                    [recognizer, {
+                        direction: Hammer.DIRECTION_HORIZONTAL,
+                        threshold: plugin.$container.width() * 0.15
+                    }],
                 ]
             });
             var isReverse = false;
