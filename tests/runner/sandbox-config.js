@@ -17,7 +17,7 @@ require.config({
         'shade': 'bower_components/shade/dist/shade.min',
         'deckard': 'bower_components/deckard/dist/deckard.min',
         'lockup': 'bower_components/lockup/dist/lockup',
-        'event-polyfill': 'dist/utils/event-polyfil',
+        'event-polyfill': 'dist/utils/event-polyfill',
         'isChildOf': 'bower_components/selector-utils/src/selector/isChildOf',
         'pinny': 'dist/pinny'
     },
