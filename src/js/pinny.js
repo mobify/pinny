@@ -100,7 +100,6 @@
          */
         animation: {
             openComplete: function() {
-                var plugin = this;
                 this._disableExternalInputs();
                 this._focus();
 
@@ -108,9 +107,7 @@
                 // open and locked the viewport up already
                 !this._activePinnies() && this.$pinny.lockup('lock');
 
-                EventPolyfill.on(events.resize, function() {
-                    plugin._repaint();
-                });
+                EventPolyfill.on(events.resize, this._repaint);
 
                 if (!this._activePinnies() && iOS7orBelow) {
                     $window.on(events.orientationchange, this._blurActiveElement.bind(this));
