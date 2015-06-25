@@ -100,46 +100,54 @@
          */
         animation: {
             openComplete: function() {
-                this._disableExternalInputs();
-                this._focus();
+                setTimeout(function () {
 
-                // only run lockup if another pinny isn't
-                // open and locked the viewport up already
-                !this._activePinnies() && this.$pinny.lockup('lock');
+                    this._disableExternalInputs();
+                    this._focus();
 
-                EventPolyfill.on(events.resize, this._repaint);
+                    // only run lockup if another pinny isn't
+                    // open and locked the viewport up already
+                    !this._activePinnies() && this.$pinny.lockup('lock');
 
-                if (!this._activePinnies() && iOS7orBelow) {
-                    $window.on(events.orientationchange, this._blurActiveElement.bind(this));
-                }
+                    EventPolyfill.on(events.resize, this._repaint);
 
-                this.$pinny
-                    .addClass(classes.OPENED)
-                    .attr('aria-hidden', 'false');
+                    if (!this._activePinnies() && iOS7orBelow) {
+                        $window.on(events.orientationchange, this._blurActiveElement.bind(this));
+                    }
 
-                this.$container.attr('aria-hidden', 'true');
+                    this.$pinny
+                        .addClass(classes.OPENED)
+                        .attr('aria-hidden', 'false');
 
-                this._trigger('opened');
+                    this.$container.attr('aria-hidden', 'true');
+
+                    this._trigger('opened');
+
+                }.bind(this), 0);
             },
             closeComplete: function() {
-                this.$pinny
-                    .removeClass(classes.OPENED)
-                    .attr('aria-hidden', 'true');
+                setTimeout(function () {
 
-                this._enableExternalInputs();
-                this._resetFocus();
+                    this.$pinny
+                        .removeClass(classes.OPENED)
+                        .attr('aria-hidden', 'true');
 
-                // only unlock if there isn't another pinny
-                // that requires the viewport to be locked
-                if (!this._activePinnies()) {
-                    this.$pinny.lockup('unlock');
-                    EventPolyfill.off(events.resize);
-                    $window.off(events.orientationchange);
-                }
+                    this._enableExternalInputs();
+                    this._resetFocus();
 
-                this.$container.attr('aria-hidden', 'false');
+                    // only unlock if there isn't another pinny
+                    // that requires the viewport to be locked
+                    if (!this._activePinnies()) {
+                        this.$pinny.lockup('unlock');
+                        EventPolyfill.off(events.resize);
+                        $window.off(events.orientationchange);
+                    }
 
-                this._trigger('closed');
+                    this.$container.attr('aria-hidden', 'false');
+
+                    this._trigger('closed');
+
+                }.bind(this), 0);
             }
         },
 
