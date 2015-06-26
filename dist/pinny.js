@@ -294,7 +294,7 @@
 
                 if (!ignoreSwipe) {
                     var isOpen = plugin._isOpen();
-                    var deltaX = openDirection === Hammer.DIRECTION_LEFT ? e.deltaX : -1 * event.deltaX;
+                    var deltaX = openDirection === Hammer.DIRECTION_LEFT ? -1 * e.deltaX : e.deltaX;
                     var deltaP = deltaX / plugin.$container.width() * 100;
 
                     // Reset status
