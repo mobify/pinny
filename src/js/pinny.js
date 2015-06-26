@@ -259,7 +259,7 @@
                                     $target.hasClass('.needstouch').length ||
                                     (!isOpen && lastKnownDirection !== openDirection && !isOpening) ||
                                     (isOpen && lastKnownDirection === openDirection) ||
-                                    e.deltaX < 0;
+                                    ((e.deltaX < 0 && !isReverse) || (e.deltaX >= 0 && isReverse));
 
                     if (!ignoreSwipe) {
                         var deltaP = Math.abs(e.deltaX / plugin.$container.width() * 100);
