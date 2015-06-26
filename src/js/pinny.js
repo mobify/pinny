@@ -246,15 +246,16 @@
                     }],
                 ]
             });
-            var isReverse = false;
             var lastKnownDirection;
-
+            var isReverse = false;
             if (isInteractive) {
                 manager.on('panmove', function (e) {
                     var $target = $(e.target);
                     var isOpen = plugin._isOpen();
                     var isOpening = plugin._isOpening();
                     lastKnownDirection = e.direction;
+                    reverse = lastKnownDirection === Hammer.DIRECTION_LEFT;
+
                     ignoreSwipe = $target.parents('.needstouch').length ||
                                     $target.hasClass('.needstouch').length ||
                                     (!isOpen && lastKnownDirection !== openDirection && !isOpening) ||
