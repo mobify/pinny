@@ -262,6 +262,8 @@
                                     (isOpen && lastKnownDirection === openDirection) ||
                                     ((e.deltaX < 0 && !isReverse) || (e.deltaX >= 0 && isReverse));
 
+
+                    console.log(e, 'ignoreSwipe: ', ignoreSwipe, ' isReverse: ', isReverse, ' lastKnownDirection: ', lastKnownDirection);
                     if (!ignoreSwipe) {
                         var deltaP = Math.abs(e.deltaX / plugin.$container.width() * 100);
 
@@ -270,7 +272,6 @@
                         plugin.$pinny.removeClass(classes.OPENING);
 
                         if (!isOpen) { // Opening
-                            console.log('Open: ', deltaP, e.deltaY, e);
                             if (plugin._activePinnies(true) > 0) { // Do no open if there are active pinnies.
                                 return;
                             }
@@ -278,7 +279,6 @@
                             plugin.$pinny.addClass(classes.OPENING);
                             plugin.open(deltaP);
                         } else { // Closing
-                            console.log('Close: ', deltaP);
                             plugin.$pinny.addClass(classes.CLOSING);
                             plugin.close(deltaP);
                         }
