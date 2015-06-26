@@ -245,7 +245,7 @@
                 var isOpening = plugin._isOpening();
                 var openDirection = effect.openDirection;
 
-                var deltaX = openDirection === Hammer.DIRECTION_RIGHT ? event.deltaX : -1 * event.deltaX;
+                var deltaX = openDirection === Hammer.DIRECTION_LEFT ? event.deltaX : -1 * event.deltaX;
 
                 isValid = isValid && (
                     (!isOpen && lastKnownDirection !== openDirection) ||
