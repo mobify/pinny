@@ -26,7 +26,6 @@
 
         var currentCoverage = 0;
         var setVisibility = function (dPercent) {
-            console.log('State: ', dPercent);
 
             if (dPercent < 0 || dPercent > 100) {
                 return;

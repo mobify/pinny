@@ -244,10 +244,17 @@
                 var isOpen = plugin._isOpen();
                 var isOpening = plugin._isOpening();
                 var openDirection = effect.openDirection;
-                var isInteractive = plugin.options.swipeOptions.interactive;
 
                 isValid = isValid && ((!isOpen && lastKnownDirection !== openDirection && !isOpening) ||
                     (isOpen && lastKnownDirection === openDirection));
+
+                console.log(
+                    'Pinny: ', this.id,
+                    'Direction: ', lastKnownDirection,
+                    'isOpen: ', isOpen,
+                    'isOpening: ', isOpening,
+                    'resu: ', isValid
+                );
             }
 
             return isValid;
