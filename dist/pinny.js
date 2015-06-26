@@ -231,7 +231,7 @@
             return this.$pinny.hasClass(classes.OPENED);
         },
 
-        _isValidGesture: function (event, effect, interactive) {
+        _ignoreGesture: function (event, effect, interactive) {
             var plugin = this;
             var isValid = true;
             var $target = $(event.target);
@@ -245,8 +245,13 @@
                 var isOpening = plugin._isOpening();
                 var openDirection = effect.openDirection;
 
-                isValid = isValid && ((!isOpen && lastKnownDirection !== openDirection && !isOpening) ||
-                    (isOpen && lastKnownDirection === openDirection));
+                var deltaX = openDirection === Hammer.DIRECTION_RIGHT ? event.deltaX : -1 * event.deltaX;
+
+                isValid = isValid && (
+                    (!isOpen && lastKnownDirection !== openDirection) ||
+                    (isOpen && lastKnownDirection === openDirection) ||
+                    deltaX < 0
+                );
 
                 console.log(
                     'Pinny: ', this.id,
@@ -266,7 +271,7 @@
 
             manager.on('swipe', function (e) {
                 var $target = $(e.target);
-                var ignoreSwipe = plugin._isValidGesture(e, plugin.effect);
+                var ignoreSwipe = plugin._ignoreGesture(e, plugin.effect);
 
                 if (!ignoreSwipe) {
                     if (e.direction === openDirection) {
@@ -283,7 +288,7 @@
 
             manager.on('panmove', function (e) {
 
-                var ignoreSwipe = plugin._isValidGesture(e, plugin.effect, true);
+                var ignoreSwipe = plugin._ignoreGesture(e, plugin.effect, true);
 
                 if (!ignoreSwipe) {
                     var isOpen = plugin._isOpen();
