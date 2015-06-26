@@ -231,6 +231,84 @@
             return this.$pinny.hasClass(classes.OPENED);
         },
 
+        _isValidGesture: function (event, effect, interactive) {
+            var plugin = this;
+            var isValid = true;
+            var $target = $(event.target);
+
+            isValid = $target.parents('.needstouch').length || // Ignore events on explicitly defined elements
+                        $target.hasClass('.needstouch').length;
+
+            if (interactive) {
+                var lastKnownDirection = event.direction;
+                var isOpen = plugin._isOpen();
+                var isOpening = plugin._isOpening();
+                var openDirection = effect.openDirection;
+                var isInteractive = plugin.options.swipeOptions.interactive;
+
+                isValid = isValid && ((!isOpen && lastKnownDirection !== openDirection && !isOpening) ||
+                    (isOpen && lastKnownDirection === openDirection));
+            }
+
+            return isValid;
+        },
+
+        _addSwipeRegognizer: function (manager) {
+            var plugin = this;
+            var openDirection = plugin.effect.openDirection;
+
+            manager.on('swipe', function (e) {
+                var $target = $(e.target);
+                var ignoreSwipe = plugin._isValidGesture(e, plugin.effect);
+
+                if (!ignoreSwipe) {
+                    if (e.direction === openDirection) {
+                        plugin.open();
+                    } else {
+                        plugin.close();
+                    }
+                }
+            });
+        },
+
+        _addPanRecognizer: function (manager) {
+            var plugin = this;
+
+            manager.on('panmove', function (e) {
+
+                var ignoreSwipe = plugin._isValidGesture(e, plugin.effect, true);
+
+                if (!ignoreSwipe) {
+                    var isOpen = plugin._isOpen();
+                    var deltaP = Math.abs(e.deltaX / plugin.$container.width() * 100);
+
+                    // Reset status
+                    plugin.$pinny.removeClass(classes.CLOSING);
+                    plugin.$pinny.removeClass(classes.OPENING);
+
+                    if (plugin._activePinnies(true) <= 0) { // Do no open if there are active pinnies.
+                        if (!isOpen) { // Opening
+                            plugin.$pinny.addClass(classes.OPENING);
+                            plugin.open(deltaP);
+                        } else { // Closing
+                            plugin.$pinny.addClass(classes.CLOSING);
+                            plugin.close(deltaP);
+                        }
+                    }
+                }
+            });
+
+            manager.on('panend', function (e) {
+                var openDirection = plugin.effect.openDirection;
+
+                if (e.direction === openDirection) {
+                    !plugin._activePinnies(true) && !plugin._isOpen() && plugin.open();
+                } else {
+                    plugin.close();
+                }
+            });
+        },
+
         _buildTouchManager: function(el, effect) {
 
             var openDirection = effect.openDirection;
@@ -246,69 +324,11 @@
                     }],
                 ]
             });
-            var lastKnownDirection;
-            var isReverse = false;
+
             if (isInteractive) {
-                manager.on('panmove', function (e) {
-                    var $target = $(e.target);
-                    var isOpen = plugin._isOpen();
-                    var isOpening = plugin._isOpening();
-                    lastKnownDirection = e.direction;
-                    reverse = lastKnownDirection === Hammer.DIRECTION_LEFT;
-
-                    ignoreSwipe = $target.parents('.needstouch').length ||
-                                    $target.hasClass('.needstouch').length ||
-                                    (!isOpen && lastKnownDirection !== openDirection && !isOpening) ||
-                                    (isOpen && lastKnownDirection === openDirection) ||
-                                    ((e.deltaX < 0 && !isReverse) || (e.deltaX >= 0 && isReverse));
-
-
-                    console.log(e, 'ignoreSwipe: ', ignoreSwipe, ' isReverse: ', isReverse, ' lastKnownDirection: ', lastKnownDirection);
-                    if (!ignoreSwipe) {
-                        var deltaP = Math.abs(e.deltaX / plugin.$container.width() * 100);
-
-                        // Reset status
-                        plugin.$pinny.removeClass(classes.CLOSING);
-                        plugin.$pinny.removeClass(classes.OPENING);
-
-                        if (!isOpen) { // Opening
-                            if (plugin._activePinnies(true) > 0) { // Do no open if there are active pinnies.
-                                return;
-                            }
-
-                            plugin.$pinny.addClass(classes.OPENING);
-                            plugin.open(deltaP);
-                        } else { // Closing
-                            plugin.$pinny.addClass(classes.CLOSING);
-                            plugin.close(deltaP);
-                        }
-                    }
-                });
-
-                manager.on('panend', function (e) {
-                    // TODO: determine if user was opening or closing.
-                    if (lastKnownDirection === openDirection) {
-                        !plugin._activePinnies(true) && !plugin._isOpen() && plugin.open();
-                    } else {
-                        plugin.close();
-                    }
-                });
+                plugin._addPanRecognizer(manager);
             } else {
-                manager.on('swipe', function (e) {
-                    var $target = $(e.target);
-                    ignoreSwipe = $target.parents('.needstouch').length ||
-                                    $target.hasClass('.needstouch').length;
-
-                    if (!ignoreSwipe) {
-                        var deltaP = isReverse ? e.deltaX * -1 : e.deltaX;
-
-                        if (deltaP >= 0) {
-                            plugin.open();
-                        } else {
-                            plugin.close();
-                        }
-                    }
-                });
+                plugin._addSwipeRegognizer(manager);
             }
         },
 
