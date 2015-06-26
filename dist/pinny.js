@@ -233,36 +233,37 @@
 
         _ignoreGesture: function (event, effect, interactive) {
             var plugin = this;
-            var isValid = true;
+            var ignore = false;
             var $target = $(event.target);
 
-            isValid = $target.parents('.needstouch').length > 0 || // Ignore events on explicitly defined elements
+            ignore = $target.parents('.needstouch').length > 0 || // Ignore events on explicitly defined elements
                         $target.hasClass('.needstouch').length > 0;
 
             if (interactive) {
-                var lastKnownDirection = event.direction;
-                var isOpen = plugin._isOpen();
-                var isOpening = plugin._isOpening();
-                var openDirection = effect.openDirection;
-
-                var deltaX = openDirection === Hammer.DIRECTION_LEFT ? event.deltaX : -1 * event.deltaX;
-
-                isValid = isValid && (
-                    (!isOpen && lastKnownDirection !== openDirection) ||
-                    (isOpen && lastKnownDirection === openDirection) ||
-                    deltaX < 0
-                );
-
-                console.log(
-                    'Pinny: ', this.id,
-                    'Direction: ', lastKnownDirection === Hammer.DIRECTION_RIGHT ? 'right' : 'left',
-                    'isOpen: ', isOpen,
-                    'isOpening: ', isOpening,
-                    'result: ', isValid
-                );
+            //     var lastKnownDirection = event.direction;
+            //     var isOpen = plugin._isOpen();
+            //     var isOpening = plugin._isOpening();
+            //     var openDirection = effect.openDirection;
+            //
+            //     var deltaX = openDirection === Hammer.DIRECTION_LEFT ? event.deltaX : -1 * event.deltaX;
+            //
+            //     isValid = isValid && (
+            //         (!isOpen && lastKnownDirection !== openDirection) ||
+            //         (isOpen && lastKnownDirection === openDirection) ||
+            //         deltaX < 0
+            //     );
+            //
+            //     console.log(
+            //         'Pinny: ', this.id,
+            //         'Direction: ', lastKnownDirection === Hammer.DIRECTION_RIGHT ? 'right' : 'left',
+            //         'isOpen: ', isOpen,
+            //         'isOpening: ', isOpening,
+            //         'result: ', isValid
+            //     );
+                ignore = ignore && plugin._activePinnies(true) > 0;
             }
 
-            return isValid;
+            return ignore;
         },
 
         _addSwipeRegognizer: function (manager) {
@@ -285,6 +286,7 @@
 
         _addPanRecognizer: function (manager) {
             var plugin = this;
+            var openDirection = plugin.effect.openDirection;
 
             manager.on('panmove', function (e) {
 
@@ -292,20 +294,19 @@
 
                 if (!ignoreSwipe) {
                     var isOpen = plugin._isOpen();
-                    var deltaP = Math.abs(e.deltaX / plugin.$container.width() * 100);
+                    var deltaX = openDirection === Hammer.DIRECTION_LEFT ? e.deltaX : -1 * event.deltaX;
+                    var deltaP = deltaX / plugin.$container.width() * 100;
 
                     // Reset status
                     plugin.$pinny.removeClass(classes.CLOSING);
                     plugin.$pinny.removeClass(classes.OPENING);
 
-                    if (plugin._activePinnies(true) <= 0) { // Do no open if there are active pinnies.
-                        if (!isOpen) { // Opening
-                            plugin.$pinny.addClass(classes.OPENING);
-                            plugin.open(deltaP);
-                        } else { // Closing
-                            plugin.$pinny.addClass(classes.CLOSING);
-                            plugin.close(deltaP);
-                        }
+                    if (!isOpen) { // Opening
+                        plugin.$pinny.addClass(classes.OPENING);
+                        plugin.open(deltaP);
+                    } else { // Closing
+                        plugin.$pinny.addClass(classes.CLOSING);
+                        plugin.close(deltaP);
                     }
                 }
             });
