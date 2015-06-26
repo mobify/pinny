@@ -308,14 +308,15 @@
                         plugin.$pinny.addClass(classes.CLOSING);
                         plugin.close(deltaP);
                     }
+                }
 
-                    //
-                    if (e.isFinal) {
-                        if (e.direction === openDirection) {
-                            plugin.open();
-                        } else {
-                            plugin.close();
-                        }
+                //
+                console.log('isFinal: ', e.isFinal);
+                if (e.isFinal) {
+                    if (e.direction === openDirection) {
+                        plugin.open();
+                    } else {
+                        plugin.close();
                     }
                 }
             });
