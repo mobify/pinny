@@ -253,7 +253,7 @@
                     'Direction: ', lastKnownDirection,
                     'isOpen: ', isOpen,
                     'isOpening: ', isOpening,
-                    'resu: ', isValid
+                    'result: ', isValid
                 );
             }
 
