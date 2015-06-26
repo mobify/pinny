@@ -258,7 +258,8 @@
                     ignoreSwipe = $target.parents('.needstouch').length ||
                                     $target.hasClass('.needstouch').length ||
                                     (!isOpen && lastKnownDirection !== openDirection && !isOpening) ||
-                                    (isOpen && lastKnownDirection === openDirection);
+                                    (isOpen && lastKnownDirection === openDirection) ||
+                                    e.deltaX < 0;
 
                     if (!ignoreSwipe) {
                         var deltaP = Math.abs(e.deltaX / plugin.$container.width() * 100);
@@ -268,7 +269,7 @@
                         plugin.$pinny.removeClass(classes.OPENING);
 
                         if (!isOpen) { // Opening
-                            console.log('Open: ', deltaP, e.angle);
+                            console.log('Open: ', deltaP, e.deltaY, e);
                             if (plugin._activePinnies(true) > 0) { // Do no open if there are active pinnies.
                                 return;
                             }
