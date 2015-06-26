@@ -236,8 +236,8 @@
             var isValid = true;
             var $target = $(event.target);
 
-            isValid = $target.parents('.needstouch').length || // Ignore events on explicitly defined elements
-                        $target.hasClass('.needstouch').length;
+            isValid = $target.parents('.needstouch').length > 0 || // Ignore events on explicitly defined elements
+                        $target.hasClass('.needstouch').length > 0;
 
             if (interactive) {
                 var lastKnownDirection = event.direction;
@@ -250,7 +250,7 @@
 
                 console.log(
                     'Pinny: ', this.id,
-                    'Direction: ', lastKnownDirection,
+                    'Direction: ', lastKnownDirection === Hammer.DIRECTION_RIGHT ? 'right' : 'left',
                     'isOpen: ', isOpen,
                     'isOpening: ', isOpening,
                     'result: ', isValid
