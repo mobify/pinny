@@ -287,9 +287,9 @@
         _addPanRecognizer: function (manager) {
             var plugin = this;
             var openDirection = plugin.effect.openDirection;
+            var lastKnownDirection;
 
             manager.on('panmove', function (e) {
-
                 var ignoreSwipe = plugin._ignoreGesture(e, plugin.effect, true);
 
                 if (!ignoreSwipe) {
@@ -308,16 +308,15 @@
                         plugin.$pinny.addClass(classes.CLOSING);
                         plugin.close(deltaP);
                     }
-                }
-            });
 
-            manager.on('panend', function (e) {
-                var openDirection = plugin.effect.openDirection;
-
-                if (e.direction === openDirection) {
-                    !plugin._activePinnies(true) && !plugin._isOpen() && plugin.open();
-                } else {
-                    plugin.close();
+                    //
+                    if (e.isFinal) {
+                        if (e.direction === openDirection) {
+                            plugin.open();
+                        } else {
+                            plugin.close();
+                        }
+                    }
                 }
             });
         },
