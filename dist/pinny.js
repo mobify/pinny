@@ -289,30 +289,29 @@
             var openDirection = plugin.effect.openDirection;
             var lastKnownDirection;
 
-            manager.on('panmove', function (e) {
+            manager.on('panmove panend', function (e) {
                 var ignoreSwipe = plugin._ignoreGesture(e, plugin.effect, true);
 
-                if (!ignoreSwipe) {
-                    var isOpen = plugin._isOpen();
-                    var deltaX = openDirection === Hammer.DIRECTION_LEFT ? -1 * e.deltaX : e.deltaX;
-                    var deltaP = deltaX / plugin.$container.width() * 100;
+                if (!e.isFinal) {
+                    if (!ignoreSwipe) {
+                        var isOpen = plugin._isOpen();
+                        var deltaX = openDirection === Hammer.DIRECTION_LEFT ? -1 * e.deltaX : e.deltaX;
+                        var deltaP = deltaX / plugin.$container.width() * 100;
 
-                    // Reset status
-                    plugin.$pinny.removeClass(classes.CLOSING);
-                    plugin.$pinny.removeClass(classes.OPENING);
+                        // Reset status
+                        plugin.$pinny.removeClass(classes.CLOSING);
+                        plugin.$pinny.removeClass(classes.OPENING);
 
-                    if (!isOpen) { // Opening
-                        plugin.$pinny.addClass(classes.OPENING);
-                        plugin.open(deltaP);
-                    } else { // Closing
-                        plugin.$pinny.addClass(classes.CLOSING);
-                        plugin.close(deltaP);
+                        if (!isOpen) { // Opening
+                            plugin.$pinny.addClass(classes.OPENING);
+                            plugin.open(deltaP);
+                        } else { // Closing
+                            plugin.$pinny.addClass(classes.CLOSING);
+                            plugin.close(deltaP);
+                        }
                     }
                 }
-
-                //
-                console.log('isFinal: ', e.isFinal);
-                if (e.isFinal) {
+                else {
                     if (e.direction === openDirection) {
                         plugin.open();
                     } else {
