@@ -289,7 +289,7 @@
                         // Reset status
                         plugin.$pinny.removeClass(classes.CLOSING);
                         plugin.$pinny.removeClass(classes.OPENING);
-                                                
+
                         if (!isOpen) { // Opening
                             console.log(plugin.effectName + ': Opening' + deltaP);
                             plugin.$pinny.addClass(classes.OPENING);
@@ -302,10 +302,12 @@
                     }
                 }
                 else {
-                    if (e.direction === openDirection) {
-                        plugin.open();
-                    } else {
-                        plugin.close();
+                    if (plugin.$pinny.hasClass(classes.OPENING) || plugin.$pinny.hasClass(classes.CLOSING)) {
+                        if (e.direction === openDirection) {
+                            plugin.open();
+                        } else {
+                            plugin.close();
+                        }
                     }
                 }
             });
