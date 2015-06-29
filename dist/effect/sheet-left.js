@@ -46,7 +46,7 @@
         };
 
         return {
-            openDirection: Hammer.DIRECTION_RIGHT,
+            //openDirection: Hammer.DIRECTION_RIGHT,
             open: function(dPercent) { // Accepts a percentage value 0 = fully closed, 100 = fully open
                 console.log('Open: ', dPercent);
                 if (dPercent) {
