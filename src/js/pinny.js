@@ -163,6 +163,7 @@
             }
 
             this.effect = this.options.effect.call(this);
+            this.effectName = (this.effect.openDirection === Hammer.DIRECTION_RIGHT) ? 'Sheet-Left' : 'Sheet-Right';
 
             this.$element.removeAttr('hidden');
 
@@ -240,29 +241,7 @@
                         $target.hasClass('.needstouch').length > 0;
 
             if (interactive) {
-            //     var lastKnownDirection = event.direction;
-            //     var isOpen = plugin._isOpen();
-            //     var isOpening = plugin._isOpening();
-            //     var openDirection = effect.openDirection;
-            //
-            //     var deltaX = openDirection === Hammer.DIRECTION_LEFT ? event.deltaX : -1 * event.deltaX;
-            //
-            //     isValid = isValid && (
-            //         (!isOpen && lastKnownDirection !== openDirection) ||
-            //         (isOpen && lastKnownDirection === openDirection) ||
-            //         deltaX < 0
-            //     );
-            //
-            //     console.log(
-            //         'Pinny: ', this.id,
-            //         'Direction: ', lastKnownDirection === Hammer.DIRECTION_RIGHT ? 'right' : 'left',
-            //         'isOpen: ', isOpen,
-            //         'isOpening: ', isOpening,
-            //         'result: ', isValid
-            //     );
-                var dir = plugin.effect.openDirection === Hammer.DIRECTION_RIGHT ? 'Right' : 'Left';
-                console.log(dir);
-                console.log('Has other active pinnys: ' + plugin._activePinnies(true));
+                console.log(plugin.effectName + ': Has other active pinnys: ' + plugin._activePinnies(true));
                 ignore = ignore || plugin._activePinnies(true);
             }
 
@@ -310,11 +289,13 @@
                         // Reset status
                         plugin.$pinny.removeClass(classes.CLOSING);
                         plugin.$pinny.removeClass(classes.OPENING);
-
+                                                
                         if (!isOpen) { // Opening
+                            console.log(plugin.effectName + ': Opening' + deltaP);
                             plugin.$pinny.addClass(classes.OPENING);
                             plugin.open(deltaP);
                         } else { // Closing
+                            console.log(plugin.effectName + ': Closing ' + deltaP);
                             plugin.$pinny.addClass(classes.CLOSING);
                             plugin.close(deltaP);
                         }

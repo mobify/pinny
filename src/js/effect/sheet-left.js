@@ -48,7 +48,6 @@
         return {
             openDirection: Hammer.DIRECTION_RIGHT,
             open: function(dPercent) { // Accepts a percentage value 0 = fully closed, 100 = fully open
-                console.log('Open: ', dPercent);
                 if (dPercent) {
                     setVisibility(dPercent);
                 } else {
@@ -67,7 +66,6 @@
 
             },
             close: function(dPercent) {  // Accepts a percentage value 0 = fully open, 100 = fully closed
-                console.log('Close: ', dPercent);
                 if (dPercent) {
                     setVisibility(100 - dPercent);
                 } else {
