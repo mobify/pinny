@@ -191,15 +191,15 @@
             if (!percentage) {
                 this._trigger('open');
                 this.options.shade && this.$shade.shade('open');
-            }
 
-            // CSOPS-1165: Fix broken Eddie Bauer Pinny for iOS8
-            //
-            // On iOS8, Pinny could be initially broken unless the page scrolls for at least 1 pixel before opening
-            // By forcing a scroll, Pinny would be built and render properly
-            if (iOS8) {
-                var scrollTop = $(window).scrollTop();
-                window.scrollTo(0, +scrollTop + 1);
+                // CSOPS-1165: Fix broken Eddie Bauer Pinny for iOS8
+                //
+                // On iOS8, Pinny could be initially broken unless the page scrolls for at least 1 pixel before opening
+                // By forcing a scroll, Pinny would be built and render properly
+                if (iOS8) {
+                    var scrollTop = $(window).scrollTop();
+                    window.scrollTo(0, +scrollTop + 1);
+                }
             }
 
             bouncefix.add(classes.SCROLLABLE);
@@ -295,7 +295,7 @@
                 if (!e.isFinal) {
                     if (!ignoreSwipe) {
                         var isOpen = plugin._isOpen();
-                        var deltaX = openDirection === Hammer.DIRECTION_LEFT && isOpen ? -1 * e.deltaX : e.deltaX;
+                        var deltaX = openDirection === Hammer.DIRECTION_LEFT ? -1 * e.deltaX : e.deltaX;
                         var deltaP = deltaX / plugin.$container.width() * 100;
 
                         // Reset status
