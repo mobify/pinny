@@ -260,7 +260,7 @@
             //         'isOpening: ', isOpening,
             //         'result: ', isValid
             //     );
-                ignore = ignore && plugin._activePinnies(true) > 0;
+                ignore = ignore && plugin._activePinnies(true);
             }
 
             return ignore;
