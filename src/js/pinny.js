@@ -300,6 +300,10 @@
                         var deltaX = (isReverse && !isOpen) || (!isReverse && isOpen) ? -1 * e.deltaX : e.deltaX;
                         var deltaP = deltaX / plugin.$container.width() * 100;
 
+                        if (deltaP < 0) {
+                            return;
+                        }
+
                         // Reset status
                         plugin.$pinny.removeClass(classes.CLOSING);
                         plugin.$pinny.removeClass(classes.OPENING);
