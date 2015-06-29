@@ -288,6 +288,7 @@
             var plugin = this;
             var openDirection = plugin.effect.openDirection;
             var lastKnownDirection;
+            var isReverse = openDirection === Hammer.DIRECTION_LEFT;
 
             manager.on('panmove panend', function (e) {
                 var ignoreSwipe = plugin._ignoreGesture(e, plugin.effect, true);
@@ -295,7 +296,8 @@
                 if (!e.isFinal) {
                     if (!ignoreSwipe) {
                         var isOpen = plugin._isOpen();
-                        var deltaX = ((openDirection === Hammer.DIRECTION_LEFT) && !isOpen) ? -1 * e.deltaX : e.deltaX;
+
+                        var deltaX = (isReverse && !isOpen) || (!isReverse && isOpen) ? -1 * e.deltaX : e.deltaX;
                         var deltaP = deltaX / plugin.$container.width() * 100;
 
                         // Reset status
