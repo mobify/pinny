@@ -260,8 +260,10 @@
             //         'isOpening: ', isOpening,
             //         'result: ', isValid
             //     );
+                var dir = plugin.effect.openDirection === Hammer.DIRECTION_RIGHT ? 'Right' : 'Left';
+                console.log(dir);
                 console.log('Has other active pinnys: ' + plugin._activePinnies(true));
-                ignore = ignore && plugin._activePinnies(true);
+                ignore = ignore || plugin._activePinnies(true);
             }
 
             return ignore;
