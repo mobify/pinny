@@ -260,6 +260,7 @@
             //         'isOpening: ', isOpening,
             //         'result: ', isValid
             //     );
+                console.log('Has other active pinnys: ' + plugin._activePinnies(true));
                 ignore = ignore && plugin._activePinnies(true);
             }
 
