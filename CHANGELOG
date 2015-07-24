@@ -1,3 +1,5 @@
+2.0.3
+	- Fix for issue #85 - Update dependencies to include event-polyfill, velocity and isChildOf
 2.0.2
     - Fix for issue #73 - On iOS 7 first input focus does not invoke _scrollToTarget() correctly
 2.0.1
