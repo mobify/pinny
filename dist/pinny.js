@@ -36,6 +36,7 @@
 
     var $window = $(window);
     var iOS7orBelow = $.os.ios && $.os.major <= 7;
+    var iOS8 = $.os.ios && $.os.major >= 8;
 
     var classes = {
         PINNY: 'pinny',
@@ -122,6 +123,13 @@
                     this.$container.attr('aria-hidden', 'true');
 
                     this._trigger('opened');
+
+                    // Lockup scrolls the lockup container but the page will not be in the correct scroll position.
+                    // We will set it to the top so the page would appear exactly where you left off.
+
+                    if (iOS8) {
+                        $(window).scrollTop(0);
+                    }
 
                 }.bind(this), 0);
             },
