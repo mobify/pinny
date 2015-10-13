@@ -27,6 +27,6 @@
     "shade": "~1.1.1",
     "lockup": "~1.1.3",
     "deckard": "~1.0.0",
-    "selector-utils": "https://github.com/mobify/selector-utils.git"
+    "selector-utils": "~1.1.0"
   }
 }
