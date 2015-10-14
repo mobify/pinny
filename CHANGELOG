@@ -9,6 +9,8 @@
     - Apply spacer fix to Android 4.0 and below as well as iOS7 and below
     - Remove "auto-scroll to selected input" behaviour, since iOS7 handles this
       fine on its own.
+    - Perform openComplete/closeComplete work in a setTimeout call to improve
+      performance
 2.0.2
     - Fix for issue #73 - On iOS 7 first input focus does not invoke _scrollToTarget() correctly
 2.0.1
