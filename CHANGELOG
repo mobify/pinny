@@ -1,3 +1,16 @@
+2.0.3
+    - Fire lock and unlock events even if not locking/unlocking due to presence
+      of activePinnies
+    - Don't immediately add spacer on initialization, wait for input focus
+    - Fix scrollTarget to ignore invalid scroll targets (eg. document)
+    - Uses new release of lockup
+    - Limit focusable inputs to known good whitelist of text input types
+      (text, password, email, etc.) instead of to all inputs
+    - Apply spacer fix to Android 4.0 and below as well as iOS7 and below
+    - Remove "auto-scroll to selected input" behaviour, since iOS7 handles this
+      fine on its own.
+    - Perform openComplete/closeComplete work in a setTimeout call to improve
+      performance
 2.0.2
     - Fix for issue #73 - On iOS 7 first input focus does not invoke _scrollToTarget() correctly
 2.0.1

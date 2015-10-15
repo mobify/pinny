@@ -1,9 +1,10 @@
 define([
     'test-sandbox',
-    'text!fixtures/pinny.html'
-], function(testSandbox, fixture) {
+    'text!fixtures/pinny.html',
+    'text!fixtures/fullPinny.html'
+], function(testSandbox, fixture, fixtureFull) {
     var Pinny;
-    var $element;
+    var $element, $element2;
     var modalCenter;
     var $;
 
@@ -14,6 +15,7 @@ define([
                 Pinny = $.fn.pinny.Constructor;
                 modalCenter = dependencies.modalCenter;
                 $element = $(fixture);
+                $element2 = $(fixtureFull);
 
                 done();
             };
@@ -113,6 +115,66 @@ define([
             });
 
             $element.pinny('open');
+        });
+
+        it('fires all lock handlers', function(done) {
+            var lockCtr = 0;
+
+            // Open first pinny
+            $element.pinny({
+                effect: modalCenter,
+                open: function() {
+                    var _locked = this.$pinny.data('lockup').options.locked;
+                    this.$pinny.data('lockup').options.locked = function() {
+                        ++lockCtr;
+                        return _locked.apply(this, arguments);
+                    };
+                }
+            }).pinny('open');
+
+            // Setup second pinny
+            $element2.pinny({
+                effect: modalCenter,
+                open: function() {
+                    // Test passes only if the `locked` event is triggered twice
+                    this.$pinny.data('lockup').options.locked = function() {
+                        ++lockCtr === 2 && done();
+                    };
+                }
+            }).pinny('open');
+        });
+
+        it('fires all unlock handlers', function(done) {
+            var lockCtr = 2;
+
+            // Open first pinny
+            $element.pinny({
+                effect: modalCenter,
+                open: function() {
+                    this.$pinny.data('lockup').options.unlocked = function() {
+                        --lockCtr;
+                    };
+                }
+            }).pinny('open');
+
+            // Setup second pinny
+            $element2.pinny({
+                effect: modalCenter,
+                open: function() {
+                    var _unlocked = this.$pinny.data('lockup').options.unlocked;
+
+                    // Test passes only if the `unlocked` event is triggered twice
+                    this.$pinny.data('lockup').options.unlocked = function() {
+                        --lockCtr === 0 && done();
+                    };
+                }
+            }).pinny('open');
+
+            // Wait for pinny opening animation
+            setTimeout(function() {
+                $element.pinny('close');
+                $element2.pinny('close');
+            }, 300);
         });
     });
 });

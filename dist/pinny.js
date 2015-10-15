@@ -18,7 +18,10 @@
 }(function($, Plugin, bouncefix, EventPolyfill, Velocity) {
     var EFFECT_REQUIRED = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
     var FOCUSABLE_ELEMENTS = 'a[href], area[href], input, select, textarea, button, iframe, object, embed, [tabindex], [contenteditable]';
-    var FOCUSABLE_INPUT_ELEMENTS = 'input, select, textarea';
+    var FOCUSABLE_INPUT_ELEMENTS =
+        'input[type="text"], input[type="email"], input[type="password"],' +
+        'input[type="tel"], input[type="search"], input[type="number"],' +
+        'select, textarea';
 
     /**
      * Function.prototype.bind polyfill required for < iOS6
@@ -35,7 +38,8 @@
     /* jshint ignore:end */
 
     var $window = $(window);
-    var iOS7orBelow = $.os.ios && $.os.major <= 7;
+    var needsSpacer = ($.os.ios && $.os.major <= 7) ||
+        ($.os.android && $.os.major <= 4);
 
     var classes = {
         PINNY: 'pinny',
@@ -70,7 +74,7 @@
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
     }
 
-    Pinny.VERSION = '2.0.2';
+    Pinny.VERSION = '2.0.3';
 
     Pinny.DEFAULTS = {
         effect: null,
@@ -100,49 +104,56 @@
          */
         animation: {
             openComplete: function() {
-                var plugin = this;
-                this._disableExternalInputs();
-                this._focus();
+                setTimeout(function () {
 
-                // only run lockup if another pinny isn't
-                // open and locked the viewport up already
-                !this._activePinnies() && this.$pinny.lockup('lock');
+                    this._disableExternalInputs();
+                    this._focus();
+                    // Only run lockup if another pinny isn't open and has
+                    // locked up the viewport already
+                    if (this._activePinnies()) {
+                        this.$pinny.data('lockup')._trigger('locked');
+                    } else {
+                        // The other pinny has probably set this listener already
+                        $window.on(events.orientationchange, this._blurActiveElement.bind(this));
+                        this.$pinny.lockup('lock');
+                    }
 
-                EventPolyfill.on(events.resize, function() {
-                    plugin._repaint();
-                });
+                    EventPolyfill.on(events.resize, this._repaint);
 
-                if (!this._activePinnies() && iOS7orBelow) {
-                    $window.on(events.orientationchange, this._blurActiveElement.bind(this));
-                }
+                    this.$pinny
+                        .addClass(classes.OPENED)
+                        .attr('aria-hidden', 'false');
 
-                this.$pinny
-                    .addClass(classes.OPENED)
-                    .attr('aria-hidden', 'false');
+                    this.$container.attr('aria-hidden', 'true');
 
-                this.$container.attr('aria-hidden', 'true');
+                    this._trigger('opened');
 
-                this._trigger('opened');
+                }.bind(this), 0);
             },
             closeComplete: function() {
-                this.$pinny
-                    .removeClass(classes.OPENED)
-                    .attr('aria-hidden', 'true');
+                setTimeout(function () {
+                    this.$pinny
+                        .removeClass(classes.OPENED)
+                        .attr('aria-hidden', 'true');
 
-                this._enableExternalInputs();
-                this._resetFocus();
+                    this._enableExternalInputs();
+                    this._resetFocus();
 
-                // only unlock if there isn't another pinny
-                // that requires the viewport to be locked
-                if (!this._activePinnies()) {
-                    this.$pinny.lockup('unlock');
-                    EventPolyfill.off(events.resize);
-                    $window.off(events.orientationchange);
-                }
+                    // only unlock if there isn't another pinny
+                    // that requires the viewport to be locked
+                    if (this._activePinnies()) {
+                        this.$pinny.data('lockup')._trigger('unlocked');
+                    } else {
+                        this.$pinny.lockup('unlock');
+                        EventPolyfill.off(events.resize);
+                        $window.off(events.orientationchange);
+                    }
 
-                this.$container.attr('aria-hidden', 'false');
+                    this.$container.attr('aria-hidden', 'false');
 
-                this._trigger('closed');
+                    this._trigger('closed');
+
+                }.bind(this), 0);
             }
         },
 
@@ -280,7 +291,6 @@
                     .addClass(classes.CONTENT)
                     .addClass(classes.SCROLLABLE)
                     .append(this.$element)
-                    .append(this.$spacer)
                     .appendTo($wrapper);
 
                 this._buildComponent('footer').appendTo($wrapper);
@@ -444,44 +454,24 @@
         },
 
         /**
-         * In iOS7 or below, when elements are focused inside pinny
+         * In iOS7/Android 4 or below, when elements are focused inside pinny
          * the keyboard obscures the input. We need to scroll back to
          * the element to keep it in view.
          */
         _handleKeyboardShown: function() {
-            if (iOS7orBelow) {
-                var activate = function() {
-                    this._showSpacer();
-                    this._scrollToTarget();
-                };
-
+            if (needsSpacer) {
                 this.$pinny.find(FOCUSABLE_INPUT_ELEMENTS)
-                    .on(events.focus, activate.bind(this))
+                    .on(events.focus, this._showSpacer.bind(this))
                     .on(events.blur, this._hideSpacer.bind(this));
-
-                activate.call(this);
             }
         },
 
         _handleKeyboardHidden: function() {
-            if (iOS7orBelow) {
+            if (needsSpacer) {
                 this.$pinny.find(FOCUSABLE_INPUT_ELEMENTS)
                     .off(events.focus)
                     .off(events.blur);
             }
-        },
-
-        /**
-         * In iOS7 or below, when inputs are focused inside pinny, we show a
-         * spacer element at the bottom of pinny content so that it creates space
-         * in the viewport to facilitate scrolling back to the element.
-         */
-        _scrollToTarget: function() {
-            Velocity.animate(this._scrollTarget(), 'scroll', {
-                container: this.$content[0],
-                offset: -1 * (this.$header.height() + parseInt(this.$content.css('padding-top'))),
-                duration: this.options.scrollDuration
-            });
         },
 
         _showSpacer: function() {
@@ -498,24 +488,6 @@
 
         _blurActiveElement: function() {
             this._activeElement().blur();
-        },
-
-        /**
-         * Returns the closest parent element that doesn't have relative positioning
-         * (within the pinny__content container). Relative positioning messes with
-         * Velocity's scroll, which prevents us from correctly scrolling back to active
-         * inputs in pinny__content.
-         */
-        _scrollTarget: function() {
-            var $scrollTarget = this._activeElement();
-            var $activeElementParent = $scrollTarget.parent();
-
-            while ($activeElementParent.css('position') === 'relative' && !$activeElementParent.hasClass(classes.CONTENT)) {
-                $scrollTarget = $activeElementParent;
-                $activeElementParent = $scrollTarget.parent();
-            }
-
-            return $scrollTarget;
         }
     });
 
