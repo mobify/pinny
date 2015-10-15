@@ -108,19 +108,17 @@
 
                     this._disableExternalInputs();
                     this._focus();
-                    // only run lockup if another pinny isn't
-                    // open and locked the viewport up already
+                    // Only run lockup if another pinny isn't open and has
+                    // locked up the viewport already
                     if (this._activePinnies()) {
                         this.$pinny.data('lockup')._trigger('locked');
                     } else {
+                        // The other pinny has probably set this listener already
+                        $window.on(events.orientationchange, this._blurActiveElement.bind(this));
                         this.$pinny.lockup('lock');
                     }
 
                     EventPolyfill.on(events.resize, this._repaint);
-
-                    if (!this._activePinnies()) {
-                        $window.on(events.orientationchange, this._blurActiveElement.bind(this));
-                    }
 
                     this.$pinny
                         .addClass(classes.OPENED)
