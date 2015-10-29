@@ -205,6 +205,12 @@
                 return;
             }
 
+            // Force window repaint before Pinny opens so that it will
+            // render correctly and not double the viewport width.
+            if (iOS8) {
+                this._repaint();
+            }
+
             this._trigger('open');
 
             bouncefix.add(classes.SCROLLABLE);
