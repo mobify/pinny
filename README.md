@@ -91,7 +91,7 @@ For accessibility and functional purposes, Pinny will wrap all of your body cont
 <link rel="stylesheet" href="pinny.min.css">
 
 <!-- Optionally include the Theme file -->
-<link rel="stylesheet" href="pinny-style.min.css">
+<link rel="stylesheet" href="pinny-theme.min.css">
 
 <!-- Optionally include a wrapping container -->
 <div id="bodyContent" class="pinny__body-wrapper">
@@ -543,7 +543,7 @@ Currently, form inputs and selects inside of Pinny have issues on iOS7 and under
 
 ### Grunt Tasks:
 * `grunt` or `grunt build` - builds a distributable release
-* `grunt watch` - watches for changes and builds when changes are detected. 
+* `grunt watch` - watches for changes and builds when changes are detected.
 * `grunt serve` - runs the server, building changes and then watching for changes. Use grunt serve to preview the site at **http://localhost:3000**
 * `grunt test` - runs Pinny's test suite in your console
 * `grunt test:browser` - runs a server that allows you to run pinny's test suite in your browser by browsing to **http://localhost:8888/tests/runner**
