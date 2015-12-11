@@ -113,7 +113,6 @@
                     if (this._activePinnies()) {
                         this.$pinny.data('lockup')._trigger('locked');
                     } else {
-                        // The other pinny has probably set this listener already
                         $window.on(events.orientationchange, this._blurActiveElement.bind(this));
                         this.$pinny.lockup('lock');
                     }
@@ -460,17 +459,17 @@
          */
         _handleKeyboardShown: function() {
             if (needsSpacer) {
-                this.$pinny.find(FOCUSABLE_INPUT_ELEMENTS)
-                    .on(events.focus, this._showSpacer.bind(this))
-                    .on(events.blur, this._hideSpacer.bind(this));
+                this.$pinny
+                    .on(events.focus, FOCUSABLE_INPUT_ELEMENTS, this._showSpacer.bind(this))
+                    .on(events.blur, FOCUSABLE_INPUT_ELEMENTS, this._hideSpacer.bind(this));
             }
         },
 
         _handleKeyboardHidden: function() {
             if (needsSpacer) {
-                this.$pinny.find(FOCUSABLE_INPUT_ELEMENTS)
-                    .off(events.focus)
-                    .off(events.blur);
+                this.$pinny
+                    .off(events.focus, FOCUSABLE_INPUT_ELEMENTS)
+                    .off(events.blur, FOCUSABLE_INPUT_ELEMENTS);
             }
         },
 
