@@ -398,8 +398,12 @@
             this.$pinny.children().first().focus();
         },
 
+        // Set focus back to input field after pinny is closed
+        // to keep context for screen readers experience
         _resetFocus: function() {
-            this.originalActiveElement && this.originalActiveElement.focus();
+            if (this.options.reFocus) {
+                this.originalActiveElement && this.originalActiveElement.focus();
+            }
         },
 
         /**

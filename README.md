@@ -164,7 +164,8 @@ $('#myPinny').pinny({
     open: noop,
     opened: noop,
     close: noop,
-    closed: noop
+    closed: noop,
+    reFocus: true
 });
 ```
 
@@ -482,6 +483,19 @@ $('#myPinny').pinny({
     closed: function(e, ui) {
         // ui.item contains the item that closed
     }
+});
+```
+
+##### reFocus
+
+default: `true`
+
+Refocusing on the input element to return context for screen readers experience.
+Set it to `false` if pinny should not set focus back to input for any reason.
+
+```js
+$('#myPinny').pinny({
+    reFocus: false
 });
 ```
 

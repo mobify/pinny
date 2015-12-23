@@ -1,3 +1,5 @@
+2.0.4
+    - Made feature where pinny re-focuses back on input field after closing optional (added `reFocus`: Bool option)
 2.0.3
     - Fire lock and unlock events even if not locking/unlocking due to presence
       of activePinnies

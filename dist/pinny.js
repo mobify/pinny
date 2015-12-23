@@ -74,7 +74,7 @@
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
     }
 
-    Pinny.VERSION = '2.0.3';
+    Pinny.VERSION = '2.0.4';
 
     Pinny.DEFAULTS = {
         effect: null,
@@ -113,7 +113,6 @@
                     if (this._activePinnies()) {
                         this.$pinny.data('lockup')._trigger('locked');
                     } else {
-                        // The other pinny has probably set this listener already
                         $window.on(events.orientationchange, this._blurActiveElement.bind(this));
                         this.$pinny.lockup('lock');
                     }
@@ -399,8 +398,12 @@
             this.$pinny.children().first().focus();
         },
 
+        // Set focus back to input field after pinny is closed
+        // to keep context for screen readers experience
         _resetFocus: function() {
-            this.originalActiveElement && this.originalActiveElement.focus();
+            if (this.options.reFocus) {
+                this.originalActiveElement && this.originalActiveElement.focus();
+            }
         },
 
         /**
