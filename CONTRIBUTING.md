@@ -1,43 +1,61 @@
-## Contributing
+# Contributing
 
-We love pull requests, and other people helping maintain our code. If you want to contribute, please follow these guidelines.
+We love pull requests. If you want to contribute a bug fix or feature, please follow the guidelines below. Don't forget to add tests!
 
-### Bugfixes
+If you are unable to resolve the issue with a PR, create an issue in our [issue tracker](https://github.com/mobify/pinny/issues) describing the problem.
 
-Create an issue in our [issue tracker](https://github.com/mobify/pinny/issues) describing the problem. Follow the steps below, fixing the bug in your fork. Don't forget to add tests!
+## Instructions
 
-### General Contribution Guidelines
+#### Fork
 
-Fork, then clone the repo:
+[Fork](https://help.github.com/articles/fork-a-repo/), then [clone](https://help.github.com/articles/cloning-a-repository/) the repo:
 
 ```
 git clone https://github.com/your-username/pinny.git
 ```
 
-Ensure the tests pass:
+Install any dependencies:
+
+```
+cd your-pinny-directory
+bower install
+npm install
+```
+
+#### Contribute
+
+First, ensure the existing tests pass:
 
 ```
 grunt test
 ```
-	
-Make your changes, add tests for your changes, then run the tests again:
+
+Make your changes, **add tests for your changes**, then ensure the tests continue to pass:
 
 ```
 grunt test
 ```
 
-### Building a release
+#### Build
 
-Releases are built into the `dist` directory. To build a release, do the following:
+If the tests have passed, generate the build. Build files are built into the `dist` directory. To build, do the following:
 
-Increment the version number in the package.json file according to the [semver](http://semver.org/) specification.
+1. Increment the version number in the package.json file according to the [semver](http://semver.org/) specification.
 
-Run the following `grunt` task to build the dist:
+2. Run the following `grunt` task to build the dist:
 
-```
-grunt build
-```
+  ```
+  grunt build
+  ```
 
-Push to your fork, and open a [pull request](https://github.com/mobify/pinny/compare). Please ensure you describe your changes in your pull request, as they have a higher liklihood of being merged. 
+3. Push to your fork, and open a [pull request](https://github.com/mobify/pinny/compare). Please ensure you use the [Plugin Pull Request Template](./PULL-REQUEST-TEMPLATE.md) when opening up a pull request; describing your changes increases the likelihood of the PR being merged.
 
+## Coding Guidelines
 
+The following section sets out some guidelines for code being submitted to the project.  These are not hard-and-fast rules but rather guidelines that help to make for a consistent and easy-to-learn codebase.
+
+#### JavaScript
+
+[Mobify JavaScript Code Style Guidelines](https://github.com/mobify/mobify-code-style/tree/master/javascript)
+
+JS can be manually run through our code style linter (eslint) with the command `grunt lint`. Please note that JS will be linted automatically during each build.
