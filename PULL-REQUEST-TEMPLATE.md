@@ -17,7 +17,7 @@ Linked PRs: **(links to corresponding PRs, optional)**
 - (link1)
 
 ## TODOS:
-- [ ] Changes tested and working in both Android and iOS
+- [ ] Changes tested and working in supported browsers (see [README](https://github.com/mobify/pinny#browser-compatibility) for supported browsers)
 - [ ] Tests added
 - [ ] Tests passed
 - [ ] Build generated
