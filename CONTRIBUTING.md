@@ -24,17 +24,7 @@ npm install
 
 #### Contribute
 
-First, ensure the existing tests pass:
-
-```
-grunt test
-```
-
-Make your changes, **add tests for your changes**, then ensure the tests continue to pass:
-
-```
-grunt test
-```
+First, ensure the existing tests pass. Make your changes, **add tests for your changes**, then ensure the tests continue to pass in both the terminal and in supported browsers. See [README.md grunt tasks](./README.md#grunt-tasks) for instructions on how to test, and [README.md supported browsers](./README.md#browser-compatibility) for browser list.
 
 #### Build
 
