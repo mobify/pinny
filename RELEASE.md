@@ -3,6 +3,7 @@
 Take this checklist and paste it into your release PR. Ensure steps are followed in order.
 
 - [ ] Tests pass in the terminal and in supported browsers.
+  - See [README](./README.md#browser-compatibility) for list of supported browsers.
   - See [README](./README.md#grunt-tasks) for instructions on how to run these tests.
 - [ ] Branch off `develop` and create a `release-X.X.X` branch.
 - [ ] Increment the version in package.json and bower.json.
