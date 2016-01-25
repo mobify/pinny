@@ -12,4 +12,5 @@ Take this checklist and paste it into your release PR. Ensure steps are followed
   - Describe large internal changes or anything that will affect users.
 - [ ] Merge this release branch into `master` and tag it. Delete release branch.
 - [ ] Merge `master` into `develop`.
-- [ ] Publish a new GitHub [release](https://github.com/mobify/pinny/releases).
+- [ ] Publish a new GitHub [release/tag](https://github.com/mobify/pinny/releases).
+- [ ] Publish the new version to npm by running `npm publish`. 
