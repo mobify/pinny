@@ -553,8 +553,7 @@ The `dist` directory will be populated with minified versions of the css and jav
 
 ## Releasing Pinny
 
-To do a new release of Pinny, follow our [RELEASE.md][RELEASE.md]
-guide.
+To release a new version of Pinny, follow our [RELEASE](./RELEASE.md) guide.
 
 ## License
 
