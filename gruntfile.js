@@ -20,6 +20,12 @@ module.exports = function(grunt) {
         config[configName] = _.extend(config[configName] || {}, option);
     });
 
+    grunt.initConfig(_.extend({
+        pkg: grunt.file.readJSON('package.json'),
+        releaseName: '<%= pkg.name %>-<%= pkg.version %>',
+        releaseMessage: '<%= pkg.name %> release <%= pkg.version %>'
+    }, config));
+
     // load npm tasks
     var npmTasks = [
         'grunt-contrib-uglify',
