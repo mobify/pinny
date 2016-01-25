@@ -551,6 +551,10 @@ Currently, form inputs and selects inside of Pinny have issues on iOS7 and under
 
 The `dist` directory will be populated with minified versions of the css and javascript files for distribution and use with whatever build system you might use. The `src` directory has our raw unminified Sass and Javascript files if you prefer to work with those.
 
+## Releasing Pinny
+
+To release a new version of Pinny, follow our [RELEASE](./RELEASE.md) guide.
+
 ## License
 
 _MIT License. Pinny is Copyright © 2014 Mobify. It is free software and may be redistributed under the terms specified in the LICENSE file._

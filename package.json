@@ -22,7 +22,6 @@
     "grunt-jscs": "0.7.1",
     "grunt-mocha-phantomjs": "~0.3.2",
     "grunt-open": "^0.2.3",
-    "grunt-shell": "~0.2.1",
     "grunt-version": "^0.3.0",
     "jshint": "2.5.0",
     "mobify-code-style": "1.0.0",
