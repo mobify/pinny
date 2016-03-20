@@ -55,4 +55,5 @@ module.exports = function(grunt) {
     grunt.registerTask('test', ['build', 'connect:test', 'mocha_phantomjs']);
     grunt.registerTask('test:browser', ['build', 'concurrent:tests']);
     grunt.registerTask('default', 'build');
+    grunt.registerTask('standalone', ['build', 'connect:server', 'open:standalone', 'watch']);
 };

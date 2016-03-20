@@ -7,6 +7,10 @@ module.exports = function(grunt) {
         tests: {
             path: 'http://localhost:8888/tests/runner',
             app: 'Google Chrome'
+        },
+        standalone: {
+            path: 'http://localhost:3000/examples/standalone.html',
+            app: 'Google Chrome'
         }
-    }
+    };
 };
