@@ -1,5 +1,34 @@
+2.0.3
+    - Fire lock and unlock events even if not locking/unlocking due to presence
+      of activePinnies
+    - Don't immediately add spacer on initialization, wait for input focus
+    - Fix scrollTarget to ignore invalid scroll targets (eg. document)
+    - Uses new release of lockup
+    - Limit focusable inputs to known good whitelist of text input types
+      (text, password, email, etc.) instead of to all inputs
+    - Apply spacer fix to Android 4.0 and below as well as iOS7 and below
+    - Remove "auto-scroll to selected input" behaviour, since iOS7 handles this
+      fine on its own.
+    - Perform openComplete/closeComplete work in a setTimeout call to improve
+      performance
+2.0.2
+    - Fix for issue #73 - On iOS 7 first input focus does not invoke _scrollToTarget() correctly
+2.0.1
+    - Fix for issue #63 - pinny gets distored when software keyboard is active and orientation changes
+2.0.0
+    - Fixing issue in iOS7 where triggering the address bar causes the cursor's position
+      to be be outside of the focussed input field
+1.2.2
+    - Reworked test infrastructure to use more robust setup and teardown using iframes
+1.2.1
+    - Fixed input disabling on underlying page when pinny is open
+    - Upgraded to latest versions of plugin, shade, and lockup
+1.2.0
+    - Added `destroy` function
+1.1.2
+    - Fixes issue in iOS7 or below where form inputs are obscured by the soft keyboard on focus
 1.1.1
-    - Fixed issue where calling open/close multiple times would fire their events multiple times.
+    - Fixed issue where calling open/close multiple times would fire their events multiple times
 1.1.0
     - Added new config option for `appendTo`, allowing you to specify an alternate container that Pinny is appended to
 1.0.2

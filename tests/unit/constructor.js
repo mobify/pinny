@@ -1,24 +1,32 @@
 define([
-    'text!fixtures/pinny.html',
-    '$',
-    'modal-center',
-    'pinny'
-], function(fixture, $, modalCenter) {
+    'test-sandbox',
+    'text!fixtures/pinny.html'
+], function(testSandbox, fixture) {
     var Pinny;
-    var element;
+    var $element;
+    var modalCenter;
+    var $;
 
     describe('Pinny constructor', function() {
-        beforeEach(function() {
-            Pinny = $.fn.pinny.Constructor;
-            element = $(fixture);
+        beforeEach(function(done) {
+            var setUpComplete = function(iFrame$, dependencies) {
+                $ = iFrame$;
+                Pinny = $.fn.pinny.Constructor;
+                modalCenter = dependencies.modalCenter;
+                $element = $(fixture);
+
+                done();
+            };
+
+            testSandbox.setUp('sandbox', setUpComplete);
         });
 
         it('creates a pinny instance', function() {
-            var pinny = new Pinny(element, {
+            var pinny = new Pinny($element, {
                 effect: modalCenter
             });
 
-            assert.isDefined(pinny);
+            expect(pinny).to.be.defined;
         });
     });
 });

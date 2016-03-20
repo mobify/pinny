@@ -12,9 +12,11 @@ require.config({
         'sheet-top': 'dist/effect/sheet-top',
         'plugin': 'bower_components/plugin/dist/plugin.min',
         'shade': 'bower_components/shade/dist/shade.min',
-        'lockup': 'bower_components/lockup/dist/lockup',
+        'lockup': 'bower_components/lockup/src/js/lockup',
         'deckard': 'bower_components/deckard/dist/deckard.min',
-        'pinny': 'dist/pinny'
+        'event-polyfill': 'dist/utils/event-polyfil',
+        'isChildOf': 'bower_components/selector-utils/src/selector/isChildOf',
+        'pinny': 'src/js/pinny'
     },
     'shim': {
         '$': {

@@ -53,6 +53,9 @@ We highly recommend using Require.js with Pinny. To use Require, you have to ref
         'lockup': 'bower_components/lockup/dist/lockup.min',
         'deckard': 'bower_components/deckard/dist/deckard.min',
         'bouncefix': 'bower_components/bouncefix.js/dist/bouncefix.min'
+        'event-polyfil': 'bower_components/pinny/src/js/utils/event-polyfil',
+        'velocity': 'bower_components/mobify-velocity/velocity.min',
+        'isChildOf': 'bower_components/selector-utils/src/selector/isChildOf',
     }
 }
 
@@ -79,7 +82,7 @@ define([
 
 Pinny requires very minimal markup. All Pinny needs is a div with your content and it will automatically transform into what we need.
 
-> To avoid any unwanted FOUT, decorate the content you will be passing to Pinny with the `hidden` attribute. We will remove that attribute when Pinny is initialized.
+> To avoid any unwanted FOUT, decorate the content you will be passing to Pinny with the `hidden` attribute. The `hidden` attribute will be removed when Pinny is initialized.
 
 For accessibility and functional purposes, Pinny will wrap all of your body content in a wrapping container. This could conflict with other plugins that alter your page's markup. If you're seeing issues, try initializing Pinny after your other plugins. If you want to specify your own wrapping container, add a class of `lockup__container` to the element. This element should be a root level element to be effective. You can also [pass Pinny a `container` parameter](https://github.com/mobify/pinny/tree/1.0-alpha#container).
 
@@ -88,7 +91,7 @@ For accessibility and functional purposes, Pinny will wrap all of your body cont
 <link rel="stylesheet" href="pinny.min.css">
 
 <!-- Optionally include the Theme file -->
-<link rel="stylesheet" href="pinny-style.min.css">
+<link rel="stylesheet" href="pinny-theme.min.css">
 
 <!-- Optionally include a wrapping container -->
 <div id="bodyContent" class="pinny__body-wrapper">
@@ -223,7 +226,7 @@ default: `{
             footer: false
         }`
 
-Defines the structure to use for Pinny. Specifically, Pinny tries to build its own HTML structure if passed the default options. 
+Defines the structure to use for Pinny. Specifically, Pinny tries to build its own HTML structure if passed the default options.
 
 **If you want to have full control over the HTML of your Pinny, including the header, footer, and content section, set `structure: false`**. Setting `structure: false` will still allow the `close` event to be bound to any element that has the `pinny__close` class, allowing you to specify the element that should trigger closing your Pinny.
 
@@ -521,21 +524,36 @@ $pinny.pinny('close');
 
 Currently, form inputs and selects inside of Pinny have issues on iOS7 and under. This is due to not being able to lock scrolling without causing rendering issues as well as iOS attempting to scroll the page when the keyboard opens. Forms work but will cause some visual jumping.
 
-## Building a distribution
+## Working with Pinny locally
 
 ### Requirements
-* [node.js 0.10.x/npm](http://nodejs.org/download/)
+
+* [Node.js 0.10.x/npm](http://nodejs.org/download/)
 * [Grunt](http://gruntjs.com/)
-    * Install with `npm install -g grunt-cli`
+  * Install with `npm install -g grunt-cli`
 * [Bower](http://bower.io/)
-    * Install with `npm install -g bower`
+  * Install with `npm install -g bower`
+
 
 ### Steps
 1. `npm install`
 1. `bower install`
-1. `grunt build`
+1. `grunt serve`
+
+
+### Grunt Tasks:
+* `grunt` or `grunt build` - builds a distributable release
+* `grunt watch` - watches for changes and builds when changes are detected.
+* `grunt serve` - runs the server, building changes and then watching for changes. Use grunt serve to preview the site at **http://localhost:3000**
+* `grunt test` - runs Pinny's test suite in your console
+* `grunt test:browser` - runs a server that allows you to run pinny's test suite in your browser by browsing to **http://localhost:8888/tests/runner**
+
 
 The `dist` directory will be populated with minified versions of the css and javascript files for distribution and use with whatever build system you might use. The `src` directory has our raw unminified Sass and Javascript files if you prefer to work with those.
+
+## Releasing Pinny
+
+To release a new version of Pinny, follow our [RELEASE](./RELEASE.md) guide.
 
 ## License
 
