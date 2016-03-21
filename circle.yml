@@ -4,9 +4,8 @@ machine:
 
 test:
     pre:
+        - npm install
         - gem install sass -v 3.4
-        - bower cache clean
-        - bower install
     override:
         - grunt lint
-        - grunt test 
+        - grunt test

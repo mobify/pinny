@@ -113,7 +113,6 @@
                     if (this._activePinnies()) {
                         this.$pinny.data('lockup')._trigger('locked');
                     } else {
-                        // The other pinny has probably set this listener already
                         $window.on(events.orientationchange, this._blurActiveElement.bind(this));
                         this.$pinny.lockup('lock');
                     }

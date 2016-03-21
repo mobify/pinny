@@ -2,7 +2,7 @@ require.config({
     baseUrl: '../',
     paths: {
         'text': 'bower_components/requirejs-text/text',
-        '$': 'lib/zeptojs/dist/zepto',
+        '$': 'node_modules/jquery/dist/jquery.min',
         'bouncefix': 'bower_components/bouncefix.js/dist/bouncefix.min',
         'velocity': 'bower_components/mobify-velocity/velocity',
         'modal-center': 'dist/effect/modal-center',
