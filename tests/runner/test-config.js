@@ -1,7 +1,7 @@
 require.config({
     baseUrl: '../../',
     paths: {
-        'text': 'bower_components/requirejs-text/text',
+        'text': 'node_modules/text/text',
         'glob': 'node_modules/requirejs-glob/lib/glob',
         'fixtures': 'tests/fixtures',
         '$': 'node_modules/jquery/dist/jquery.min',

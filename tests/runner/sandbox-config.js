@@ -1,11 +1,11 @@
 require.config({
     baseUrl: '../../',
     paths: {
-        'text': 'bower_components/requirejs-text/text',
+        'text': 'node_modules/requirejs-text/text',
         'fixtures': 'tests/fixtures',
-        'bouncefix': 'bower_components/bouncefix.js/dist/bouncefix.min',
+        'bouncefix': 'node_modules/bouncefix.js/dist/bouncefix.min',
         '$': 'node_modules/jquery/dist/jquery.min',
-        'velocity': 'bower_components/mobify-velocity/velocity',
+        'velocity': 'node_modules/velocity-animate/velocity',
         'chai': 'node_modules/chai/chai',
         'mocha': 'node_modules/mocha/mocha',
         'modal-center': 'dist/effect/modal-center',
@@ -13,12 +13,12 @@ require.config({
         'sheet-left': 'dist/effect/sheet-left',
         'sheet-right': 'dist/effect/sheet-right',
         'sheet-top': 'dist/effect/sheet-top',
-        'plugin': 'bower_components/plugin/dist/plugin',
-        'shade': 'bower_components/shade/dist/shade.min',
-        'deckard': 'bower_components/deckard/dist/deckard.min',
-        'lockup': 'bower_components/lockup/dist/lockup',
+        'plugin': 'node_modules/plugin/dist/plugin',
+        'shade': 'node_modules/shade/dist/shade.min',
+        'deckard': 'node_modules/deckard/dist/deckard.min',
+        'lockup': 'node_modules/lockup/dist/lockup',
         'event-polyfill': 'dist/utils/event-polyfil',
-        'isChildOf': 'bower_components/selector-utils/src/selector/isChildOf',
+        'isChildOf': 'node_modules/selector-utils/src/selector/isChildOf',
         'pinny': 'dist/pinny'
     },
     'shim': {
