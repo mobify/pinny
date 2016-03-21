@@ -10,7 +10,7 @@ A mobile-first content fly-in UI plugin.
 
 ## Dependencies
 
-* [jQuery](https://jquery.com/)
+* [jQuery](https://jquery.com/) (**Note**: [Zepto](http://zeptojs.com/) is supported until [v2.0.3](https://github.com/mobify/pinny/releases/tag/2.0.3))
 * [Velocity.js](http://julian.com/research/velocity/)
 * [Plugin](http://github.com/mobify/plugin)
 * [Shade](http://github.com/mobify/shade)
