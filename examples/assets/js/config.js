@@ -14,7 +14,7 @@ require.config({
         'shade': 'node_modules/shade/dist/shade.min',
         'lockup': 'node_modules/lockup/src/js/lockup',
         'deckard': 'node_modules/deckard/dist/deckard.min',
-        'event-polyfill': 'dist/utils/event-polyfil',
+        'event-polyfill': 'dist/utils/event-polyfill',
         'isChildOf': 'node_modules/selector-utils/src/selector/isChildOf',
         'pinny': 'src/js/pinny'
     },
