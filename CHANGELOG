@@ -1,4 +1,4 @@
-Pending Release:
+3.0.0
     - Migrate from Zepto to jQuery
     - Migrate from Mobify's fork of Velocity.js to current Velocity.js release
     - Migrate Bower dependencies to NPM
