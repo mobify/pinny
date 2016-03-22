@@ -8,7 +8,7 @@
         var framework = window.jQuery;
         factory(framework, framework.Velocity);
     }
-}(function($, Velocity) {
+})(function($, Velocity) {
     return function() {
         var plugin = this;
         var coverage = this._coverage();
@@ -54,4 +54,4 @@
         };
     };
 
-}));
+});

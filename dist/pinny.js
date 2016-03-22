@@ -15,7 +15,7 @@
         var framework = window.jQuery;
         factory(framework, window.Plugin, window.bouncefix, window.EventPolyfill);
     }
-}(function($, Plugin, bouncefix, EventPolyfill, Velocity) {
+})(function($, Plugin, bouncefix, EventPolyfill, Velocity) {
     var EFFECT_REQUIRED = 'Pinny requires a declared effect to operate. For more information read: https://github.com/mobify/pinny#initializing-the-plugin';
     var FOCUSABLE_ELEMENTS = 'a[href], area[href], input, select, textarea, button, iframe, object, embed, [tabindex], [contenteditable]';
     var FOCUSABLE_INPUT_ELEMENTS =
@@ -26,7 +26,7 @@
     /**
      * Function.prototype.bind polyfill required for < iOS6
      */
-    /* jshint ignore:start */
+    /* eslint-disable no-extend-native */
     if (!Function.prototype.bind) {
         Function.prototype.bind = function(scope) {
             var fn = this;
@@ -35,7 +35,7 @@
             };
         };
     }
-    /* jshint ignore:end */
+    /* eslint-enable no-extend-native */
 
     var $window = $(window);
     var needsSpacer = ($.os.ios && $.os.major <= 7) ||
@@ -70,9 +70,9 @@
         orientationchange: 'orientationchange.pinny'
     };
 
-    function Pinny(element, options) {
+    var Pinny = function(element, options) {
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
-    }
+    };
 
     Pinny.VERSION = '2.0.3';
 
@@ -104,7 +104,7 @@
          */
         animation: {
             openComplete: function() {
-                setTimeout(function () {
+                setTimeout(function() {
 
                     this._disableExternalInputs();
                     this._focus();
@@ -130,7 +130,7 @@
                 }.bind(this), 0);
             },
             closeComplete: function() {
-                setTimeout(function () {
+                setTimeout(function() {
                     this.$pinny
                         .removeClass(classes.OPENED)
                         .attr('aria-hidden', 'true');
@@ -504,4 +504,4 @@
     });
 
     return $;
-}));
+});
