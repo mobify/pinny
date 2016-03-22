@@ -5,7 +5,7 @@
             'deckard'
         ], factory);
     } else {
-        var framework = window.Zepto || window.jQuery;
+        var framework = window.jQuery;
         factory(framework);
     }
 }(function($) {
@@ -86,4 +86,3 @@
 
     return EventPolyfill;
 }));
-

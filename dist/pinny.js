@@ -12,7 +12,7 @@
             'isChildOf'
         ], factory);
     } else {
-        var framework = window.Zepto || window.jQuery;
+        var framework = window.jQuery;
         factory(framework, window.Plugin, window.bouncefix, window.EventPolyfill);
     }
 }(function($, Plugin, bouncefix, EventPolyfill, Velocity) {
