@@ -1,3 +1,10 @@
+Pending Release:
+    - Migrate from Zepto to jQuery
+    - Migrate from Mobify's fork of Velocity.js to current Velocity.js release
+    - Migrate Bower dependencies to NPM
+    - Migrate JS linting to current standards (eslint)
+    - Migrate SCSS compilation to current standards (libsass)
+    - Add SCSS linting
 2.0.3
     - Fire lock and unlock events even if not locking/unlocking due to presence
       of activePinnies

@@ -1,6 +1,7 @@
 .pinny {
   -webkit-box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.25);
-          box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.25); }
+          box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.25);
+}
 
 .pinny__header {
   position: relative;
@@ -10,7 +11,8 @@
   display: flex;
   padding: 0 5px;
   border-bottom: 1px solid #ededed;
-  background: white; }
+  background: white;
+}
 
 .pinny__title {
   -webkit-box-flex: 1;
@@ -19,7 +21,8 @@
           flex: 1;
   margin: 0;
   padding: 10px;
-  font-size: 1.2em; }
+  font-size: 1.2em;
+}
 
 .pinny__close {
   overflow: hidden;
@@ -33,34 +36,45 @@
   background: none;
   text-indent: 100%;
   -webkit-appearance: none;
-  -webkit-tap-highlight-color: transparent; }
+  -webkit-tap-highlight-color: transparent;
+}
 
 .pinny__close {
-  position: relative; }
-  .pinny__close::before, .pinny__close::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    z-index: 2;
-    display: block;
-    width: 20px;
-    height: 2px;
-    margin-top: -1px;
-    margin-left: -10px;
-    border-radius: 2px;
-    background: #59adeb;
-    pointer-events: none; }
-  .pinny__close::before {
-    -webkit-transform: rotate(-45deg);
-        -ms-transform: rotate(-45deg);
-            transform: rotate(-45deg); }
-  .pinny__close::after {
-    -webkit-transform: rotate(45deg);
-        -ms-transform: rotate(45deg);
-            transform: rotate(45deg); }
-  .pinny__close:active::before, .pinny__close:active::after {
-    background: #3e7cc6; }
+  position: relative;
+}
+
+.pinny__close::before, .pinny__close::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: block;
+  width: 20px;
+  height: 2px;
+  margin-top: -1px;
+  margin-left: -10px;
+  border-radius: 2px;
+  background: #59adeb;
+  pointer-events: none;
+}
+
+.pinny__close::before {
+  -webkit-transform: rotate(-45deg);
+      -ms-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+}
+
+.pinny__close::after {
+  -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+
+.pinny__close:active::before, .pinny__close:active::after {
+  background: #3e7cc6;
+}
 
 .pinny__content {
-  padding: 10px; }
+  padding: 10px;
+}

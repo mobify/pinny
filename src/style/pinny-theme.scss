@@ -71,7 +71,7 @@
 // 1. Pseudo elements absolutely positioned relative to the parent `.pinny__close`
 // 2. Center vertically and horizontally
 
-.pinny__close {
+.pinny__close { // sass-lint:disable-line no-mergeable-selectors
     position: relative; // 1
 
     &::before,

@@ -2,7 +2,7 @@
 
 A mobile-first content fly-in UI plugin.
 
-[![Bower version](https://badge.fury.io/bo/pinny.svg)](http://badge.fury.io/bo/pinny)
+[![NPM](https://nodei.co/npm/pinny.png?downloads=true&stars=true)](https://nodei.co/npm/pinny/)
 [![Dependency Status](https://www.versioneye.com/user/projects/54512dcb9fc4d548ec000380/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54512dcb9fc4d548ec000380)
 [![Circle CI](https://circleci.com/gh/mobify/pinny.png?style=shield&circle-token=7f052e50aabb80c939303cc2f5118aa92ca502fa)](https://circleci.com/gh/mobify/pinny)
 
@@ -10,52 +10,44 @@ A mobile-first content fly-in UI plugin.
 
 ## Dependencies
 
-* [Zepto](http://zeptojs.com/)
-* [Mobify's fork of Velocity.js](http://github.com/mobify/velocity)
+* [jQuery](https://jquery.com/) (**Note**: [Zepto](http://zeptojs.com/) is supported until [v2.0.3](https://github.com/mobify/pinny/releases/tag/2.0.3))
+* [Velocity.js](http://julian.com/research/velocity/)
 * [Plugin](http://github.com/mobify/plugin)
 * [Shade](http://github.com/mobify/shade)
 * [Lockup](http://github.com/mobify/lockup)
 * [Deckard](http://github.com/mobify/deckard)
 * [Bouncefix](https://github.com/jaridmargolin/bouncefix.js)
 
-### Velocity
-
-If you are using Zepto, you need to load `bower_components/mobify-velocity/velocity.js` (this file comes with a jQuery shim bundled directly in it). If you are using jQuery, you need to load `bower_components/velocity/jquery.velocity.js`.
-
-### jQuery Support
-
-Pinny supports jQuery but is not actively developed for it. You should be able to use Pinny directly with jQuery 2.0. While we don't actively support jQuery for Pinny, we welcome any and all issues and PRs to help us make it work.
-
 ## Installation
 
-Pinny can be installed using bower:
+Pinny can be installed using NPM:
 
 ```
-bower install pinny
+npm install pinny
 ```
 
 ## Usage with Require.js
 
-We highly recommend using Require.js with Pinny. To use Require, you have to reference Pinny, Pinny's effect modules, and Pinny's dependencies inside your require config file:
+We highly recommend using Require.js with Pinny. To use Require, you have to reference Pinny, Pinny's effect modules, and Pinny's dependencies inside your require config file (note: if your project already has those external dependencies, such as deckard, and the versions are compatible, it's recommended that you use the one in your project to reduce duplication):
 
 ```config.js
 
 {
     'paths': {
-    	'plugin': 'bower_components/plugin/dist/plugin.min',
-        'pinny': 'bower_components/pinny/dist/pinny.min',
-        'modal-center': 'bower_components/pinny/dist/effect/modal-center',
-        'sheet-bottom': 'bower_components/pinny/dist/effect/sheet-bottom',
-        'sheet-left': 'bower_components/pinny/dist/effect/sheet-left',
-        'sheet-right': 'bower_components/pinny/dist/effect/sheet-right',
-        'sheet-top': 'bower_components/pinny/dist/effect/sheet-top',
-        'shade': 'bower_components/shade/dist/shade.min',
-        'lockup': 'bower_components/lockup/dist/lockup.min',
-        'deckard': 'bower_components/deckard/dist/deckard.min',
-        'bouncefix': 'bower_components/bouncefix.js/dist/bouncefix.min'
-        'event-polyfil': 'bower_components/pinny/src/js/utils/event-polyfil',
-        'velocity': 'bower_components/mobify-velocity/velocity.min',
-        'isChildOf': 'bower_components/selector-utils/src/selector/isChildOf',
+    	'plugin': 'node_modules/pinny/node_modules/plugin/dist/plugin.min',
+        'pinny': 'node_modules/pinny/dist/pinny.min',
+        'modal-center': 'node_modules/pinny/effect/modal-center',
+        'sheet-bottom': 'node_modules/pinny/effect/sheet-bottom',
+        'sheet-left': 'node_modules/pinny/effect/sheet-left',
+        'sheet-right': 'node_modules/pinny/effect/sheet-right',
+        'sheet-top': 'node_modules/pinny/effect/sheet-top',
+        'shade': 'node_modules/pinny/node_modules/shade/dist/shade.min',
+        'lockup': 'node_modules/pinny/node_modules/lockup/dist/lockup.min',
+        'deckard': 'node_modules/pinny/node_modules/deckard/dist/deckard.min',
+        'bouncefix': 'node_modules/pinny/node_modules/bouncefix.js/dist/bouncefix.min'
+        'event-polyfill': 'node_modules/pinny/src/js/utils/event-polyfill',
+        'velocity': 'node_modules/pinny/node_modules/velocity-animate/velocity.min',
+        'isChildOf': 'node_modules/pinny/node_modules/selector-utils/src/selector/isChildOf',
     }
 }
 
@@ -65,7 +57,7 @@ And then require Pinny in as needed:
 
 ```
 define([
-    'zepto',
+    '$',
     'modal-center',
     'pinny'
     ],
@@ -84,7 +76,7 @@ Pinny requires very minimal markup. All Pinny needs is a div with your content a
 
 > To avoid any unwanted FOUT, decorate the content you will be passing to Pinny with the `hidden` attribute. The `hidden` attribute will be removed when Pinny is initialized.
 
-For accessibility and functional purposes, Pinny will wrap all of your body content in a wrapping container. This could conflict with other plugins that alter your page's markup. If you're seeing issues, try initializing Pinny after your other plugins. If you want to specify your own wrapping container, add a class of `lockup__container` to the element. This element should be a root level element to be effective. You can also [pass Pinny a `container` parameter](https://github.com/mobify/pinny/tree/1.0-alpha#container).
+For accessibility and functional purposes, Pinny will wrap all of your body content in a wrapping container. This could conflict with other plugins that alter your page's markup. If you're seeing issues, try initializing Pinny after your other plugins. If you want to specify your own wrapping container, add a class of `lockup__container` to the element. This element should be a root level element to be effective. You can also [pass Pinny a `container` option](#pinnyoptions).
 
 ```html
 <!-- Include the CSS -->
@@ -104,7 +96,7 @@ For accessibility and functional purposes, Pinny will wrap all of your body cont
 </div>
 
 <!-- Include dependencies -->
-<script src="zepto.min.js"></script>
+<script src="jquery.min.js"></script>
 <script src="velocity.min.js"></script>
 <script src="plugin.min.js"></script>
 <script src="shade.min.js"></script>
@@ -531,13 +523,10 @@ Currently, form inputs and selects inside of Pinny have issues on iOS7 and under
 * [Node.js 0.10.x/npm](http://nodejs.org/download/)
 * [Grunt](http://gruntjs.com/)
   * Install with `npm install -g grunt-cli`
-* [Bower](http://bower.io/)
-  * Install with `npm install -g bower`
 
 
 ### Steps
 1. `npm install`
-1. `bower install`
 1. `grunt serve`
 
 
