@@ -45,7 +45,7 @@ We highly recommend using Require.js with Pinny. To use Require, you have to ref
         'lockup': 'node_modules/pinny/node_modules/lockup/dist/lockup.min',
         'deckard': 'node_modules/pinny/node_modules/deckard/dist/deckard.min',
         'bouncefix': 'node_modules/pinny/node_modules/bouncefix.js/dist/bouncefix.min'
-        'event-polyfil': 'node_modules/pinny/src/js/utils/event-polyfil',
+        'event-polyfill': 'node_modules/pinny/src/js/utils/event-polyfill',
         'velocity': 'node_modules/pinny/node_modules/velocity-animate/velocity.min',
         'isChildOf': 'node_modules/pinny/node_modules/selector-utils/src/selector/isChildOf',
     }
