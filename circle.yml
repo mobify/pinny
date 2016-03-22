@@ -1,11 +1,13 @@
 machine:
   node:
-    version: 0.10.21
+    version: 4.3.1
+
+dependencies:
+    override:
+        - npm install
 
 test:
-    pre:
-        - npm install
-        - gem install sass -v 3.4
     override:
-        - grunt lint
+        - grunt sasslint
+        - grunt lint:prod
         - grunt test
