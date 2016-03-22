@@ -28,7 +28,7 @@ npm install pinny
 
 ## Usage with Require.js
 
-We highly recommend using Require.js with Pinny. To use Require, you have to reference Pinny, Pinny's effect modules, and Pinny's dependencies inside your require config file:
+We highly recommend using Require.js with Pinny. To use Require, you have to reference Pinny, Pinny's effect modules, and Pinny's dependencies inside your require config file (note: if your project already has those external dependencies, such as deckard, and the versions are compatible, it's recommended that you use the one in your project to reduce duplication):
 
 ```config.js
 
