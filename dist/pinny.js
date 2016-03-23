@@ -38,6 +38,7 @@
     /* eslint-enable no-extend-native */
 
     var $window = $(window);
+    var iOS8 = $.os.ios && $.os.major >= 8;
     var needsSpacer = ($.os.ios && $.os.major <= 7) ||
         ($.os.android && $.os.major <= 4);
 
@@ -74,7 +75,7 @@
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
     };
 
-    Pinny.VERSION = '2.0.3';
+    Pinny.VERSION = '3.0.0';
 
     Pinny.DEFAULTS = {
         effect: null,
@@ -126,6 +127,13 @@
                     this.$container.attr('aria-hidden', 'true');
 
                     this._trigger('opened');
+
+                    // Lockup scrolls the lockup container but the page will not be in the correct scroll position.
+                    // We will set it to the top so the page would appear exactly where you left off.
+
+                    if (iOS8) {
+                        $(window).scrollTop(0);
+                    }
 
                 }.bind(this), 0);
             },
@@ -195,6 +203,12 @@
         open: function() {
             if (this._isOpen()) {
                 return;
+            }
+
+            // Force window repaint before Pinny opens so that it will
+            // render correctly and not double the viewport width.
+            if (iOS8) {
+                this._repaint();
             }
 
             this._trigger('open');
