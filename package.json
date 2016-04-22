@@ -33,7 +33,7 @@
     "bouncefix.js": "0.3.0",
     "deckard": "git+https://github.com/mobify/deckard.git#1.2.0",
     "jquery": "2.2.2",
-    "lockup": "git+https://github.com/mobify/lockup.git#1.1.3",
+    "lockup": "git+https://github.com/mobify/lockup.git#iOS9-reduce-jank",
     "plugin": "git+https://github.com/mobify/plugin.git#3.1.0",
     "requirejs": "2.2.0",
     "requirejs-glob": "git+https://github.com/mobify/requirejs-glob.git",
