@@ -95,7 +95,12 @@
         close: $.noop,
         closed: $.noop,
         scrollDuration: 50,
-        spacerHeight: 300
+        spacerHeight: 300,
+        blockTouchmove: {
+            header: true,
+            body: false,
+            footer: true
+        }
     };
 
     Plugin.create('pinny', Pinny, {
@@ -230,7 +235,13 @@
 
             // Block scrolling on anything but pinny content
             container.on('touchmove', function(e) {
-                if (!$(e.target).parents().hasClass(classes.CONTENT)) {
+                if (this.options.blockTouchmove.header && $(e.target).parents().hasClass(classes.HEADER)) {
+                    e.preventDefault();
+                }
+                if (this.options.blockTouchmove.body && $(e.target).parents().hasClass(classes.CONTENT)) {
+                    e.preventDefault();
+                }
+                if (this.options.blockTouchmove.footer && $(e.target).parents().hasClass(classes.FOOTER)) {
                     e.preventDefault();
                 }
             });
