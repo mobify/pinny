@@ -74,7 +74,7 @@
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
     };
 
-    Pinny.VERSION = '2.0.3';
+    Pinny.VERSION = '3.0.0';
 
     Pinny.DEFAULTS = {
         effect: null,
@@ -95,7 +95,12 @@
         close: $.noop,
         closed: $.noop,
         scrollDuration: 50,
-        spacerHeight: 300
+        spacerHeight: 300,
+        blockTouchmove: {
+            header: true,
+            body: false,
+            footer: true
+        }
     };
 
     Plugin.create('pinny', Pinny, {
@@ -228,9 +233,17 @@
             var plugin = this;
             var container = this.$pinny;
 
-            // Block scrolling on anything but pinny content
             container.on('touchmove', function(e) {
-                if (!$(e.target).parents().hasClass(classes.CONTENT)) {
+                // if option is set, block scrolling on pinny header
+                if (plugin.options.blockTouchmove.header && $(e.target).parents().hasClass(classes.HEADER)) {
+                    e.preventDefault();
+                }
+                // if option is set, block scrolling on pinny content
+                if (plugin.options.blockTouchmove.body && $(e.target).parents().hasClass(classes.CONTENT)) {
+                    e.preventDefault();
+                }
+                // if option is set, block scrolling on pinny footer
+                if (plugin.options.blockTouchmove.footer && $(e.target).parents().hasClass(classes.FOOTER)) {
                     e.preventDefault();
                 }
             });
