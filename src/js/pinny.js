@@ -235,15 +235,15 @@
 
             container.on('touchmove', function(e) {
                 // if option is set, block scrolling on pinny header
-                if (this.options.blockTouchmove.header && $(e.target).parents().hasClass(classes.HEADER)) {
+                if (plugin.options.blockTouchmove.header && $(e.target).parents().hasClass(classes.HEADER)) {
                     e.preventDefault();
                 }
                 // if option is set, block scrolling on pinny content
-                if (this.options.blockTouchmove.body && $(e.target).parents().hasClass(classes.CONTENT)) {
+                if (plugin.options.blockTouchmove.body && $(e.target).parents().hasClass(classes.CONTENT)) {
                     e.preventDefault();
                 }
                 // if option is set, block scrolling on pinny footer
-                if (this.options.blockTouchmove.footer && $(e.target).parents().hasClass(classes.FOOTER)) {
+                if (plugin.options.blockTouchmove.footer && $(e.target).parents().hasClass(classes.FOOTER)) {
                     e.preventDefault();
                 }
             });
