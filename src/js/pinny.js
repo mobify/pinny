@@ -96,7 +96,8 @@
         close: $.noop,
         closed: $.noop,
         scrollDuration: 50,
-        spacerHeight: 300
+        spacerHeight: 300,
+        disableScrollTop: false
     };
 
     Plugin.create('pinny', Pinny, {
@@ -131,7 +132,7 @@
                     // Lockup scrolls the lockup container but the page will not be in the correct scroll position.
                     // We will set it to the top so the page would appear exactly where you left off.
 
-                    if (iOS8) {
+                    if (iOS8 && !this.options.disableScrollTop) {
                         $(window).scrollTop(0);
                     }
 
