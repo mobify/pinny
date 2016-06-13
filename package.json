@@ -37,7 +37,7 @@
     "plugin": "git+https://github.com/mobify/plugin.git#3.1.0",
     "requirejs": "2.2.0",
     "requirejs-glob": "git+https://github.com/mobify/requirejs-glob.git",
-    "selector-utils": "git+https://github.com/mobify/selector-utils.git",
+    "selector-utils": "2.0.0",
     "shade": "git+https://github.com/mobify/shade.git#1.1.1",
     "text": "requirejs/text",
     "velocity-animate": "1.2.3"
