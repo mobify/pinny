@@ -95,7 +95,8 @@
         close: $.noop,
         closed: $.noop,
         scrollDuration: 50,
-        spacerHeight: 300
+        spacerHeight: 300,
+        pageContentSelector: '#x-root'
     };
 
     Plugin.create('pinny', Pinny, {
@@ -127,8 +128,8 @@
                     // Instead of making whole lockup container aria hidden,
                     // just make page content aria hidden, since otherwise pinny
                     // cannot be read by screenreaders
-                    if ($('#x-root').length) {
-                        $('#x-root').attr('aria-hidden', 'true');
+                    if ($(this.options.pageContentSelector).length) {
+                        $(this.options.pageContentSelector).attr('aria-hidden', 'true');
                     } else {
                         this.$container.attr('aria-hidden', 'true');
                     }
@@ -160,8 +161,8 @@
                     // Instead of making whole lockup container aria hidden,
                     // just make page content aria hidden, since otherwise pinny
                     // cannot be read by screenreaders
-                    if ($('#x-root').length) {
-                        $('#x-root').attr('aria-hidden', 'false');
+                    if ($(this.options.pageContentSelector).length) {
+                        $(this.options.pageContentSelector).attr('aria-hidden', 'false');
                     } else {
                         this.$container.attr('aria-hidden', 'false');
                     }
@@ -392,8 +393,8 @@
             // Instead of making whole lockup container aria hidden,
             // just make page content aria hidden, since otherwise pinny
             // cannot be read by screenreaders
-            if ($('#x-root').length) {
-                $('#x-root').attr('aria-hidden', 'false');
+            if ($(this.options.pageContentSelector).length) {
+                $(this.options.pageContentSelector).attr('aria-hidden', 'false');
             } else {
                 this.$container.attr('aria-hidden', 'false');
             }
