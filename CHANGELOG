@@ -1,3 +1,5 @@
+2.1.0
+    - Fix a11y issue where lockup's aria hidden attr was causing all pinnies inside to be inaccessible for screenreaders
 2.0.3
     - Fire lock and unlock events even if not locking/unlocking due to presence
       of activePinnies

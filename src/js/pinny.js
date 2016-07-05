@@ -123,7 +123,15 @@
                         .addClass(classes.OPENED)
                         .attr('aria-hidden', 'false');
 
-                    this.$container.attr('aria-hidden', 'true');
+                    // Lockup a11y fix
+                    // Instead of making whole lockup container aria hidden,
+                    // just make page content aria hidden, since otherwise pinny
+                    // cannot be read by screenreaders
+                    if ($('#x-root').length) {
+                        $('#x-root').attr('aria-hidden', 'true');
+                    } else {
+                        this.$container.attr('aria-hidden', 'true');
+                    }
 
                     this._trigger('opened');
 
@@ -148,7 +156,15 @@
                         $window.off(events.orientationchange);
                     }
 
-                    this.$container.attr('aria-hidden', 'false');
+                    // Lockup a11y fix
+                    // Instead of making whole lockup container aria hidden,
+                    // just make page content aria hidden, since otherwise pinny
+                    // cannot be read by screenreaders
+                    if ($('#x-root').length) {
+                        $('#x-root').attr('aria-hidden', 'false');
+                    } else {
+                        this.$container.attr('aria-hidden', 'false');
+                    }
 
                     this._trigger('closed');
 

@@ -74,7 +74,7 @@
         Pinny.__super__.call(this, element, options, Pinny.DEFAULTS);
     }
 
-    Pinny.VERSION = '2.0.3';
+    Pinny.VERSION = '2.1.0';
 
     Pinny.DEFAULTS = {
         effect: null,
@@ -113,7 +113,6 @@
                     if (this._activePinnies()) {
                         this.$pinny.data('lockup')._trigger('locked');
                     } else {
-                        // The other pinny has probably set this listener already
                         $window.on(events.orientationchange, this._blurActiveElement.bind(this));
                         this.$pinny.lockup('lock');
                     }
@@ -124,7 +123,15 @@
                         .addClass(classes.OPENED)
                         .attr('aria-hidden', 'false');
 
-                    this.$container.attr('aria-hidden', 'true');
+                    // Lockup a11y fix
+                    // Instead of making whole lockup container aria hidden,
+                    // just make page content aria hidden, since otherwise pinny
+                    // cannot be read by screenreaders
+                    if ($('#x-root').length) {
+                        $('#x-root').attr('aria-hidden', 'true');
+                    } else {
+                        this.$container.attr('aria-hidden', 'true');
+                    }
 
                     this._trigger('opened');
 
@@ -149,7 +156,15 @@
                         $window.off(events.orientationchange);
                     }
 
-                    this.$container.attr('aria-hidden', 'false');
+                    // Lockup a11y fix
+                    // Instead of making whole lockup container aria hidden,
+                    // just make page content aria hidden, since otherwise pinny
+                    // cannot be read by screenreaders
+                    if ($('#x-root').length) {
+                        $('#x-root').attr('aria-hidden', 'false');
+                    } else {
+                        this.$container.attr('aria-hidden', 'false');
+                    }
 
                     this._trigger('closed');
 
