@@ -388,8 +388,15 @@
             var $header = this.$pinny.find('h1, .' + classes.TITLE).first();
             var $wrapper = this.$pinny.find('.' + classes.WRAPPER);
 
-            this.$container
-                .attr('aria-hidden', 'false');
+            // Lockup a11y fix
+            // Instead of making whole lockup container aria hidden,
+            // just make page content aria hidden, since otherwise pinny
+            // cannot be read by screenreaders
+            if ($('#x-root').length) {
+                $('#x-root').attr('aria-hidden', 'false');
+            } else {
+                this.$container.attr('aria-hidden', 'false');
+            }
 
             this.$pinny
                 .attr('role', 'dialog')
