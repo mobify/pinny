@@ -227,7 +227,7 @@ If you are using `structure: false`, you will need to structure your HTML to inc
 ```html
 <div id="myPinny" class="pinny__wrapper" role="document" hidden>
     <div class="pinny__header">
-    	<a class="pinny__close">close</a>
+    	<button class="pinny__close">close</button>
     </div>
     <div class="pinny__content pinny--is-scrollable"></div>
     <div class="pinny__footer"></div>
