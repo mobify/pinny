@@ -106,9 +106,9 @@
         animation: {
             openComplete: function() {
                 setTimeout(function () {
-
-                    this._disableExternalInputs();
                     this._focus();
+                    this._disableExternalInputs();
+
                     // Only run lockup if another pinny isn't open and has
                     // locked up the viewport already
                     if (this._activePinnies()) {
@@ -144,9 +144,6 @@
                         .removeClass(classes.OPENED)
                         .attr('aria-hidden', 'true');
 
-                    this._enableExternalInputs();
-                    this._resetFocus();
-
                     // only unlock if there isn't another pinny
                     // that requires the viewport to be locked
                     if (this._activePinnies()) {
@@ -166,6 +163,9 @@
                     } else {
                         this.$container.attr('aria-hidden', 'false');
                     }
+
+                    this._resetFocus();
+                    this._enableExternalInputs();
 
                     this._trigger('closed');
 
@@ -216,6 +216,9 @@
 
             this._trigger('open');
 
+            // Record active element so that it may be re-focused when pinny is closed
+            this.originalActiveElement = document.activeElement;
+
             bouncefix.add(classes.SCROLLABLE);
 
             this.options.shade && this.$shade.shade('open');
@@ -257,9 +260,9 @@
          Builds Pinny using the following structure:
 
          <section class="pinny">
-         <div class="pinny__wrapper">
+         <div class="pinny__wrapper" tabindex="0">
          <header class="pinny__header">{header content}</header>
-         <div class="pinny__content">
+         <div class="pinny__content" tabindex="0">
          {content}
          </div>
          <footer class="pinny__footer">{footer content}</footer>
@@ -294,11 +297,14 @@
 
             this.$container = this.$pinny.data('lockup').$container;
 
-            this.$pinny.appendTo(this.options.appendTo ? $(this.options.appendTo) : this.$container);
+            // Append to document.body by default, so that pinnies will be
+            // outside the lockup container, which can be hidden to screenreaders
+            this.$pinny.appendTo(this.options.appendTo ? $(this.options.appendTo) : this.$body);
 
             if (this.options.structure) {
                 var $wrapper = $('<div />')
                     .addClass(classes.WRAPPER)
+                    .attr('tabindex', '0')
                     .appendTo(this.$pinny);
 
                 this._buildComponent('header').appendTo($wrapper);
@@ -306,6 +312,7 @@
                 $('<div />')
                     .addClass(classes.CONTENT)
                     .addClass(classes.SCROLLABLE)
+                    .attr('tabindex', '0')
                     .append(this.$element)
                     .appendTo($wrapper);
 
@@ -417,9 +424,7 @@
         },
 
         _focus: function() {
-            this.originalActiveElement = document.activeElement;
-
-            this.$pinny.children().first().focus();
+            this.$pinny.find('.' + classes.WRAPPER).focus();
         },
 
         _resetFocus: function() {
