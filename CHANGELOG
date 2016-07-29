@@ -1,5 +1,6 @@
 2.0.4
     - Fix a11y issue where lockup's aria hidden attr was causing all pinnies inside to be inaccessible for screenreaders
+    - Changes new default container to <body> instead of lockup container
 2.0.3
     - Fire lock and unlock events even if not locking/unlocking due to presence
       of activePinnies
