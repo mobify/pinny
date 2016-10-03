@@ -38,7 +38,7 @@ If the tests have passed, generate the build. Build files are built into the `di
   grunt build
   ```
 
-3. Push to your fork, and open a [pull request](https://github.com/mobify/pinny/compare). Please ensure you use the [Plugin Pull Request Template](./PULL-REQUEST-TEMPLATE.md) when opening up a pull request; describing your changes increases the likelihood of the PR being merged.
+3. Push to your fork, and open a [pull request](https://github.com/mobify/pinny/compare). Please ensure you use the [Pull Request Template](./PULL-REQUEST-TEMPLATE.md) when opening up a pull request; describing your changes increases the likelihood of the PR being merged.
 
 ## Coding Guidelines
 

@@ -34,7 +34,7 @@ We highly recommend using Require.js with Pinny. To use Require, you have to ref
 
 {
     'paths': {
-    	'plugin': 'node_modules/pinny/node_modules/plugin/dist/plugin.min',
+    	'plugin': 'node_modules/pinny/node_modules/mobify-plugin/dist/plugin.min',
         'pinny': 'node_modules/pinny/dist/pinny.min',
         'modal-center': 'node_modules/pinny/effect/modal-center',
         'sheet-bottom': 'node_modules/pinny/effect/sheet-bottom',
