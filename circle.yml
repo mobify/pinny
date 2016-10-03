@@ -11,4 +11,4 @@ test:
     override:
         - grunt sasslint
         - grunt lint:prod
-        - grunt test
+        - npm test

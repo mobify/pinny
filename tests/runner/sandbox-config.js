@@ -13,7 +13,7 @@ require.config({
         'sheet-left': 'dist/effect/sheet-left',
         'sheet-right': 'dist/effect/sheet-right',
         'sheet-top': 'dist/effect/sheet-top',
-        'plugin': 'node_modules/plugin/dist/plugin',
+        'plugin': 'node_modules/mobify-plugin/dist/plugin',
         'shade': 'node_modules/shade/dist/shade.min',
         'deckard': 'node_modules/deckard/dist/deckard.min',
         'lockup': 'node_modules/lockup/dist/lockup',
