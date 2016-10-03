@@ -1,3 +1,5 @@
+Pending Release
+    - Update NPM dependencies for selector-utils and mobify-plugin
 3.0.0
     - Migrate from Zepto to jQuery
     - Migrate from Mobify's fork of Velocity.js to current Velocity.js release
