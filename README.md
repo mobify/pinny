@@ -76,7 +76,7 @@ Pinny requires very minimal markup. All Pinny needs is a div with your content a
 
 > To avoid any unwanted FOUT, decorate the content you will be passing to Pinny with the `hidden` attribute. The `hidden` attribute will be removed when Pinny is initialized.
 
-For accessibility and functional purposes, Pinny will wrap all of your body content in a wrapping container. This could conflict with other plugins that alter your page's markup. If you're seeing issues, try initializing Pinny after your other plugins. If you want to specify your own wrapping container, add a class of `lockup__container` to the element. This element should be a root level element to be effective. You can also [pass Pinny a `container` option](#pinnyoptions).
+For accessibility and functional purposes, Pinny will wrap all of your body content in a wrapping container. This could conflict with other plugins that alter your page's markup. If you're seeing issues, try initializing Pinny after your other plugins. If you want to specify your own wrapping container, you can [pass Pinny a `container` option](https://github.com/mobify/pinny#container).
 
 ```html
 <!-- Include the CSS -->
@@ -185,7 +185,7 @@ $('#myPinny').pinny({
 
 #### container
 
-default: `$container` (lockup's container)
+default: `<body>`
 
 Specify the container Pinny will be created within
 
@@ -227,7 +227,7 @@ If you are using `structure: false`, you will need to structure your HTML to inc
 ```html
 <div id="myPinny" class="pinny__wrapper" role="document" hidden>
     <div class="pinny__header">
-    	<button class="pinny__close">close</button>
+    	<button type="button" class="pinny__close">close</button>
     </div>
     <div class="pinny__content pinny--is-scrollable"></div>
     <div class="pinny__footer"></div>

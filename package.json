@@ -4,7 +4,7 @@
     "type": "git",
     "url": "https://github.com/mobify/pinny.git"
   },
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A mobile first content fly-in UI plugin",
   "devDependencies": {
     "almond": "0.3.0",
