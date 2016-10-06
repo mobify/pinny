@@ -128,11 +128,7 @@
                     // Instead of making whole lockup container aria hidden,
                     // just make page content aria hidden, since otherwise pinny
                     // cannot be read by screenreaders
-                    if ($(this.options.pageContentSelector).length) {
-                        $(this.options.pageContentSelector).attr('aria-hidden', 'true');
-                    } else {
-                        this.$container.attr('aria-hidden', 'true');
-                    }
+                    this.$container.attr('aria-hidden', 'true');
 
                     this._trigger('opened');
 
@@ -158,11 +154,7 @@
                     // Instead of making whole lockup container aria hidden,
                     // just make page content aria hidden, since otherwise pinny
                     // cannot be read by screenreaders
-                    if ($(this.options.pageContentSelector).length) {
-                        $(this.options.pageContentSelector).attr('aria-hidden', 'false');
-                    } else {
-                        this.$container.attr('aria-hidden', 'false');
-                    }
+                    this.$container.attr('aria-hidden', 'false');
 
                     this._resetFocus();
                     this._enableExternalInputs();
@@ -295,7 +287,12 @@
                     }
                 });
 
-            this.$container = this.$pinny.data('lockup').$container;
+            this.$container;
+            if ($(this.options.pageContentSelector).length) {
+                this.$container = $(this.options.pageContentSelector);
+            } else {
+                this.$container = this.$pinny.data('lockup').$container;
+            }
 
             // Append to document.body by default, so that pinnies will be
             // outside the lockup container, which can be hidden to screenreaders
@@ -400,11 +397,7 @@
             // Instead of making whole lockup container aria hidden,
             // just make page content aria hidden, since otherwise pinny
             // cannot be read by screenreaders
-            if ($(this.options.pageContentSelector).length) {
-                $(this.options.pageContentSelector).attr('aria-hidden', 'false');
-            } else {
-                this.$container.attr('aria-hidden', 'false');
-            }
+            this.$container.attr('aria-hidden', 'false');
 
             this.$pinny
                 .attr('role', 'dialog')
