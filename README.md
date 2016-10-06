@@ -84,7 +84,7 @@ Pinny requires very minimal markup. All Pinny needs is a div with your content a
 
 > To avoid any unwanted FOUT, decorate the content you will be passing to Pinny with the `hidden` attribute. The `hidden` attribute will be removed when Pinny is initialized.
 
-For accessibility and functional purposes, Pinny will wrap all of your body content in a wrapping container. This could conflict with other plugins that alter your page's markup. If you're seeing issues, try initializing Pinny after your other plugins. If you want to specify your own wrapping container, add a class of `lockup__container` to the element. This element should be a root level element to be effective. You can also [pass Pinny a `container` parameter](https://github.com/mobify/pinny/tree/1.0-alpha#container).
+For accessibility and functional purposes, Pinny will wrap all of your body content in a wrapping container. This could conflict with other plugins that alter your page's markup. If you're seeing issues, try initializing Pinny after your other plugins. If you want to specify your own wrapping container, you can [pass Pinny a `container` parameter](https://github.com/mobify/pinny#container).
 
 ```html
 <!-- Include the CSS -->
@@ -193,7 +193,7 @@ $('#myPinny').pinny({
 
 #### container
 
-default: `$container` (lockup's container)
+default: `<body>`
 
 Specify the container Pinny will be created within
 
@@ -543,7 +543,7 @@ Currently, form inputs and selects inside of Pinny have issues on iOS7 and under
 
 ### Grunt Tasks:
 * `grunt` or `grunt build` - builds a distributable release
-* `grunt watch` - watches for changes and builds when changes are detected. 
+* `grunt watch` - watches for changes and builds when changes are detected.
 * `grunt serve` - runs the server, building changes and then watching for changes. Use grunt serve to preview the site at **http://localhost:3000**
 * `grunt test` - runs Pinny's test suite in your console
 * `grunt test:browser` - runs a server that allows you to run pinny's test suite in your browser by browsing to **http://localhost:8888/tests/runner**

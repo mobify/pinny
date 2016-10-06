@@ -143,7 +143,7 @@ define([
             it('creates pinny with the default container', function() {
                 var $pinny = $element.pinny({ effect: modalCenter });
 
-                expect($pinny.closest('.lockup__container').length).to.equal(1);
+                expect($pinny.closest('body').length).to.equal(1);
             });
         });
 
