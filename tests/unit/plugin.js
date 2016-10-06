@@ -22,8 +22,8 @@ define([
             testSandbox.setUp('sandbox', setUpComplete);
         });
 
-        describe('binding to Zepto\'s fn', function() {
-            it('defines pinny in Zepto', function() {
+        describe('binding to jQuery\'s fn', function() {
+            it('defines pinny in jQuery', function() {
                 var pinny = $.fn.pinny;
 
                 expect(pinny).to.be.defined;
@@ -279,9 +279,9 @@ define([
                         $element.pinny('close');
                     },
                     closed: function() {
-                        expect($externalInput1.attr('tabindex')).to.be.null;
+                        expect($externalInput1.attr('tabindex')).to.be.undefined;
                         expect(+$externalInput2.attr('tabindex')).to.equal(10);
-                        expect($externalSelect.attr('tabindex')).to.be.null;
+                        expect($externalSelect.attr('tabindex')).to.be.undefined;
 
                         done();
                     }
